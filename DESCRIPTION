@@ -1,0 +1,38 @@
+Package: decorrelate
+Type: Package
+Title: Decorrelation projection scalable to high dimensional data using estimated correlation with low rank and shrinkage
+Version: 0.0.1
+Date: 2021-03-12
+Author: Gabriel E. Hoffman
+Maintainer: Gabriel E. Hoffman <gabriel.hoffman@mssm.edu>
+Description: Coming soon...
+License: GPL (>= 2)
+BugReports: https://github.com/GabrielHoffman/decorrelate/issues
+Suggests:
+    BiocStyle,
+    knitr,
+    pander,
+    rmarkdown,
+biocViews: RNASeq,
+    GeneExpression,
+    GeneSetEnrichment,
+    DifferentialExpression,
+    BatchEffect,
+    QualityControl,
+    Regression,
+    Epigenetics,
+    FunctionalGenomics,
+    Transcriptomics,
+    Normalization,
+    Preprocessing,
+    Microarray,
+    ImmunoOncology,
+    Software
+Depends:
+    R (>= 3.6.0),
+    methods
+Imports:
+    Rfast,
+    irlba,
+    stats
+RoxygenNote: 7.1.1
