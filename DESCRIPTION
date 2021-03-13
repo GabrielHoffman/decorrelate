@@ -1,7 +1,7 @@
 Package: decorrelate
 Type: Package
 Title: Decorrelation projection scalable to high dimensional data using estimated correlation with low rank and shrinkage
-Version: 0.0.1
+Version: 0.0.2
 Date: 2021-03-12
 Author: Gabriel E. Hoffman
 Maintainer: Gabriel E. Hoffman <gabriel.hoffman@mssm.edu>
