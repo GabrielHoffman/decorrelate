@@ -1,0 +1,77 @@
+
+---
+title: "Decorrelate"
+subtitle: ''
+author: "Developed by [Gabriel Hoffman](http://gabrielhoffman.github.io/)"
+date: "Run on `r Sys.time()`"
+documentclass: article
+output: 
+  html_document:
+  toc: true
+  smart: false
+vignette: >
+  %\VignetteIndexEntry{Decorrelate}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
+---
+
+
+<!--- 
+
+rmarkdown::render("decorrelate.Rmd");
+
+--->
+
+
+# Test statistical performance of decorrelate 
+## p >> n
+```{r decorrelate.test1, fig.width=5}
+library(decorrelate)
+library(Matrix)
+library(Rfast)
+set.seed(1)
+n = 2000 # number of samples
+p = 8*3 # number of features
+
+# Create correlation matrix with autocorrelation
+autocorr.mat <- function(p = 100, rho = 0.9) {
+    mat <- diag(p)
+    return(rho^abs(row(mat)-col(mat)))
+}
+
+# create correlation matrix
+Sigma = autocorr.mat(p/8, .9)
+Sigma = bdiag(Sigma, Sigma)
+Sigma = bdiag(Sigma, Sigma)
+Sigma = bdiag(Sigma, Sigma)
+
+image(as.matrix(Sigma), main="True correlation matrix")
+
+# sample matrix from MVN with covariance Sigma
+Y = rmvnorm(n, rep(0, p), sigma=Sigma)
+
+# decorrelated using *true* correlation matrix
+Y.decorr.exact = Y %*% with(eigen(Sigma), vectors %*% diag(values^-0.5) %*% t(vectors))
+
+# Estimate correlation with low rank and shrinkage
+ecl = eclairs(Y)
+plot(ecl$dSq, main = "Eigen values of Y")
+C = getCor(ecl)
+image(C, main="Sample correlation matrix")
+
+Y.decorr = decorrelate(Y, ecl)
+image(cor(Y.decorr2), main="Correlation after decorrelating")
+```  
+
+When p >> n, the estimate of $\hat\Sigma$ is poor, even with shrinkage.  In this case `eclairs + decorrelate` does reduce the correlation, but the amount varies.
+
+
+
+
+
+
+
+
+
+
