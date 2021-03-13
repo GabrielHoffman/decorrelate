@@ -19,6 +19,7 @@
 #'
 #' Evaluate \eqn{X \Sigma^\alpha} in linear time using the special structure of the matrix
 #'
+#' @export
 mult_eclairs = function(X, U1, dSq1, lambda, alpha){
 
 	v = dSq1*(1-lambda) + lambda
@@ -35,7 +36,7 @@ mult_eclairs = function(X, U1, dSq1, lambda, alpha){
 #' @param X matrix to be transformed so *columns* are independent
 #' @param cor.est estimate of correlation matrix from \link{eclairs} storing \code{U}, \code{dSq}, and \code{lambda}
 #'
-#' @description
+#' @details
 # FIX NOTATION HERE: Given a vector \eqn{x ~ N(0, \Sigma)} where \eqn{\Sigma = U diag(dSq1) U^T + diag(\sigma^2)}, transform x so that it has an identity covariance matrix.  \eqn{\Sigma^{-0.5}x} is such a projection (see Strimmer whitening).  When \eqn{\Sigma} is \eqn{p \times p}, computing this project naively is \eqn{O(p^3)}.  Here we take advantage of the fact that \eqn{\Sigma} is the sum of a low rank decomposition, plus a scaled identity matrix
 #'
 #' @export

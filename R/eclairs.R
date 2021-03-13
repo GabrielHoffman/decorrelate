@@ -49,7 +49,7 @@ setMethod("print", 'eclairs',
 #'
 #' @return p x p covariance/correlation matrix
 #'
-#' @details The full matrix is computationally expensive to compute and uses a lot of memory for large p.  So it is better to use \link{decorrelate},  \link{lrmult} or \link{lrmult_t} to perform operations in \eqn{O(np)} time.
+#' @details The full matrix is computationally expensive to compute and uses a lot of memory for large p.  So it is better to use \link{decorrelate} or \link{mult_eclairs} to perform operations in \eqn{O(np)} time.
 #'
 #' @rdname getCov
 #' @export
@@ -70,6 +70,7 @@ setMethod('getCov', c(cor.est = "eclairs"),
 })
 
 
+#' @importFrom stats cov2cor
 #' @export
 setMethod('getCor', c(cor.est = "eclairs"), 
 	function(cor.est){
@@ -108,6 +109,7 @@ setMethod('getCor', c(cor.est = "eclairs"),
 #'
 #' @importFrom Rfast standardise colVars
 #' @importFrom irlba irlba
+#' @importFrom methods new
 #'
 #' @export
 eclairs = function(X, k, lambda, center=TRUE, scale=TRUE){

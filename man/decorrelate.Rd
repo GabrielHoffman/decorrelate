@@ -12,8 +12,8 @@ decorrelate(X, cor.est)
 \item{cor.est}{estimate of correlation matrix from \link{eclairs} storing \code{U}, \code{dSq}, and \code{lambda}}
 }
 \description{
-
+Efficient decorrelation projection eclairs decomposition
 }
 \details{
-Efficient decorrelation projection eclairs decomposition
+
 }

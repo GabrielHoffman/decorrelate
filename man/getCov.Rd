@@ -19,5 +19,5 @@ p x p covariance/correlation matrix
 Get full covariance/correlation matrix from eclairs decomposition
 }
 \details{
-The full matrix is computationally expensive to compute and uses a lot of memory for large p.  So it is better to use \link{decorrelate},  \link{lrmult} or \link{lrmult_t} to perform operations in \eqn{O(np)} time.
+The full matrix is computationally expensive to compute and uses a lot of memory for large p.  So it is better to use \link{decorrelate} or \link{mult_eclairs} to perform operations in \eqn{O(np)} time.
 }
