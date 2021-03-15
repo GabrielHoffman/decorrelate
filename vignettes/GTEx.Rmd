@@ -95,9 +95,9 @@ rownames(gtex_count) = gtex_count$Name
 gtex_count$Name = NULL
 gtex_count = as.matrix(gtex_count)
 
-isexpr = rowSums(cpm(gtex_count>1)) >= 0.1*ncol(gtex_count)
+isexpr = rowSums(cpm(gtex_count)>1) >= 0.3*ncol(gtex_count)
 dge = DGEList( gtex_count[isexpr,] )
-dge = calcNormFactors(dge)
+dge = calcNormFactors(dge, "none")
 gtex_log2cpm = cpm(dge, log=TRUE)
 
 # df_voomTrend_GTEx = lapply( unique(gtex_sample$SMTSD), function(Tissue){
@@ -126,6 +126,54 @@ gtex_log2cpm = cpm(dge, log=TRUE)
 
 gtexColors = read.csv('/sc/arion/projects/CommonMind/data/resources/GTEx/GTEx_Tissue_colors.csv', header=TRUE)
 ```
+
+# Standard PCA
+```{r PCA}
+res.standard = prcomp(gtex_log2cpm, center=TRUE, scale=TRUE)
+
+
+ggplot(res.standard, aes(PC1, PC2)) + geom_point() + theme_classic() + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5))
+
+
+
+# decorrelate
+```{r}
+res.decorr = pca_cor2( gtex_log2cpm, 10, maxit=10)
+
+
+
+```
+
+
+
+
+```{r test}
+library(nnet)
+
+concordance = function(X, group){
+
+  if( length(unique(group)) == 2 ){
+    stop("Doesn't work with just 2 groups")
+  }
+
+  fit = multinom( group ~ X, trace=FALSE)
+  y.pred = predict(fit, type='probs')
+  y.true = model.matrix(~0+group)
+
+  sqrt(mean((y.pred - y.true)^2))
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
