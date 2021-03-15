@@ -1,0 +1,132 @@
+
+---
+title: "decorrelate/ecliars on GTEx v8"
+subtitle: ''
+author: "Developed by [Gabriel Hoffman](http://gabrielhoffman.github.io/)"
+date: "Run on `r Sys.time()`"
+documentclass: article
+output: 
+  html_document:
+  toc: true
+  smart: false
+---
+
+
+<!---
+
+cd /hpc/users/hoffmg01/work/cmc_analysis/src
+# rm -rf molec_profiling_cache/
+ml git pandoc
+git pull
+R
+
+system("git pull")
+rmarkdown::render("molec_profiling.Rmd", output_dir='./', intermediates_dir='./')
+
+
+# http
+# https://hoffmg01.u.hpc.mssm.edu/molec_profiling.html
+
+--->
+
+--->
+
+```{r knit2synapse, eval=FALSE}
+library(synapser)
+library(knit2synapse)
+synLogin()
+knit2synapse::createAndKnitToFolderEntity(file = "individual-cohorts/meta_analysis/meta-analysis_sex.Rmd",
+                                          parentId ="syn22315403",
+                                          folderName = 'Meta-analysis on sex',
+                                          overwrite=TRUE, 
+                                          knitmd=FALSE)
+```
+
+
+```{r load.packages, echo=FALSE, message=FALSE, results='hide', cache=FALSE}
+suppressPackageStartupMessages({
+library(variancePartition)
+library(limma)
+library(edgeR)
+library(mvIC)
+library(knitr)
+library(kableExtra)
+library(ggplot2)
+library(cowplot)
+library(openxlsx)
+library(decorrelate)
+})
+
+knitr::opts_chunk$set(
+  echo=FALSE,
+  warning=FALSE,
+  message=FALSE,
+  error = FALSE,
+  tidy = FALSE,
+  cache = TRUE,
+  cache.lazy = FALSE,  dev = c("png", "pdf"), 
+  fig.width=7, fig.height=7)
+
+options(markdown.HTML.stylesheet = 'css/custom.css')
+```
+
+
+# Compare to GTEx
+```{r GTEX.voom}
+
+file_SampleAttributesDS = "/sc/arion/projects/CommonMind/data/resources/GTEx/GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt"
+file_SubjectPhenotypesDS= "/sc/arion/projects/CommonMind/data/resources/GTEx/GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt"
+file_counts = "/sc/arion/projects/CommonMind/data/resources/GTEx/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_reads.gct.gz"
+
+gtex_sample = read.delim(file_SampleAttributesDS, header = TRUE, stringsAsFactors = FALSE)
+# gtex_sample = gtex_sample[gtex_sample$SMTS == 'Brain',]
+
+rnaseq_sample_id = fread(file_counts, header = TRUE, skip = 2, nrows = 1)
+gtex_sample = gtex_sample[gtex_sample$SAMPID %in% colnames(rnaseq_sample_id),]
+
+# read count
+gtex_count <- fread(file_counts, header = TRUE, skip = 2, select = c('Name', unique(gtex_sample$SAMPID)))
+gtex_count = as.data.frame(gtex_count, stringsAsFactors=FALSE)
+
+gtex_count$Name = gsub("^(.*)(\\.\\S+)$", "\\1", gtex_count$Name )
+gtex_count = gtex_count[!duplicated(gtex_count$Name), ]
+rownames(gtex_count) = gtex_count$Name
+gtex_count$Name = NULL
+gtex_count = as.matrix(gtex_count)
+
+# isexpr = rowSums(cpm(gtex_count>1)) >= 0.3*ncol(gtex_count)
+# dge = DGEList( gtex_count[isexpr,] )
+# dge = calcNormFactors(dge)
+# gtex_log2cpm = cpm(dge, log=TRUE)
+
+# df_voomTrend_GTEx = lapply( unique(gtex_sample$SMTSD), function(Tissue){
+
+#   idx = which( gtex_sample$SMTSD == Tissue)
+
+#   isexpr = rowSums(cpm(gtex_count[,idx])>1) >= 0.3*ncol(gtex_count[,idx])
+#   table(isexpr)
+
+#   dge = DGEList( gtex_count[isexpr,idx] )
+#   dge = calcNormFactors(dge)
+
+#   vobj = voomWithDreamWeights(dge, ~1, gtex_sample[idx,], plot=FALSE, save.plot=TRUE, BPPARAM=SnowParam(6, progressbar=TRUE))
+
+#   data.frame( key = Tissue, x = vobj$voom.line[['x']], y = vobj$voom.line[['y']])
+# })
+# df_voomTrend_GTEx = do.call(rbind, df_voomTrend_GTEx)
+```
+
+```{r GTEX.voom.plot}
+# ggplot(df_voomTrend_GTEx, aes(x, y, color=key)) + geom_line() + theme_bw(15) + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5), legend.position="bottom") + ylab("sqrt( standard deviation)") + xlab("log2( count size + 0.5 )") + ggtitle("GTEx brain regions") + xlim(2, 22) + ylim(0.45, 1.36)
+```
+
+```{r gtex.colors}
+# https://genome.ucsc.edu/cgi-bin/hgTables?db=hg19&hgta_track=hgFixed&hgta_group=allTables&hgta_table=hgFixed.gtexTissue
+
+gtexColors = read.csv('/sc/arion/projects/CommonMind/data/resources/GTEx/GTEx_Tissue_colors.csv', header=TRUE)
+```
+
+
+
+
+
