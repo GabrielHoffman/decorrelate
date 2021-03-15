@@ -25,11 +25,9 @@ test_decorrelate = function(){
 	# Estimate covariance from Y
 	cor.est = eclairs( Y, k=3, lambda=lambda)
 
+	z.decorr = t(mult_eclairs(t(zstat), cor.est$U, cor.est$dSq, cor.est$lambda, alpha = -1/2))
 
-	z.decorr = decorrelate(zstat, U=cor.est$U, dSq=cor.est$dSq*(1- cor.est$lambda), sigSq=cor.est$lambda)
-
-
-	z.decorr2 = decorrelate_eclairs(zstat, cor.est )
+	z.decorr2 = decorrelate(zstat, cor.est )
 
 	checkIdentical(z.decorr, z.decorr2)
 }
@@ -54,7 +52,6 @@ test_lrmult = function(){
 	Y = rmvnorm(n, rep(0, p), sigma=Sigma)
 
 
-
 	dcmp = eigen(cov2cor(Sigma))
 	k = 10
 	U = dcmp$vectors
@@ -76,7 +73,7 @@ test_lrmult = function(){
 	# C2 = U1 %*% (v * t(U1)) + tcrossprod(U2) *lambda
 	C2 = U1 %*% (v * t(U1)) + tcrossprod(diag(1,p) - tcrossprod(U1)) *lambda
 
-	checkEquals(C1, C2)
+	a = checkEquals(C1, C2)
 
 
 	# projection
@@ -94,12 +91,14 @@ test_lrmult = function(){
 
 	Y.decorr2 = (Y %*% U1) %*% (v^alpha * t(U1)) + (Y  - tcrossprod(Y %*% U1,U1) ) *(lambda^alpha)
 
-	checkEquals(Y.decorr1, Y.decorr2)
+	b = checkEquals(Y.decorr1, Y.decorr2)
 
 
 	Y.decorr2 = mult_eclairs(Y, U1, dSq1, lambda, alpha)
 
-	checkEquals(Y.decorr1, Y.decorr2)
+	c = checkEquals(Y.decorr1, Y.decorr2)
+
+	a & b & c
 }
 
 
@@ -141,63 +140,62 @@ test_decorrelate_full_rank = function(){
 	cor(Y.decorr2[,1:3])
 
 	checkEquals(Y.decorr, Y.decorr2)
-
 }
 
-test = function(){
+# test = function(){
 
-	# test statistical performance of decorrelate 
-	# 	It performs well with n >> p, but poorly in p >> n
-	#   However, this is not an issue because in regression, 
-	# 	the covariance matrix is actually known
+# 	# test statistical performance of decorrelate 
+# 	# 	It performs well with n >> p, but poorly in p >> n
+# 	#   However, this is not an issue because in regression, 
+# 	# 	the covariance matrix is actually known
 
-	library(Matrix)
-	set.seed(1)
-	n = 100 # number of samples
-	p = 2000 # number of features
+# 	library(Matrix)
+# 	set.seed(1)
+# 	n = 100 # number of samples
+# 	p = 2000 # number of features
 
-	# Create correlation matrix with autocorrelation
-	autocorr.mat <- function(p = 100, rho = 0.9) {
-	    mat <- diag(p)
-	    return(rho^abs(row(mat)-col(mat)))
-	}
+# 	# Create correlation matrix with autocorrelation
+# 	autocorr.mat <- function(p = 100, rho = 0.9) {
+# 	    mat <- diag(p)
+# 	    return(rho^abs(row(mat)-col(mat)))
+# 	}
 
-	Sigma = autocorr.mat(p/8, .9999)
-	Sigma = bdiag(Sigma, Sigma)
-	Sigma = bdiag(Sigma, Sigma)
-	Sigma = bdiag(Sigma, Sigma)
+# 	Sigma = autocorr.mat(p/8, .9999)
+# 	Sigma = bdiag(Sigma, Sigma)
+# 	Sigma = bdiag(Sigma, Sigma)
+# 	Sigma = bdiag(Sigma, Sigma)
 
-	Sigma[1:3, 1:3]
+# 	Sigma[1:3, 1:3]
 
-	# sample matrix from MVN with covariance Sigma
-	Y = rmvnorm(n, rep(0, p), sigma=Sigma)
-	# cor(Y[,1:3])
+# 	# sample matrix from MVN with covariance Sigma
+# 	Y = rmvnorm(n, rep(0, p), sigma=Sigma)
+# 	# cor(Y[,1:3])
 
-	# decorrelated using true correlation matrix
-	Y.decorr.exact = Y %*% with(eigen(Sigma), vectors %*% diag(values^-0.5) %*% t(vectors))
+# 	# decorrelated using true correlation matrix
+# 	Y.decorr.exact = Y %*% with(eigen(Sigma), vectors %*% diag(values^-0.5) %*% t(vectors))
 
-	cor(Y.decorr.exact[,1:3])
-	hist(cor(Y.decorr.exact))
+# 	cor(Y.decorr.exact[,1:3])
+# 	hist(cor(Y.decorr.exact))
 
-	ecl = eclairs(Y)
+# 	ecl = eclairs(Y)
 
-	plot(ecl$dSq)
+# 	plot(ecl$dSq)
 
-	C = getCor(ecl)
+# 	C = getCor(ecl)
 
-	Sigma[1:3, 1:3]
-	C[1:3, 1:3]
-
-
-	Y.decorr2 = decorrelate(Y, ecl)
-	cor(Y[,1:3])
-	cor(Y.decorr2[,1:3])
+# 	Sigma[1:3, 1:3]
+# 	C[1:3, 1:3]
 
 
+# 	Y.decorr2 = decorrelate(Y, ecl)
+# 	cor(Y[,1:3])
+# 	cor(Y.decorr2[,1:3])
 
-	hist(cor(Y))
-	hist(cor(Y.decorr2))
-}
+
+
+# 	hist(cor(Y))
+# 	hist(cor(Y.decorr2))
+# }
 
 
 
