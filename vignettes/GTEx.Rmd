@@ -129,21 +129,32 @@ gtexColors = read.csv('/sc/arion/projects/CommonMind/data/resources/GTEx/GTEx_Ti
 
 # Standard PCA
 ```{r PCA}
-res.standard = prcomp(gtex_log2cpm, center=TRUE, scale=TRUE)
+res.standard = prcomp(scale(t(gtex_log2cpm)), center=FALSE, scale=FALSE)
 
+df = data.frame(res.standard$x)
+df = merge(df, gtex_sample, by.x="row.names", by.y="SAMPID")
 
-ggplot(res.standard, aes(PC1, PC2)) + geom_point() + theme_classic() + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5))
-
+ggplot(df, aes(PC1, PC2, color=SMTSD)) + geom_point() + theme_classic() + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5))
+ggplot(df, aes(PC2, PC3, color=SMTSD)) + geom_point() + theme_classic() + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5))
+```
 
 
 # decorrelate
 ```{r}
-res.decorr = pca_cor2( gtex_log2cpm, 10, maxit=10)
-
-
+res.decorr = pca_cor2( t(gtex_log2cpm), 10, maxit=200)
 
 ```
 
+```{r plot.decorr}
+
+df = data.frame(res.decorr$U)
+rownames(df) = colnames(gtex_log2cpm)
+colnames(df) = paste0('PC', 1:10)
+df = merge(df, gtex_sample, by.x="row.names", by.y="SAMPID")
+
+ggplot(df, aes(PC1, PC2, color=SMTSD)) + geom_point() + theme_classic() + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5))
+
+```
 
 
 
@@ -162,7 +173,7 @@ concordance = function(X, group){
 
   sqrt(mean((y.pred - y.true)^2))
 }
-
+```
 
 
 
