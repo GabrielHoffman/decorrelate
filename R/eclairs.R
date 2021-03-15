@@ -160,7 +160,7 @@ eclairs = function(X, k, lambda, center=TRUE, scale=TRUE){
 		# but use lambda reconstructed from low rank decomp
 		# lambda = mvIC:::shrinkcovmat.equal_lambda( t(X) )$lambda
 		X_reconstruct = with(dcmp, u %*% diag(d) %*% t(v))
-		lambda = mvIC:::shrinkcovmat.equal_lambda( t(X_reconstruct) )$lambda
+		lambda = shrinkcovmat.equal_lambda( t(X_reconstruct) )$lambda
 		lambda = min(1, max(1e-4, lambda))
 	}
 
