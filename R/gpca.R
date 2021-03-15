@@ -88,7 +88,7 @@ pca_cor2 = function(Y, k, lambda, k.features, tol=1e-5, maxit=10000){
 		}
 
 		# Estimate correlation structure based on residuals
-	 	cor.est = eclairs( resid, lambda = lambda, k=k.features, warmStart=warmStart)
+	 	cor.est = eclairs( resid, lambda = lambda, k=k.features)#, warmStart=warmStart)
 	 	lambda = cor.est$lambda
 
 	 	if(i > 2){
@@ -97,6 +97,7 @@ pca_cor2 = function(Y, k, lambda, k.features, tol=1e-5, maxit=10000){
 
 			if( delta < tol){
 				res = eclairs( resid, lambda = lambda, k=k.features)
+				save(resid, warmStart, file = "save.RDS")
 				browser()
 				break
 			}
