@@ -112,7 +112,7 @@ setMethod('getCor', c(cor.est = "eclairs"),
 #' @importFrom methods new
 #'
 #' @export
-eclairs = function(X, k, lambda, center=TRUE, scale=TRUE){
+eclairs = function(X, k, lambda, center=TRUE, scale=TRUE, warmStart=NULL){
 
 	if( ! is.matrix(X) ){
 		stop("X must be a matrix")
@@ -147,7 +147,7 @@ eclairs = function(X, k, lambda, center=TRUE, scale=TRUE){
 
 	# SVD of X to get low rank estimate of Sigma
 	if( k < min(p, n)/2){
-		dcmp = irlba(X, nv=k, nu=k)
+		dcmp = irlba(X, nv=k, nu=k, v = warmStart)
 	}else{
 		dcmp = svd(X) 
 		dcmp$u = dcmp$u[,1:k]
@@ -171,7 +171,8 @@ eclairs = function(X, k, lambda, center=TRUE, scale=TRUE){
 					lambda 	= lambda,
 					n 		= n,
 					p 		= p,
-					k 		= k)
+					k 		= k,
+					decomp	= dcmp)
 
 	new("eclairs",	result)
 }

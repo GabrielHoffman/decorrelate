@@ -1,6 +1,28 @@
 # Thanks to RobertGM111 at https://github.com/RobertGM111/havok/blob/master/R/optimal_SVHT_coef.R
 # Version April 6, 2020 
 
+
+#' Singular value thresholding
+#'
+#' Singular value thresholding evalues the number of singular values to retain
+#' 
+#' @param n number of samples
+#' @param p number of features
+#' @param d singular values
+#'
+#' @return Number of singular values to retian
+#' 
+#' @export
+sv_threshold = function(n, p, d){
+
+  # get cutoff
+  cutoff = (optimal_SVHT_coef(min(p/n, n/p),0) * median(d))
+
+  # number of SV exceeding cutoff
+  sum(d >= cutoff)
+}
+
+
 ##' Optimal Hard Threshold for Singular Values
 ##'
 ##' @description A function for the calculation of the coefficient determining optimal
