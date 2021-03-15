@@ -80,7 +80,7 @@ file_SubjectPhenotypesDS= "/sc/arion/projects/CommonMind/data/resources/GTEx/GTE
 file_counts = "/sc/arion/projects/CommonMind/data/resources/GTEx/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_reads.gct.gz"
 
 gtex_sample = read.delim(file_SampleAttributesDS, header = TRUE, stringsAsFactors = FALSE)
-# gtex_sample = gtex_sample[gtex_sample$SMTS == 'Brain',]
+gtex_sample = gtex_sample[gtex_sample$SMTS == 'Brain',]
 
 rnaseq_sample_id = fread(file_counts, header = TRUE, skip = 2, nrows = 1)
 gtex_sample = gtex_sample[gtex_sample$SAMPID %in% colnames(rnaseq_sample_id),]
