@@ -95,10 +95,10 @@ rownames(gtex_count) = gtex_count$Name
 gtex_count$Name = NULL
 gtex_count = as.matrix(gtex_count)
 
-# isexpr = rowSums(cpm(gtex_count>1)) >= 0.3*ncol(gtex_count)
-# dge = DGEList( gtex_count[isexpr,] )
-# dge = calcNormFactors(dge)
-# gtex_log2cpm = cpm(dge, log=TRUE)
+isexpr = rowSums(cpm(gtex_count>1)) >= 0.1*ncol(gtex_count)
+dge = DGEList( gtex_count[isexpr,] )
+dge = calcNormFactors(dge)
+gtex_log2cpm = cpm(dge, log=TRUE)
 
 # df_voomTrend_GTEx = lapply( unique(gtex_sample$SMTSD), function(Tissue){
 
