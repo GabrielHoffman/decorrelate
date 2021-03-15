@@ -66,7 +66,7 @@ pca_cor2 = function(Y, k, lambda, k.features, tol=1e-5, maxit=10000){
 
 	# initialize to identify correlation matrix
 	cor.est = NULL
-	warmStart = NULL
+	# warmStart = NULL
 	lambda = NULL
 
 	for(i in 1:maxit){
@@ -83,9 +83,9 @@ pca_cor2 = function(Y, k, lambda, k.features, tol=1e-5, maxit=10000){
 		# resid = Y - with(res.gpca, U %*% diag(D) %*% t(V))
 		resid = Y.scale - with(res.gpca, U %*% (D * t(V)))
 
-		if( i > 2){
-			warmStart = cor.est$decomp
-		}
+		# if( i > 2){
+		# 	warmStart = cor.est$decomp
+		# }
 
 		# Estimate correlation structure based on residuals
 	 	cor.est = eclairs( resid, lambda = lambda, k=k.features)#, warmStart=warmStart)
