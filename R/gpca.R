@@ -96,9 +96,6 @@ pca_cor2 = function(Y, k, lambda, k.features, tol=1e-5, maxit=10000){
 			if(i %% 1 == 0) message(i, ": ", delta)
 
 			if( delta < tol){
-				res = eclairs( resid, lambda = lambda, k=k.features)
-				save(resid, warmStart, file = "save.RDS")
-				browser()
 				break
 			}
 		}
