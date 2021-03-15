@@ -14,14 +14,14 @@ output:
 
 <!---
 
-cd /hpc/users/hoffmg01/work/cmc_analysis/src
+cd /hpc/users/hoffmg01/work/decorrelate
 # rm -rf molec_profiling_cache/
 ml git pandoc
 git pull
 R
 
 system("git pull")
-rmarkdown::render("molec_profiling.Rmd", output_dir='./', intermediates_dir='./')
+rmarkdown::render("vignettes/GTEx.Rmd", output_dir='./', intermediates_dir='./')
 
 
 # http
@@ -55,6 +55,7 @@ library(ggplot2)
 library(cowplot)
 library(openxlsx)
 library(decorrelate)
+library(data.table)
 })
 
 knitr::opts_chunk$set(
