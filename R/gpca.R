@@ -5,7 +5,7 @@
 #' Generalized PCA using eclairs estimate of correlation betweeen features
 #'
 #' @export
-gpca_eclairs = function(Y, cor.est, k){
+gpca = function(Y, cor.est, k){
 
 	n = nrow(Y)
 	p = ncol(Y)
@@ -68,7 +68,7 @@ pca_cor2 = function(Y, k, lambda, k.features, tol=1e-5, maxit=10000){
 	for(i in 1:maxit){
 
 	 	# Perform Generalized PCA based on ecliars covariance structure
-		res.gpca = gpca_eclairs(Y.scale, cor.est, ifelse(i>1, k, min(dim(Y.scale))) )
+		res.gpca = gpca(Y.scale, cor.est, ifelse(i>1, k, min(dim(Y.scale))) )
 
 		if( i == 1){
 			k.features = sv_threshold( n, p, res.gpca$D)
