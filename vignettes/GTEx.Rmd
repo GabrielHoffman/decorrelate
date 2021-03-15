@@ -142,34 +142,12 @@ ggplot(df, aes(PC2, PC3, color=SMTSD)) + geom_point() + theme_classic() + theme(
 
 # decorrelate
 ```{r decorrelate}
-res.decorr = pca_cor2( t(gtex_log2cpm), 10, maxit=200)
 
-
-Y = t(gtex_log2cpm)
-
-system.time({
-res = eclairs( Y, lambda = .1, k=300)
-})
-
-system.time({
-res2 = eclairs( Y, lambda = .1, k=300, warmStart=res$decomp)
-})
-
-k = 100
-system.time({
-res <- irlba(Y, nu=k, nv=k)
-})
-
-system.time({
-res2 <- irlba(Y, nu=k+10, nv=k+10, v= res)
-})
-
-
-
-
-
-
+res.decorr = pca_cor2( t(gtex_log2cpm[,1:500]), 10, maxit=200)
 ```
+
+
+
 
 ```{r plot.decorr}
 
@@ -207,6 +185,66 @@ concordance = function(X, group){
 
 
 
+```{r, eval=FALSE}
+str(cor.est$decomp)
+str(res$decomp)
+
+k = 140
+res1 = irlba(resid, nu=k, nv=k)k = 140
+res1 = irlba(resid, nu=k, nv=k)
+
+
+Y = t(gtex_log2cpm)
+
+system.time({
+res = eclairs( Y, lambda = .1, k=300)
+})
+
+system.time({
+res2 = eclairs( Y, lambda = .1, k=300, warmStart=res$decomp)
+})
+
+k = 100
+system.time({
+res <- irlba(Y, nu=k, nv=k)
+})
+
+system.time({
+res2 <- irlba(Y + 10, nu=k, nv=k, v= res)
+})
+
+svd(Y+ 10)$d[1:10]
+
+
+
+
+load("save.RDS")
+library(irlba)
+library(decorrelate)
+
+dcmp = list(u = warmStart$u[,-140],
+            v = warmStart$v[,-140],
+            d = warmStart$d[-140])
+
+
+
+
+
+k = 140
+res1 = irlba(resid, nu=k, nv=k, work = 400, verbose=TRUE)
+res2 = irlba(resid, nu=k+1, nv=k+1, work = 400, v=warmStart, verbose=TRUE)
+
+str(res1$d)
+str(res2$d)
+str(warmStart$d)
+
+d = svd(resid)$d
+
+
+
+
+
+```
 
 
 
