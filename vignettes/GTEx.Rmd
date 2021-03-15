@@ -81,6 +81,7 @@ file_counts = "/sc/arion/projects/CommonMind/data/resources/GTEx/GTEx_Analysis_2
 
 gtex_sample = read.delim(file_SampleAttributesDS, header = TRUE, stringsAsFactors = FALSE)
 gtex_sample = gtex_sample[gtex_sample$SMTS == 'Brain',]
+gtex_sample = gtex_sample[-grep('Cerebell', gtex_sample$SMTSD),]
 
 rnaseq_sample_id = fread(file_counts, header = TRUE, skip = 2, nrows = 1)
 gtex_sample = gtex_sample[gtex_sample$SAMPID %in% colnames(rnaseq_sample_id),]
@@ -140,8 +141,33 @@ ggplot(df, aes(PC2, PC3, color=SMTSD)) + geom_point() + theme_classic() + theme(
 
 
 # decorrelate
-```{r}
+```{r decorrelate}
 res.decorr = pca_cor2( t(gtex_log2cpm), 10, maxit=200)
+
+
+Y = t(gtex_log2cpm)
+
+system.time({
+res = eclairs( Y, lambda = .1, k=300)
+})
+
+system.time({
+res2 = eclairs( Y, lambda = .1, k=300, warmStart=res$decomp)
+})
+
+k = 100
+system.time({
+res <- irlba(Y, nu=k, nv=k)
+})
+
+system.time({
+res2 <- irlba(Y, nu=k+10, nv=k+10, v= res)
+})
+
+
+
+
+
 
 ```
 
