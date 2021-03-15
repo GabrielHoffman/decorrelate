@@ -104,7 +104,7 @@ pca_cor2 = function(Y, k, lambda, k.features, tol=1e-5, maxit=10000){
 		d.prev = res.gpca$D
 	}
 
-	res.gpca = gpca_eclairs(Y.scale, cor.est, k)
+	res.gpca = gpca(Y.scale, cor.est, k)
 
 	res.gpca$cor.est = cor.est
 
