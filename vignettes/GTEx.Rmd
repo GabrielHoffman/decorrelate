@@ -143,7 +143,7 @@ ggplot(df, aes(PC2, PC3, color=SMTSD)) + geom_point() + theme_classic() + theme(
 # decorrelate
 ```{r decorrelate}
 
-res.decorr = pca_cor2( t(gtex_log2cpm[,1:500]), 10, maxit=200)
+res.decorr = pca_cor2( t(gtex_log2cpm), 10, maxit=200)
 ```
 
 
