@@ -4,6 +4,7 @@
 #'
 #' Generalized PCA using eclairs estimate of correlation betweeen features
 #'
+#' @importFrom irlba irlba
 #' @export
 gpca = function(Y, cor.est, k){
 
@@ -44,8 +45,9 @@ gpca = function(Y, cor.est, k){
 	}
 
 	list(U = U.star[,1:k],
-		V = V.star[,1:k],
-		D = d.star[1:k])
+	 	V = V.star[,1:k],
+		D = d.star[1:k],
+		decomp 	= dcmp.tilde)
 }
 
 
@@ -54,16 +56,18 @@ gpca = function(Y, cor.est, k){
 #'
 #' PCA learning correlation structure
 #'
+#' @importFrom Rfast standardise
 #' @export
 pca_cor2 = function(Y, k, lambda, k.features, tol=1e-5, maxit=10000){
 
-	Y.scale = scale(Y)
+	Y.scale = standardise(Y)
 	n = nrow(Y)
 	p = ncol(Y)
 
 	# initialize to identify correlation matrix
 	cor.est = NULL
 	warmStart = NULL
+	lambda = NULL
 
 	for(i in 1:maxit){
 
@@ -85,12 +89,17 @@ pca_cor2 = function(Y, k, lambda, k.features, tol=1e-5, maxit=10000){
 
 		# Estimate correlation structure based on residuals
 	 	cor.est = eclairs( resid, lambda = lambda, k=k.features, warmStart=warmStart)
+	 	lambda = cor.est$lambda
 
 	 	if(i > 2){
 			delta = mean(abs(d.prev - res.gpca$D))
 			if(i %% 1 == 0) message(i, ": ", delta)
 
-			if( delta < tol) break
+			if( delta < tol){
+				res = eclairs( resid, lambda = lambda, k=k.features)
+				browser()
+				break
+			}
 		}
 		d.prev = res.gpca$D
 	}
@@ -101,4 +110,14 @@ pca_cor2 = function(Y, k, lambda, k.features, tol=1e-5, maxit=10000){
 
 	res.gpca
 }
+
+
+
+
+
+
+
+
+
+
 

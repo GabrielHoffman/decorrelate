@@ -147,7 +147,7 @@ eclairs = function(X, k, lambda, center=TRUE, scale=TRUE, warmStart=NULL){
 
 	# SVD of X to get low rank estimate of Sigma
 	if( k < min(p, n)/2){
-		dcmp = irlba(X, nv=k, nu=k, v = warmStart)
+		dcmp = irlba(X, nv=k, nu=k, v = warmStart, warm=k+30)
 	}else{
 		dcmp = svd(X) 
 		dcmp$u = dcmp$u[,1:k]
@@ -155,7 +155,7 @@ eclairs = function(X, k, lambda, center=TRUE, scale=TRUE, warmStart=NULL){
 		dcmp$d = dcmp$d[1:k]
 	}
 
-	if( missing(lambda) ){
+	if( missing(lambda) | is.null(lambda) ){
 		# estimate lambda for shrinkage
 		# but use lambda reconstructed from low rank decomp
 		# lambda = mvIC:::shrinkcovmat.equal_lambda( t(X) )$lambda
