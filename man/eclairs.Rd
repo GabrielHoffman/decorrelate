@@ -16,6 +16,8 @@ eclairs(X, k, lambda, center = TRUE, scale = TRUE, warmStart = NULL)
 \item{center}{center columns of X (default: TRUE)}
 
 \item{scale}{scale columns of X (default: TRUE)}
+
+\item{warmStart}{result of previous SVD to initialize values}
 }
 \value{
 \itemize{

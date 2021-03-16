@@ -2,11 +2,11 @@
 
 export(decorrelate)
 export(eclairs)
+export(ergpca)
 export(getCor)
 export(getCov)
 export(gpca)
 export(mult_eclairs)
-export(pca_cor2)
 export(sv_threshold)
 exportClasses(eclairs)
 exportMethods(getCor)
