@@ -142,43 +142,8 @@ ggplot(df, aes(PC2, PC3, color=SMTSD)) + geom_point() + theme_classic() + theme(
 
 # decorrelate
 ```{r decorrelate}
-asdfasdfsadf
 res.decorr = pca_cor2( t(gtex_log2cpm), 10, maxit=200)
 ```
-
-
-
-
-```{r plot.decorr}
-
-df = data.frame(res.decorr$U)
-rownames(df) = colnames(gtex_log2cpm)
-colnames(df) = paste0('PC', 1:10)
-df = merge(df, gtex_sample, by.x="row.names", by.y="SAMPID")
-
-ggplot(df, aes(PC1, PC2, color=SMTSD)) + geom_point() + theme_classic() + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5))
-
-```
-
-
-
-```{r test}
-library(nnet)
-
-concordance = function(X, group){
-
-  if( length(unique(group)) == 2 ){
-    stop("Doesn't work with just 2 groups")
-  }
-
-  fit = multinom( group ~ X, trace=FALSE)
-  y.pred = predict(fit, type='probs')
-  y.true = model.matrix(~0+group)
-
-  sqrt(mean((y.pred - y.true)^2))
-}
-```
-
 
 
 
@@ -245,6 +210,43 @@ d = svd(resid)$d
 
 
 ```
+
+```{r plot.decorr}
+
+df = data.frame(res.decorr$U)
+rownames(df) = colnames(gtex_log2cpm)
+colnames(df) = paste0('PC', 1:10)
+df = merge(df, gtex_sample, by.x="row.names", by.y="SAMPID")
+
+ggplot(df, aes(PC1, PC2, color=SMTSD)) + geom_point() + theme_classic() + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5))
+
+```
+
+
+
+```{r test}
+library(nnet)
+
+concordance = function(X, group){
+
+  if( length(unique(group)) == 2 ){
+    stop("Doesn't work with just 2 groups")
+  }
+
+  fit = multinom( group ~ X, trace=FALSE)
+  y.pred = predict(fit, type='probs')
+  y.true = model.matrix(~0+group)
+
+  sqrt(mean((y.pred - y.true)^2))
+}
+```
+
+
+
+
+
+
+
 
 
 
