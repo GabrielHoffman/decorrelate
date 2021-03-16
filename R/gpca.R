@@ -70,7 +70,6 @@ ergpca = function(Y, k, lambda, k.features, cor.est = NULL, tol=1e-5, maxit=1000
 	n = nrow(Y)
 	p = ncol(Y)
 
-	
 	# warmStart = NULL
 	lambda = NULL
 
@@ -110,6 +109,7 @@ ergpca = function(Y, k, lambda, k.features, cor.est = NULL, tol=1e-5, maxit=1000
 	res.gpca = gpca(Y.scale, cor.est, k)
 
 	res.gpca$cor.est = cor.est
+	res.gpca$lambda = lambda
 
 	res.gpca
 }
