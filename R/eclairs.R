@@ -149,10 +149,11 @@ eclairs = function(X, k, lambda, center=TRUE, scale=TRUE, warmStart=NULL){
 	if( k < min(p, n)/2){
 		# Setting nv = nu = k doesnot work with warm start
 		# see https://github.com/bwlewis/irlba/issues/58
-		# but setting nu=k+1 works
-		dcmp = irlba(X, nv=k, nu=k+1, v = warmStart)
-		dcmp$u = dcmp$u[,1:k]
-		dcmp$d = dcmp$d[1:k]
+		# # but setting nu=k+1 works
+		# dcmp = irlba(X, nv=k, nu=k+1, v = warmStart)
+		# dcmp$u = dcmp$u[,1:k]
+		# dcmp$d = dcmp$d[1:k]
+		dcmp = irlba(X, nv=k, nu=k)
 	}else{
 		dcmp = svd(X) 
 		dcmp$u = dcmp$u[,1:k]
