@@ -92,7 +92,7 @@ setMethod('getCor', c(cor.est = "eclairs"),
 #' @param lambda shrinkage parameter
 #' @param center center columns of X (default: TRUE) 
 #' @param scale scale columns of X (default: TRUE) 
-#' @param k the rank of the low rank component  
+#' @param warmStart result of previous SVD to initialize values
 #'
 #' @return
 #' \itemize{
@@ -147,7 +147,12 @@ eclairs = function(X, k, lambda, center=TRUE, scale=TRUE, warmStart=NULL){
 
 	# SVD of X to get low rank estimate of Sigma
 	if( k < min(p, n)/2){
-		dcmp = irlba(X, nv=k, nu=k, v = warmStart, warm=k+30)
+		# Setting nv = nu = k doesnot work with warm start
+		# see https://github.com/bwlewis/irlba/issues/58
+		# but setting nu=k+1 works
+		dcmp = irlba(X, nv=k, nu=k+1, v = warmStart)
+		dcmp$u = dcmp$u[,1:k]
+		dcmp$d = dcmp$d[1:k]
 	}else{
 		dcmp = svd(X) 
 		dcmp$u = dcmp$u[,1:k]
