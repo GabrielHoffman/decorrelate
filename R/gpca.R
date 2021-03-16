@@ -44,6 +44,7 @@ gpca = function(Y, cor.est, k){
 		d.star = dcmp.tilde$d
 	}
 
+	# name dimensions
 	colnames(U.star) = paste0("PC", 1:k)
 	rownames(U.star) = rownames(Y)
 	colnames(V.star) = paste0("PC", 1:k)
@@ -57,31 +58,31 @@ gpca = function(Y, cor.est, k){
 
 
 
-#' PCA learning correlation structure
+#' Empirically Reweighted Generalized PCA
 #'
-#' PCA learning correlation structure
+#' Empirically Reweighted Generalized PCA learns correlation structure between features in order to improve PCA projection
 #'
 #' @importFrom Rfast standardise
 #' @export
-pca_cor2 = function(Y, k, lambda, k.features, tol=1e-5, maxit=10000){
+ergpca = function(Y, k, lambda, k.features, cor.est = NULL, tol=1e-5, maxit=10000){
 
 	Y.scale = standardise(Y)
 	n = nrow(Y)
 	p = ncol(Y)
 
-	# initialize to identify correlation matrix
-	cor.est = NULL
+	
 	# warmStart = NULL
 	lambda = NULL
 
 	for(i in 1:maxit){
 
 	 	# Perform Generalized PCA based on ecliars covariance structure
+	 	# if cor.est == NULL, it is equivalent to identity correlation matrix
 		res.gpca = gpca(Y.scale, cor.est, ifelse(i>1, k, min(dim(Y.scale))) )
 
 		res.gpca$iter = i
 
-		if( i == 1){
+		if( (i == 1) & missing(k.features) ){
 			k.features = sv_threshold( n, p, res.gpca$D)
 			message("k.features: ", k.features)
 		}

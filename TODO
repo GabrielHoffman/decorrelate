@@ -2,3 +2,7 @@
 1) Estimate lambda faster using only dSq, n, p?
 2) Better description of decorralate
 	#'' FIX NOTATION HERE:
+3)	
+better warmStart with ilrba
+https://github.com/bwlewis/irlba/issues/58
+
