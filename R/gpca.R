@@ -11,7 +11,7 @@ gpca = function(Y, cor.est, k){
 	n = nrow(Y)
 	p = ncol(Y)
 
-	if( ! is.null(cor.est) ){
+	if( ! is.null(cor.est) & ! missing(cor.est)){
 		# whiten
 		# Y_tilde = t(lrmult_right(t(Y), cor.est$U, cor.est$dSq *(1-cor.est$lambda), cor.est$lambda, -.5))
 
@@ -44,10 +44,15 @@ gpca = function(Y, cor.est, k){
 		d.star = dcmp.tilde$d
 	}
 
-	list(U = U.star[,1:k],
-	 	V = V.star[,1:k],
-		D = d.star[1:k],
-		decomp 	= dcmp.tilde)
+	colnames(U.star) = paste0("PC", 1:k)
+	rownames(U.star) = rownames(Y)
+	colnames(V.star) = paste0("PC", 1:k)
+	rownames(V.star) = colnames(Y)
+
+	list(	U 		= U.star[,1:k],
+	 		V 		= V.star[,1:k],
+			D 		= d.star[1:k],
+			decomp 	= dcmp.tilde)
 }
 
 
