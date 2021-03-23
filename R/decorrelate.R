@@ -27,6 +27,11 @@ mult_eclairs = function(X, U1, dSq1, lambda, alpha){
 	v = dSq1*(1-lambda) + lambda
 	X_U1 = X %*% U1
  	X_U1 %*% ((v^alpha) * t(U1)) + (X - tcrossprod(X_U1,U1) ) *(lambda^alpha)
+
+ 	# I trued to make the last lime faster by avoiding transpose  
+ 	#  by using eachrow() to scale each column.
+ 	#  This is faster then sweep(), but the original code is faster
+ 	# tcrossprod(X_U1, eachrow(U1, v^alpha, oper = "*")) + (X - tcrossprod(X_U1,U1) ) *(lambda^alpha)
 }
 
 
