@@ -119,8 +119,10 @@ eclairs = function(X, k, lambda, center=TRUE, scale=TRUE, warmStart=NULL){
 	}
 
 	# check value of lambda
-	if( lambda < 0 || lambda > 1){
-		stop("lambda must be in (0,1)")
+	if( ! missing(lambda) & !is.null(lambda) ){
+		if( lambda < 0 || lambda > 1){
+			stop("lambda must be in (0,1)")
+		}
 	}
 
 	n = nrow(X)
@@ -170,7 +172,7 @@ eclairs = function(X, k, lambda, center=TRUE, scale=TRUE, warmStart=NULL){
 		# estimate lambda for shrinkage
 		# but use lambda reconstructed from low rank decomp
 		# lambda = mvIC:::shrinkcovmat.equal_lambda( t(X) )$lambda
-		X_reconstruct = with(dcmp, u %*% diag(d) %*% t(v))
+		X_reconstruct = with(dcmp, u %*% (d * t(v)))
 		lambda = shrinkcovmat.equal_lambda( t(X_reconstruct) )$lambda
 		lambda = min(1, max(1e-4, lambda))
 	}
