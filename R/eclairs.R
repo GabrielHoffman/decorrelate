@@ -112,7 +112,7 @@ setMethod('getCor', c(cor.est = "eclairs"),
 #' @importFrom methods new
 #'
 #' @export
-eclairs = function(X, k, lambda, center=TRUE, scale=TRUE, warmStart=NULL){
+eclairs = function(X, k, lambda=NULL, center=TRUE, scale=TRUE, warmStart=NULL){
 
 	if( ! is.matrix(X) ){
 		stop("X must be a matrix")
