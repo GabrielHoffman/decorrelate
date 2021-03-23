@@ -118,6 +118,11 @@ eclairs = function(X, k, lambda, center=TRUE, scale=TRUE, warmStart=NULL){
 		stop("X must be a matrix")
 	}
 
+	# check value of lambda
+	if( lambda < 0 || lambda > 1){
+		stop("lambda must be in (0,1)")
+	}
+
 	n = nrow(X)
 	p = ncol(X)
 
@@ -177,8 +182,7 @@ eclairs = function(X, k, lambda, center=TRUE, scale=TRUE, warmStart=NULL){
 					lambda 	= lambda,
 					n 		= n,
 					p 		= p,
-					k 		= k,
-					decomp	= dcmp)
+					k 		= k)
 
 	new("eclairs",	result)
 }
