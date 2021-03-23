@@ -19,13 +19,16 @@
 #'
 #' Evaluate \eqn{X \Sigma^\alpha} in linear time using the special structure of the matrix
 #'
+#' @importFrom Matrix tcrossprod
+#'
 #' @export
 mult_eclairs = function(X, U1, dSq1, lambda, alpha){
 
 	v = dSq1*(1-lambda) + lambda
 	X_U1 = X %*% U1
- 	X_U1 %*% ((v^alpha) * t(U1))  + (X - tcrossprod(X_U1,U1) ) *(lambda^alpha)
+ 	X_U1 %*% ((v^alpha) * t(U1)) + (X - tcrossprod(X_U1,U1) ) *(lambda^alpha)
 }
+
 
 
 

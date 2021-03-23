@@ -4,12 +4,14 @@
 \alias{decorrelate}
 \title{Decorrelation projection}
 \usage{
-decorrelate(X, cor.est)
+decorrelate(X, cor.est, lambda)
 }
 \arguments{
 \item{X}{matrix to be transformed so *columns* are independent}
 
 \item{cor.est}{estimate of correlation matrix from \link{eclairs} storing \code{U}, \code{dSq}, and \code{lambda}}
+
+\item{lambda}{specify lambda and override value from cor.est}
 }
 \description{
 Efficient decorrelation projection using eclairs decomposition

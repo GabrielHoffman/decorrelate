@@ -4,7 +4,7 @@
 \alias{eclairs}
 \title{Estimate correlation with low rank and shrinkage}
 \usage{
-eclairs(X, k, lambda, center = TRUE, scale = TRUE, warmStart = NULL)
+eclairs(X, k, lambda = NULL, center = TRUE, scale = TRUE, warmStart = NULL)
 }
 \arguments{
 \item{X}{data matrix with n samples as rows and p features as columns}
