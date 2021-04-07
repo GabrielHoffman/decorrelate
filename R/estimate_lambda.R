@@ -1,5 +1,6 @@
 
 #' @importFrom stats var cov
+#' @import ShrinkCovMat
 shrinkcovmat.equal_lambda = function (data, centered = FALSE){
     if (!is.matrix(data))
         data <- as.matrix(data)

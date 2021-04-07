@@ -60,11 +60,26 @@ plot(ecl$dSq, main = "Eigen values of Y")
 C = getCor(ecl)
 image(C, main="Sample correlation matrix")
 
-Y.decorr = decorrelate(Y, ecl)
+Y.decorr2 = decorrelate(Y, ecl)
 image(cor(Y.decorr2), main="Correlation after decorrelating")
 ```  
 
 When p >> n, the estimate of $\hat\Sigma$ is poor, even with shrinkage.  In this case `eclairs + decorrelate` does reduce the correlation, but the amount varies.  However, this is not an issue because in regression, the covariance matrix is actually known.  Can I prove this?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -10,14 +10,14 @@
 #'
 #' @param X matrix to be transformed so *columns* are independent
 #' @param U1 orthonormal matrix with k columns representing the low rank component
-#' @param dSq1 eigen values so that U1 diag(dSq1) U1^T is the low rank component
+#' @param dSq1 eigen values so that \eqn{U_1 diag(d_1^2) U_1^T} is the low rank component
 #' @param lambda shrinkage parameter for the convex combination.
 #' @param alpha exponent to be evaluated
 
 #' @details
-#' Let \eqn{\Sigma = U1 diag(dSq1) U1^T * (1-\lambda) + diag(\lambda, p)}, where \eqn{\lambda} shrinkage parameter for the convex combination between a low rank matrix and the identity matrix.
+#' Let \eqn{\Sigma = U_1 diag(d_1^2) U_1^T * (1-\lambda) + diag(\lambda, p)}, where \eqn{\lambda} shrinkage parameter for the convex combination between a low rank matrix and the identity matrix.
 #'
-#' Evaluate \eqn{X \Sigma^\alpha} in linear time using the special structure of the matrix
+#' Evaluate \eqn{X \Sigma^\alpha} using special structure of the \link{eclairs} decomposition in \eqn{O(k^2p)} when there are $k$ components in the decomposition.
 #'
 #' @importFrom Matrix tcrossprod
 #'
@@ -39,14 +39,14 @@ mult_eclairs = function(X, U1, dSq1, lambda, alpha){
 
 #' Decorrelation projection
 #' 
-#' Efficient decorrelation projection using eclairs decomposition
+#' Efficient decorrelation projection using \link{eclairs} decomposition
 #'
 #' @param X matrix to be transformed so *columns* are independent
 #' @param cor.est estimate of correlation matrix from \link{eclairs} storing \code{U}, \code{dSq}, and \code{lambda}
 #' @param lambda specify lambda and override value from cor.est
 #'
 #' @details
-#'' FIX NOTATION HERE: Given a vector \eqn{x ~ N(0, \Sigma)} where \eqn{\Sigma = U diag(dSq1) U^T + diag(\sigma^2)}, transform x so that it has an identity covariance matrix.  \eqn{\Sigma^{-0.5}x} is such a projection (see Strimmer whitening).  When \eqn{\Sigma} is \eqn{p \times p}, computing this project naively is \eqn{O(p^3)}.  Here we take advantage of the fact that \eqn{\Sigma} is the sum of a low rank decomposition, plus a scaled identity matrix
+#'' FIX NOTATION HERE: Given a vector \eqn{x ~ N(0, \Sigma)} where \eqn{\Sigma = U diag(d_1^2) U^T + diag(\sigma^2)}, transform x so that it has an identity covariance matrix.  \eqn{\Sigma^{-0.5}x} is such a projection (see Strimmer whitening).  When \eqn{\Sigma} is \eqn{p \times p}, computing this projection naively is \eqn{O(p^3)}.  Here we take advantage of the fact that \eqn{\Sigma} is the sum of a low rank decomposition, plus a scaled identity matrix
 #'
 #' @export
 decorrelate = function(X, cor.est, lambda){

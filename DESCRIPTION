@@ -7,11 +7,13 @@ Author: Gabriel E. Hoffman
 Maintainer: Gabriel E. Hoffman <gabriel.hoffman@mssm.edu>
 Description: Coming soon...
 License: GPL (>= 2)
+URL: gabrielhoffman.github.oi/decorrelate, https://github.com/GabrielHoffman/decorrelate
 BugReports: https://github.com/GabrielHoffman/decorrelate/issues
 Suggests:
     BiocStyle,
     knitr,
     pander,
+    BiocGenerics,
     rmarkdown,
 biocViews: RNASeq,
     GeneExpression,
@@ -33,7 +35,8 @@ Depends:
     methods
 Imports:
     Rfast,
+    ShrinkCovMat,
     irlba,
-    mvIC,
+    Matrix,
     stats
 RoxygenNote: 7.1.1

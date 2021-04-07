@@ -20,17 +20,18 @@ eclairs(X, k, lambda = NULL, center = TRUE, scale = TRUE, warmStart = NULL)
 \item{warmStart}{result of previous SVD to initialize values}
 }
 \value{
+\link{eclairs} object storing:
 \itemize{
- \item{"U"}{orthonormal matrix with k columns representing the low rank component}
- \item{"dSq"}{eigen values so that \eqn{U diag(dSq) U^T} is the low rank component}
- \item{"lambda"}{shrinkage parameter for the scaled diagonal component: \eqn{diag(sigSq, p)}}
- \item{"n"}{number of samples (i.e. rows) in the original data}
- \item{"p"}{number of features (i.e. columns) in the original data}
- \item{"k"}{rank of low rank component}
+ \item{U: }{orthonormal matrix with k columns representing the low rank component}
+ \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
+ \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}
+ \item{n: }{number of samples (i.e. rows) in the original data}
+ \item{p: }{number of features (i.e. columns) in the original data}
+ \item{k: }{rank of low rank component}
 }
 }
 \description{
-Compute U, dSq to approximate the correlation matrix between columns of data matrix X by \eqn{U diag(dSq * (1-\lambda)) + diag(\lambda) }.
+Compute \eqn{U}, \eqn{d^2} to approximate the correlation matrix between columns of data matrix X by \eqn{U diag(d^2 (1-\lambda)) + diag(\lambda) }.
 }
 \details{
 Estimate the correlation between columns as the weighted sum of a low rank matrix and a scaled identity matrix.  The weight acts to shrink the sample correlation matrix towards the identity matrix. An estimate of this form is useful because it is fast, and enables fast operations downstream.

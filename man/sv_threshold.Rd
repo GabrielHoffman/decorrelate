@@ -14,8 +14,11 @@ sv_threshold(n, p, d)
 \item{d}{singular values}
 }
 \value{
-Number of singular values to retian
+Number of singular values to retain
 }
 \description{
-Singular value thresholding evalues the number of singular values to retain
+Singular value thresholding evaluates the optimal number of singular values to retain
+}
+\references{
+Gavish, M., & Donoho, D. L. (2014). The optimal hard threshold for singular values is 4/sqrt(3). IEEE Transactions on Information Theory, 60(8), 5040-5053.
 }

@@ -23,25 +23,6 @@ location of hard threshold for matrix denoising by singular values hard threshol
 when noise level is known or unknown. Recreation of MATLAB code by Matan Gavish and
 David Donoho.
 }
-\examples{
-\donttest{
-# Usage in known noise level:
-# Given an m-by-n matrix \code{Y} known to be low rank and observed in white noise
-# with mean zero and known variance \code{sigma^2}, form a denoised matrix \code{Xhat} by:
- sigma <- .2
- USV <- svd(Y)
- y <- USV$d
- y[y < (optimal_SVHT_coef(m/n,1) * sqrt(n) * sigma) ] <- 0
- Xhat <- USV$u * diag(y) * t(USV$v)
-
- # Given an m-by-n matrix \code{Y} known to be low rank and observed in white
- # noise with mean zero and unknown variance, form a denoised matrix \code{Xhat} by:
- USV <- svd(Y)
- y <- USV$d
- y[y < (optimal_SVHT_coef(m/n,0) * median(y)) ] <- 0
- Xhat <- USV$u * diag(y) * t(USV$v)
- }
-}
 \references{
 Gavish, M., & Donoho, D. L. (2014). The optimal hard threshold for singular
 values is 4/sqrt(3). IEEE Transactions on Information Theory, 60(8), 5040-5053.

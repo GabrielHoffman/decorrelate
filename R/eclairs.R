@@ -9,6 +9,15 @@
 #'
 #' Class \code{eclairs} 
 #'
+#' @details Object storing:
+#' \itemize{
+#'  \item{U: }{orthonormal matrix with k columns representing the low rank component}
+#'  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
+#'  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}
+#'  \item{n: }{number of samples (i.e. rows) in the original data}
+#'  \item{p: }{number of features (i.e. columns) in the original data}
+#'  \item{k: }{rank of low rank component}
+#' }
 #' @name eclairs-class
 #' @rdname eclairs-class
 #' @exportClass eclairs
@@ -41,15 +50,15 @@ setMethod("print", 'eclairs',
 
 
 
-#' Get full covariance/correlation matrix from eclairs
+#' Get full covariance/correlation matrix from \link{eclairs}
 #'
-#' Get full covariance/correlation matrix from eclairs decomposition
+#' Get full covariance/correlation matrix from \link{eclairs} decomposition
 #'
 #' @param cor.est eclairs decomposition
 #'
 #' @return p x p covariance/correlation matrix
 #'
-#' @details The full matrix is computationally expensive to compute and uses a lot of memory for large p.  So it is better to use \link{decorrelate} or \link{mult_eclairs} to perform operations in \eqn{O(np)} time.
+#' @details The full matrix is computationally expensive to compute and uses a lot of memory for large p.  So it is better to use \link{decorrelate} or \link{mult_eclairs} to perform projections in \eqn{O(np)} time.
 #'
 #' @rdname getCov
 #' @export
@@ -61,6 +70,7 @@ setGeneric("getCor", function(cor.est) standardGeneric("getCor"))
 
 
 
+#' @rdname getCov
 #' @export
 setMethod('getCov', c(cor.est = "eclairs"),
 	function(cor.est){
@@ -71,6 +81,7 @@ setMethod('getCov', c(cor.est = "eclairs"),
 
 
 #' @importFrom stats cov2cor
+#' @rdname getCov
 #' @export
 setMethod('getCor', c(cor.est = "eclairs"), 
 	function(cor.est){
@@ -94,18 +105,18 @@ setMethod('getCor', c(cor.est = "eclairs"),
 #' @param scale scale columns of X (default: TRUE) 
 #' @param warmStart result of previous SVD to initialize values
 #'
-#' @return
+#' @return \link{eclairs} object storing:
 #' \itemize{
-#'  \item{"U"}{orthonormal matrix with k columns representing the low rank component}
-#'  \item{"dSq"}{eigen values so that \eqn{U diag(dSq) U^T} is the low rank component}
-#'  \item{"lambda"}{shrinkage parameter for the scaled diagonal component: \eqn{diag(sigSq, p)}}
-#'  \item{"n"}{number of samples (i.e. rows) in the original data}
-#'  \item{"p"}{number of features (i.e. columns) in the original data}
-#'  \item{"k"}{rank of low rank component}
+#'  \item{U: }{orthonormal matrix with k columns representing the low rank component}
+#'  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
+#'  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}
+#'  \item{n: }{number of samples (i.e. rows) in the original data}
+#'  \item{p: }{number of features (i.e. columns) in the original data}
+#'  \item{k: }{rank of low rank component}
 #' }
 #'
 #' @description
-#' Compute U, dSq to approximate the correlation matrix between columns of data matrix X by \eqn{U diag(dSq * (1-\lambda)) + diag(\lambda) }.   
+#' Compute \eqn{U}, \eqn{d^2} to approximate the correlation matrix between columns of data matrix X by \eqn{U diag(d^2 (1-\lambda)) + diag(\lambda) }.   
 #'
 #' @importFrom Rfast standardise colVars
 #' @importFrom irlba irlba

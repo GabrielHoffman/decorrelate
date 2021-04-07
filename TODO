@@ -1,8 +1,16 @@
 
 1) Estimate lambda faster using only dSq, n, p?
+	No, estimation of lambda uses *unbiased* method
+
 2) Better description of decorralate
 	#'' FIX NOTATION HERE:
-3)	
-better warmStart with ilrba
-https://github.com/bwlewis/irlba/issues/58
 
+3)	SVD recycle
+	better warmStart with ilrba
+	https://github.com/bwlewis/irlba/issues/58
+
+	Use PRIMME::svds to do iterative SVD with warm start
+
+4) simulate multivariate normal using eclairs
+
+5) Parametric boostrap to get SVD of log(t^2)

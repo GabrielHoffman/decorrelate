@@ -3,11 +3,17 @@
 \name{getCov}
 \alias{getCov}
 \alias{getCor}
-\title{Get full covariance/correlation matrix from eclairs}
+\alias{getCov,eclairs-method}
+\alias{getCor,eclairs-method}
+\title{Get full covariance/correlation matrix from \link{eclairs}}
 \usage{
 getCov(cor.est)
 
 getCor(cor.est)
+
+\S4method{getCov}{eclairs}(cor.est)
+
+\S4method{getCor}{eclairs}(cor.est)
 }
 \arguments{
 \item{cor.est}{eclairs decomposition}
@@ -16,8 +22,8 @@ getCor(cor.est)
 p x p covariance/correlation matrix
 }
 \description{
-Get full covariance/correlation matrix from eclairs decomposition
+Get full covariance/correlation matrix from \link{eclairs} decomposition
 }
 \details{
-The full matrix is computationally expensive to compute and uses a lot of memory for large p.  So it is better to use \link{decorrelate} or \link{mult_eclairs} to perform operations in \eqn{O(np)} time.
+The full matrix is computationally expensive to compute and uses a lot of memory for large p.  So it is better to use \link{decorrelate} or \link{mult_eclairs} to perform projections in \eqn{O(np)} time.
 }

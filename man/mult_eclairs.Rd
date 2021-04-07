@@ -11,7 +11,7 @@ mult_eclairs(X, U1, dSq1, lambda, alpha)
 
 \item{U1}{orthonormal matrix with k columns representing the low rank component}
 
-\item{dSq1}{eigen values so that U1 diag(dSq1) U1^T is the low rank component}
+\item{dSq1}{eigen values so that \eqn{U_1 diag(d_1^2) U_1^T} is the low rank component}
 
 \item{lambda}{shrinkage parameter for the convex combination.}
 
@@ -21,7 +21,7 @@ mult_eclairs(X, U1, dSq1, lambda, alpha)
 Multiply by eclairs matrix using special structure to achieve linear instead of cubic time complexity.
 }
 \details{
-Let \eqn{\Sigma = U1 diag(dSq1) U1^T * (1-\lambda) + diag(\lambda, p)}, where \eqn{\lambda} shrinkage parameter for the convex combination between a low rank matrix and the identity matrix.
+Let \eqn{\Sigma = U_1 diag(d_1^2) U_1^T * (1-\lambda) + diag(\lambda, p)}, where \eqn{\lambda} shrinkage parameter for the convex combination between a low rank matrix and the identity matrix.
 
-Evaluate \eqn{X \Sigma^\alpha} in linear time using the special structure of the matrix
+Evaluate \eqn{X \Sigma^\alpha} using special structure of the \link{eclairs} decomposition in \eqn{O(k^2p)} when there are $k$ components in the decomposition.
 }

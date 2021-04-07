@@ -4,14 +4,17 @@
 
 #' Singular value thresholding
 #'
-#' Singular value thresholding evalues the number of singular values to retain
+#' Singular value thresholding evaluates the optimal number of singular values to retain
 #' 
 #' @param n number of samples
 #' @param p number of features
 #' @param d singular values
 #'
-#' @return Number of singular values to retian
+#' @return Number of singular values to retain
 #' 
+#' @references Gavish, M., & Donoho, D. L. (2014). The optimal hard threshold for singular values is 4/sqrt(3). IEEE Transactions on Information Theory, 60(8), 5040-5053.
+#'
+#' @importFrom stats median
 #' @export
 sv_threshold = function(n, p, d){
 
@@ -23,38 +26,39 @@ sv_threshold = function(n, p, d){
 }
 
 
-##' Optimal Hard Threshold for Singular Values
-##'
-##' @description A function for the calculation of the coefficient determining optimal
-##' location of hard threshold for matrix denoising by singular values hard thresholding
-##' when noise level is known or unknown. Recreation of MATLAB code by Matan Gavish and
-##' David Donoho.
-##' @param beta A single value or a vector that represents aspect ratio m/n of the matrix to
-##' be denoised. 0<\code{beta}<=1.
-##' @param sigma_known A logical value. TRUE if noise level known, FALSE if unknown.
-##' @return  Optimal location of hard threshold, up the median data singular value (sigma
-##' unknown) or up to \code{sigma*sqrt(n)} (sigma known); a vector of the same dimension
-##' as \code{beta}, where \code{coef[i]} is the coefficient corresponding to \code{beta[i]}.
-##' @references Gavish, M., & Donoho, D. L. (2014). The optimal hard threshold for singular
-##' values is 4/sqrt(3). IEEE Transactions on Information Theory, 60(8), 5040-5053.
-##' @examples
-##' \donttest{
-##' # Usage in known noise level:
-##' # Given an m-by-n matrix \code{Y} known to be low rank and observed in white noise
-##' # with mean zero and known variance \code{sigma^2}, form a denoised matrix \code{Xhat} by:
-##'  sigma <- .2
-##'  USV <- svd(Y)
-##'  y <- USV$d
-##'  y[y < (optimal_SVHT_coef(m/n,1) * sqrt(n) * sigma) ] <- 0
-##'  Xhat <- USV$u * diag(y) * t(USV$v)
-##'
-##'  # Given an m-by-n matrix \code{Y} known to be low rank and observed in white
-##'  # noise with mean zero and unknown variance, form a denoised matrix \code{Xhat} by:
-##'  USV <- svd(Y)
-##'  y <- USV$d
-##'  y[y < (optimal_SVHT_coef(m/n,0) * median(y)) ] <- 0
-##'  Xhat <- USV$u * diag(y) * t(USV$v)
-##'  }
+#' Optimal Hard Threshold for Singular Values
+#'
+#' @description A function for the calculation of the coefficient determining optimal
+#' location of hard threshold for matrix denoising by singular values hard thresholding
+#' when noise level is known or unknown. Recreation of MATLAB code by Matan Gavish and
+#' David Donoho.
+#' @param beta A single value or a vector that represents aspect ratio m/n of the matrix to
+#' be denoised. 0<\code{beta}<=1.
+#' @param sigma_known A logical value. TRUE if noise level known, FALSE if unknown.
+#' @return  Optimal location of hard threshold, up the median data singular value (sigma
+#' unknown) or up to \code{sigma*sqrt(n)} (sigma known); a vector of the same dimension
+#' as \code{beta}, where \code{coef[i]} is the coefficient corresponding to \code{beta[i]}.
+#' @references Gavish, M., & Donoho, D. L. (2014). The optimal hard threshold for singular
+#' values is 4/sqrt(3). IEEE Transactions on Information Theory, 60(8), 5040-5053.
+#' @examples
+#
+# # Usage in known noise level:
+# # Given an m-by-n matrix \code{Y} known to be low rank and observed in white noise
+# # with mean zero and known variance \code{sigma^2}, form a denoised matrix \code{Xhat} by:
+#  Y <- Rfast::matrnorm(1000, 100)
+#  sigma <- .2
+#  USV <- svd(Y)
+#  y <- USV$d
+#  y[y < (optimal_SVHT_coef(m/n,1) * sqrt(n) * sigma) ] <- 0
+#  Xhat <- USV$u * diag(y) * t(USV$v)
+#
+#  # Given an m-by-n matrix \code{Y} known to be low rank and observed in white
+#  # noise with mean zero and unknown variance, form a denoised matrix \code{Xhat} by:
+#  USV <- svd(Y)
+#  y <- USV$d
+#  y[y < (optimal_SVHT_coef(m/n,0) * median(y)) ] <- 0
+#  Xhat <- USV$u * diag(y) * t(USV$v)
+#  
 optimal_SVHT_coef <- function(beta, sigma_known = FALSE) {
   if (sigma_known == TRUE) {
     coef = optimal_SVHT_coef_sigma_known(beta)
