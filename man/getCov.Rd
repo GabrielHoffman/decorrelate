@@ -7,16 +7,18 @@
 \alias{getCor,eclairs-method}
 \title{Get full covariance/correlation matrix from \link{eclairs}}
 \usage{
-getCov(cor.est)
+getCov(Sigma.eclairs, ...)
 
-getCor(cor.est)
+getCor(Sigma.eclairs, ...)
 
-\S4method{getCov}{eclairs}(cor.est)
+\S4method{getCov}{eclairs}(Sigma.eclairs, ...)
 
-\S4method{getCor}{eclairs}(cor.est)
+\S4method{getCor}{eclairs}(Sigma.eclairs, ...)
 }
 \arguments{
-\item{cor.est}{eclairs decomposition}
+\item{Sigma.eclairs}{eclairs decomposition}
+
+\item{...}{other arguments}
 }
 \value{
 p x p covariance/correlation matrix

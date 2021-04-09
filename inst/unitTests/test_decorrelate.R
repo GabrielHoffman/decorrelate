@@ -25,7 +25,7 @@ test_decorrelate = function(){
 	# Estimate covariance from Y
 	cor.est = eclairs( Y, k=3, lambda=lambda)
 
-	z.decorr = t(mult_eclairs(t(zstat), cor.est$U, cor.est$dSq, cor.est$lambda, alpha = -1/2))
+	z.decorr = t(mult_eclairs(t(zstat), cor.est$U, cor.est$dSq, cor.est$lambda, cor.est$nu, alpha = -1/2))
 
 	z.decorr2 = decorrelate(zstat, cor.est )
 
@@ -94,7 +94,7 @@ test_lrmult = function(){
 	b = checkEquals(Y.decorr1, Y.decorr2)
 
 
-	Y.decorr2 = mult_eclairs(Y, U1, dSq1, lambda, alpha)
+	Y.decorr2 = mult_eclairs(Y, U1, dSq1, lambda, 1, alpha)
 
 	c = checkEquals(Y.decorr1, Y.decorr2)
 
@@ -132,7 +132,8 @@ test_decorrelate_full_rank = function(){
 	dcmp = eigen(Sigma)
 	cor.est = list(U = dcmp$vectors,
 				dSq = dcmp$values,
-				lambda =1e-10)
+				lambda =1e-10,
+				nu=1)
 
 	Y.decorr2 = decorrelate(Y, cor.est)
 

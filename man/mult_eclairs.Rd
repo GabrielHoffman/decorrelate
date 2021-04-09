@@ -4,7 +4,7 @@
 \alias{mult_eclairs}
 \title{Multiply by eclairs matrix}
 \usage{
-mult_eclairs(X, U1, dSq1, lambda, alpha)
+mult_eclairs(X, U1, dSq1, lambda, nu, alpha)
 }
 \arguments{
 \item{X}{matrix to be transformed so *columns* are independent}
@@ -15,13 +15,15 @@ mult_eclairs(X, U1, dSq1, lambda, alpha)
 
 \item{lambda}{shrinkage parameter for the convex combination.}
 
+\item{nu}{diagonal value of target matrix in shrinkage}
+
 \item{alpha}{exponent to be evaluated}
 }
 \description{
 Multiply by eclairs matrix using special structure to achieve linear instead of cubic time complexity.
 }
 \details{
-Let \eqn{\Sigma = U_1 diag(d_1^2) U_1^T * (1-\lambda) + diag(\lambda, p)}, where \eqn{\lambda} shrinkage parameter for the convex combination between a low rank matrix and the identity matrix.
+Let \eqn{\Sigma = U_1 diag(d_1^2) U_1^T * (1-\lambda) + diag(\nu\lambda, p)}, where \eqn{\lambda} shrinkage parameter for the convex combination between a low rank matrix and the diagonal matrix with values \eqn{\nu}.
 
-Evaluate \eqn{X \Sigma^\alpha} using special structure of the \link{eclairs} decomposition in \eqn{O(k^2p)} when there are $k$ components in the decomposition.
+Evaluate \eqn{X \Sigma^\alpha} using special structure of the \link{eclairs} decomposition in \eqn{O(k^2p)} when there are \eqn{k} components in the decomposition.
 }

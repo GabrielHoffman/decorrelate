@@ -15,7 +15,9 @@
 #'
 #' @details 
 #' Draw from multivariate normal and t distributions using eclairs decomposition.  If the (implied) covariance matrix is \eqn{p \times p}, the standard approach is \eqn{O(p^3)}. Taking advantage of the previously computed eclairs decomposition of rank \eqn{k}, this can be done in \eqn{O(pk^2)}.
-
+#'
+#' @return matrix where rows are samples from multivariate normal or t distribution where columns have covariance specified by \code{Sigma.eclairs}
+#'
 #' @examples
 #' 
 #' library(Matrix)
@@ -89,7 +91,7 @@ rmvnorm_eclairs = function(n, mu, Sigma.eclairs, v=Inf){
 
 	# Create X %*% sqrt of Sigma
 	# alpha = 1/2 induces correlation, -1/2 removes correlation
-	X_transform = mult_eclairs(X, Sigma.eclairs$U, Sigma.eclairs$dSq, Sigma.eclairs$lambda, alpha = 1/2)
+	X_transform = mult_eclairs(X, Sigma.eclairs$U, Sigma.eclairs$dSq, Sigma.eclairs$lambda, Sigma.eclairs$nu, alpha = 1/2)
 
 	if( is.infinite(v) ){
 

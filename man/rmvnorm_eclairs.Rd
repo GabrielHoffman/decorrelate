@@ -15,6 +15,9 @@ rmvnorm_eclairs(n, mu, Sigma.eclairs, v = Inf)
 
 \item{v}{degrees of freedom, defaults to Inf.  If finite, uses a Multivariate t distribution}
 }
+\value{
+matrix where rows are samples from multivariate normal or t distribution where columns have covariance specified by \code{Sigma.eclairs}
+}
 \description{
 Draw from multivariate normal and t distributions using eclairs decomposition
 }

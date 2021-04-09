@@ -68,9 +68,148 @@ When p >> n, the estimate of $\hat\Sigma$ is poor, even with shrinkage.  In this
 
 
 
+```{r eval=FALSE}
+library(decorrelate)
+
+library(Matrix)
+library(Rfast)
+set.seed(1)
+n = 800 # number of samples
+p = 8*1000 # number of features
+
+# Create correlation matrix with autocorrelation
+autocorr.mat <- function(p = 100, rho = 0.9) {
+ mat <- diag(p)
+ return(rho^abs(row(mat)-col(mat)))
+}
+
+# create correlation matrix
+Sigma = autocorr.mat(p/8, .9)
+Sigma = bdiag(Sigma, Sigma)
+Sigma = bdiag(Sigma, Sigma)
+Sigma = bdiag(Sigma, Sigma)
+
+# draw data from correlation matrix Sigma
+Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
+
+# Compare fastLambda TRUE vs FALSE
+# eclairs(Y, fastLambda=FALSE)
+# eclairs(Y)
+
+ecl = eclairs(Y)
+diag(cov(Y))
+
+
+ecl$lambda = .8
+diag(getCov(ecl))
 
 
 
+# How sensitive is the decorrelation projection to lambda
+
+eps = 1e-4
+lambdaArray = seq(eps, 1-eps, length.out=300)
+
+Z = lapply(lambdaArray, function(lambda){
+	decorrelate(Y[1,,drop=FALSE], ecl, lambda = lambda)
+	})
+Z = do.call(cbind, Z)
+
+
+image(cor(Z), zlim=c(0,1))
+```
+
+
+
+
+devtools::reload('/Users/gabrielhoffman/workspace/repos/decorrelate')
+
+
+
+system.time({
+ecl <- eclairs(Y, k=300)
+})
+
+system.time({
+ecl <- eclairs(Y, k=100)
+})
+
+system.time({
+ecl2 <- eclairs(Y, k=300, warmStart=ecl)
+})
+
+
+
+
+system.time({
+a <- svds(Y, 10)
+})
+
+
+system.time({
+a <- svds(Y, 10, v0 = ecl$U)
+})
+
+
+library(ggplot2)
+
+n = 100
+
+# memory and time are linear
+
+values = c(seq(100, 10000, length.out=50), seq(15000, 1000000, length.out=100))
+values = as.integer(values)
+
+df_time = lapply( values, function(p){
+
+	cat("\r", p, '       ')
+
+	Y = matrnorm(n,p)
+	zstat = rnorm(p)
+
+	res1 = system.time({
+		ecl <- eclairs(Y)
+		zstat_indep <- decorrelate(zstat, ecl)
+	})
+	time_decorrelate = res1[3]
+
+	if(p < 10000){
+		res2 = system.time({
+			C <- cov(Y)
+			lambda <- 1e-3
+			Sigma <- C*(1-lambda) + diag(lambda, p)
+			zstat_indep2 <- array(zstat %*% chol(Sigma))
+		})
+		time_naive = res2[3]
+	}else{
+		time_naive = NA
+	}
+
+	data.frame(p = p, decorrelate = time_decorrelate, naive = time_naive)
+})
+df_time = do.call(rbind, df_time)
+
+
+# predict based on curves
+fit1 = lm(decorrelate ~ 0 + p, df_time)
+fit2 = lm(naive ~ 0 + I(p^3), df_time)
+
+p_max = max(df_time$p)
+
+df_p = data.frame(p=seq(100, p_max, length.out=1000))
+
+df_p$y1 = predict(fit1, df_p)
+df_p$y2 = predict(fit2, df_p)
+df_melt_p = reshape2::melt(df_p, id.vars='p')
+
+
+
+
+df_melt = reshape2::melt(df_time, id.vars="p")
+
+df_melt$variable = factor(df_melt$variable, c("naive", "decorrelate"))
+
+ggplot(df_melt, aes(p, value, color=variable)) + scale_color_brewer(name="Method", palette = "Set1") + geom_point() + theme_bw(16) + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5)) + xlab("Number of features") + ylab("Time in seconds") + geom_line(data=df_melt_p, aes(p, value, color=variable)) + scale_y_log10() 
 
 
 

@@ -12,21 +12,22 @@
 #' @param U1 orthonormal matrix with k columns representing the low rank component
 #' @param dSq1 eigen values so that \eqn{U_1 diag(d_1^2) U_1^T} is the low rank component
 #' @param lambda shrinkage parameter for the convex combination.
+#' @param nu diagonal value of target matrix in shrinkage 
 #' @param alpha exponent to be evaluated
 
 #' @details
-#' Let \eqn{\Sigma = U_1 diag(d_1^2) U_1^T * (1-\lambda) + diag(\lambda, p)}, where \eqn{\lambda} shrinkage parameter for the convex combination between a low rank matrix and the identity matrix.
+#' Let \eqn{\Sigma = U_1 diag(d_1^2) U_1^T * (1-\lambda) + diag(\nu\lambda, p)}, where \eqn{\lambda} shrinkage parameter for the convex combination between a low rank matrix and the diagonal matrix with values \eqn{\nu}.
 #'
-#' Evaluate \eqn{X \Sigma^\alpha} using special structure of the \link{eclairs} decomposition in \eqn{O(k^2p)} when there are $k$ components in the decomposition.
+#' Evaluate \eqn{X \Sigma^\alpha} using special structure of the \link{eclairs} decomposition in \eqn{O(k^2p)} when there are \eqn{k} components in the decomposition.
 #'
 #' @importFrom Matrix tcrossprod
 #'
 #' @export
-mult_eclairs = function(X, U1, dSq1, lambda, alpha){
+mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha){
 
-	v = dSq1*(1-lambda) + lambda
+	v = dSq1*(1-lambda) + lambda*nu
 	X_U1 = X %*% U1
- 	X_U1 %*% ((v^alpha) * t(U1)) + (X - tcrossprod(X_U1,U1) ) *(lambda^alpha)
+ 	X_U1 %*% ((v^alpha) * t(U1)) + (X - tcrossprod(X_U1,U1) ) *((lambda*nu)^alpha)
 
  	# I trued to make the last lime faster by avoiding transpose  
  	#  by using eachrow() to scale each column.
@@ -42,18 +43,18 @@ mult_eclairs = function(X, U1, dSq1, lambda, alpha){
 #' Efficient decorrelation projection using \link{eclairs} decomposition
 #'
 #' @param X matrix to be transformed so *columns* are independent
-#' @param cor.est estimate of correlation matrix from \link{eclairs} storing \code{U}, \code{dSq}, and \code{lambda}
-#' @param lambda specify lambda and override value from cor.est
+#' @param Sigma.eclairs estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
+#' @param lambda specify lambda and override value from \code{Sigma.eclairs}
 #'
 #' @details
 #'' FIX NOTATION HERE: Given a vector \eqn{x ~ N(0, \Sigma)} where \eqn{\Sigma = U diag(d_1^2) U^T + diag(\sigma^2)}, transform x so that it has an identity covariance matrix.  \eqn{\Sigma^{-0.5}x} is such a projection (see Strimmer whitening).  When \eqn{\Sigma} is \eqn{p \times p}, computing this projection naively is \eqn{O(p^3)}.  Here we take advantage of the fact that \eqn{\Sigma} is the sum of a low rank decomposition, plus a scaled identity matrix
 #'
 #' @export
-decorrelate = function(X, cor.est, lambda){
+decorrelate = function(X, Sigma.eclairs, lambda){
 
-	# of not specified, use lambda from cor.est
+	# of not specified, use lambda from Sigma.eclairs
 	if( missing(lambda) ){
-		lambda = cor.est$lambda
+		lambda = Sigma.eclairs$lambda
 	}
 
 	# check value of lambda
@@ -76,7 +77,7 @@ decorrelate = function(X, cor.est, lambda){
 	}
 
 	# alpha = -1/2 gives the decorrelating projection (i.e. whitening)
-	X.decorr = mult_eclairs(X, cor.est$U, cor.est$dSq, lambda, alpha = -1/2)
+	X.decorr = mult_eclairs(X, Sigma.eclairs$U, Sigma.eclairs$dSq, lambda, nu=Sigma.eclairs$nu, alpha = -1/2)
 
 	if( toArray ){
 		X.decorr = c(X.decorr)

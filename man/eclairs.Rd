@@ -2,22 +2,29 @@
 % Please edit documentation in R/eclairs.R
 \name{eclairs}
 \alias{eclairs}
-\title{Estimate correlation with low rank and shrinkage}
+\title{Estimate covariance/correlation with low rank and shrinkage}
 \usage{
-eclairs(X, k, lambda = NULL, center = TRUE, scale = TRUE, warmStart = NULL)
+eclairs(
+  X,
+  k,
+  lambda = NULL,
+  compute = c("covariance", "correlation"),
+  warmStart = NULL,
+  fastLambda = TRUE
+)
 }
 \arguments{
 \item{X}{data matrix with n samples as rows and p features as columns}
 
 \item{k}{the rank of the low rank component}
 
-\item{lambda}{shrinkage parameter}
+\item{lambda}{shrinkage parameter. If not specified, it is estimated from the data.}
 
-\item{center}{center columns of X (default: TRUE)}
-
-\item{scale}{scale columns of X (default: TRUE)}
+\item{compute}{compute the 'covariance' (default) or 'correlation'}
 
 \item{warmStart}{result of previous SVD to initialize values}
+
+\item{fastLambda}{use fast approximation to estimate lambda (default: TRUE)}
 }
 \value{
 \link{eclairs} object storing:
@@ -25,14 +32,15 @@ eclairs(X, k, lambda = NULL, center = TRUE, scale = TRUE, warmStart = NULL)
  \item{U: }{orthonormal matrix with k columns representing the low rank component}
  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}
+ \item{nu: }{diagonal value of target matrix in shrinkage}
  \item{n: }{number of samples (i.e. rows) in the original data}
  \item{p: }{number of features (i.e. columns) in the original data}
  \item{k: }{rank of low rank component}
 }
 }
 \description{
-Compute \eqn{U}, \eqn{d^2} to approximate the correlation matrix between columns of data matrix X by \eqn{U diag(d^2 (1-\lambda)) + diag(\lambda) }.
+Estimate the covariance/correlation between columns as the weighted sum of a low rank matrix and a scaled identity matrix.  The weight acts to shrink the sample correlation matrix towards the identity matrix or the sample covariance matrix towards a scaled identity matrix with constant variance.  An estimate of this form is useful because it is fast, and enables fast operations downstream.
 }
 \details{
-Estimate the correlation between columns as the weighted sum of a low rank matrix and a scaled identity matrix.  The weight acts to shrink the sample correlation matrix towards the identity matrix. An estimate of this form is useful because it is fast, and enables fast operations downstream.
+Compute \eqn{U}, \eqn{d^2} to approximate the covariance/correlation matrix between columns of data matrix X by \eqn{U diag(d^2 (1-\lambda)) U^T + diag(\nu * \lambda)}.  When computing the covariance matrix \eqn{\nu} is the constant variance which is the mean of all feature-wise variances.  When computing the correlation matrix, \eqn{\nu = 1}.
 }

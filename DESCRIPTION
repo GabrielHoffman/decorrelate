@@ -1,10 +1,10 @@
 Package: decorrelate
 Type: Package
 Title: Decorrelation projection scalable to high dimensional data using estimated correlation with low rank and shrinkage
-Version: 0.0.2
-Date: 2021-03-12
-Author: Gabriel E. Hoffman
-Maintainer: Gabriel E. Hoffman <gabriel.hoffman@mssm.edu>
+Version: 0.0.3
+Date: 2021-04-08
+Author: Gabriel Hoffman
+Maintainer: Gabriel Hoffman <gabriel.hoffman@mssm.edu>
 Description: Coming soon...
 License: GPL (>= 2)
 URL: gabrielhoffman.github.oi/decorrelate, https://github.com/GabrielHoffman/decorrelate
@@ -37,6 +37,7 @@ Imports:
     Rfast,
     ShrinkCovMat,
     irlba,
+    PRIMME,
     Matrix,
     stats
 RoxygenNote: 7.1.1

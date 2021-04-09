@@ -30,7 +30,7 @@ gpca = function(Y, cor.est, k){
 		}
 
 		# back transform
-		V.star = t(mult_eclairs(t(dcmp.tilde$v), cor.est$U, cor.est$dSq, cor.est$lambda, 0.5))
+		V.star = t(mult_eclairs(t(dcmp.tilde$v), cor.est$U, cor.est$dSq, cor.est$lambda, cor.est$nu, 0.5))
 		U.star = dcmp.tilde$u
 		d.star = dcmp.tilde$d
 	}else{
