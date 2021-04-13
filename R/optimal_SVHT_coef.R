@@ -14,6 +14,21 @@
 #' 
 #' @references Gavish, M., & Donoho, D. L. (2014). The optimal hard threshold for singular values is 4/sqrt(3). IEEE Transactions on Information Theory, 60(8), 5040-5053.
 #'
+#' @examples
+#' # simulate data
+#' set.seed(1)
+#' n = 500
+#' p = 5000
+#' Y <- Rfast::matrnorm(n, p)
+#' 
+#' # SVD
+#' dcmp = svd(Y)
+#' 
+#' # how many components to retain
+#' sv_threshold(n, p, dcmp$d)
+#' 
+#' # in this case the data has no structure, so no components are retained
+#' 
 #' @importFrom stats median
 #' @export
 sv_threshold = function(n, p, d){

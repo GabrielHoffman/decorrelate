@@ -101,6 +101,8 @@ colnames(X) = paste0('set_', 1:ncol(X))
 # Use linear model to test each features stored as columns in X
 res = lm_each_eclairs(y ~ v1 + v2, data, X, ecl )
 
+head(res)
+
 # Analysis after non-linear transform
 #------------------------------------
 
@@ -108,10 +110,12 @@ res = lm_each_eclairs(y ~ v1 + v2, data, X, ecl )
 f = function(x) log(x^2 + 0.001)
 
 # evaluate covariance of transformed data
-ecl_transform = cov_transform(ecl, 100, f)
+ecl_transform = cov_transform(ecl, f, 100)
 
 # Use linear model to test each features stored as columns in X
 # in data transformed by f()
 res2 = lm_each_eclairs( f(y) ~ v1 + v2, data, X, ecl_transform )
+
+head(res)
 
 }

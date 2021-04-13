@@ -6,8 +6,8 @@
 \usage{
 cov_transform(
   Sigma.eclairs,
+  f,
   n.boot,
-  f = function(x) log(x^2 + 0.001),
   lambda = NULL,
   compute = c("covariance", "correlation")
 )
@@ -15,13 +15,16 @@ cov_transform(
 \arguments{
 \item{Sigma.eclairs}{covariance/correlation matrix as an \link{eclairs} object}
 
-\item{n.boot}{number of parametric bootstrap samples.  Increasing n gives more precise estimates.}
+\item{f}{function specifying the transformation.}
 
-\item{f}{function specifying the transformation.  The default function is \eqn{\log(x^2 + 1e-3)} which offsets \eqn{x^2} away from zero since \eqn{\log(x^2)} is not defined for \eqn{x=0}.}
+\item{n.boot}{number of parametric bootstrap samples.  Increasing n gives more precise estimates.}
 
 \item{lambda}{shrinkage parameter.  If not specified, it is estimated from the data.}
 
 \item{compute}{compute the 'covariance' (default) or 'correlation'}
+}
+\value{
+\link{eclairs} decomposition represented correlation/covariance on the transformed data
 }
 \description{
 Given covariance between features in the original data, estimate the covariance matrix after applying a transformation to each feature.  Here we use the eclairs decomposition of the original covariance matrix, perform a parametric bootstrap and return the eclairs decomposition of the covariance matrix of the transformed data.
@@ -64,7 +67,7 @@ f = function(x) log(x^2 + 1e-3)
 n_boot = 50000
 
 # Evaluate eclairs decomposition on boostrap samples
-ecl2 = cov_transform( ecl, n_boot, f=f, lambda = 1e-4)
+ecl2 = cov_transform( ecl, f=f, n_boot, lambda = 1e-4)
 
 # Get full covariance matrix from eclairs decomposition
 C1 = getCov(ecl2)
@@ -88,7 +91,7 @@ abline(0, 1, col='red')
 # Save above but compute eclairs for correlation matrix
 
 # Evaluate eclairs decomposition on boostrap samples
-ecl2 = cov_transform( ecl, n_boot, f=f, compute="correlation", lambda = 1e-4)
+ecl2 = cov_transform( ecl, f=f, n_boot, compute="correlation", lambda = 1e-4)
 
 # Get full covariance matrix from eclairs decomposition
 C1 = getCor(ecl2)

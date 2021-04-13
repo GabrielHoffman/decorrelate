@@ -44,3 +44,33 @@ Estimate the covariance/correlation between columns as the weighted sum of a low
 \details{
 Compute \eqn{U}, \eqn{d^2} to approximate the covariance/correlation matrix between columns of data matrix X by \eqn{U diag(d^2 (1-\lambda)) U^T + diag(\nu * \lambda)}.  When computing the covariance matrix \eqn{\nu} is the constant variance which is the mean of all feature-wise variances.  When computing the correlation matrix, \eqn{\nu = 1}.
 }
+\examples{
+library(Matrix)
+library(Rfast)
+set.seed(1)
+n = 800 # number of samples
+p = 8*200 # number of features
+
+# Create correlation matrix with autocorrelation
+autocorr.mat <- function(p = 100, rho = 0.9) {
+mat <- diag(p)
+return(rho^abs(row(mat)-col(mat)))
+}
+
+# create correlation matrix
+Sigma = autocorr.mat(p/8, .9)
+Sigma = bdiag(Sigma, Sigma)
+Sigma = bdiag(Sigma, Sigma)
+Sigma = bdiag(Sigma, Sigma)
+
+# draw data from correlation matrix Sigma
+Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
+rownames(Y) = paste0("sample_", 1:n)
+colnames(Y) = paste0("gene_", 1:p)
+
+# eclairs decomposition
+Sigma.eclairs = eclairs(Y, compute="covariance")
+
+Sigma.eclairs
+
+}

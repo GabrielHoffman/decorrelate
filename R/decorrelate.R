@@ -21,35 +21,67 @@
 #'
 #' Evaluate \eqn{X \Sigma^\alpha} using special structure of the \link{eclairs} decomposition in \eqn{O(k^2p)} when there are \eqn{k} components in the decomposition.
 #'
-#' @importFrom Matrix tcrossprod
+#' @return a matrix product
 #'
+#' @importFrom Matrix tcrossprod
 #' @export
 mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha, transpose=FALSE){
 
 	v = dSq1*(1-lambda) + lambda*nu
 
 	if( transpose ){
-		X = t(X)
+
+		if( nrow(X) != nrow(U1) ){
+			stop("Incompatable dimensions:\nData matrix X has ", nrow(X), ' columns, but low rank component has ', nrow(U1), " rows")
+		}
+
+		# decorrelate rows
+		X_U1 = crossprod(X, U1)
+		result = crossprod((v^alpha)* t(U1), t(X_U1)) + ((X - tcrossprod(U1,X_U1) ) *((lambda*nu)^alpha))
+	}else{
+
+		if( ncol(X) != nrow(U1) ){
+			stop("Incompatable dimensions:\nData matrix X has ", ncol(X), ' columns, but low rank component has ', nrow(U1), " rows")
+		}
+
+		# decorrelate columns
+		X_U1 = X %*% U1
+ 		result = X_U1 %*% ((v^alpha) * t(U1)) + (X - tcrossprod(X_U1,U1) ) *((lambda*nu)^alpha)
 	}
-
-	if( ncol(X) != nrow(U1) ){
-		stop("Incompatable dimensions:\nData matrix X has ", ncol(X), ' columns, but low rank component has ', nrow(U1), " rows")
-	}
-
-	X_U1 = X %*% U1
- 	result = X_U1 %*% ((v^alpha) * t(U1)) + (X - tcrossprod(X_U1,U1) ) *((lambda*nu)^alpha)
-
- 	if( transpose ){
- 		result = t(result)
- 	}
-
 	result
 }
+
+# mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha, transpose=FALSE){
+
+# 	v = dSq1*(1-lambda) + lambda*nu
+
+# 	if( transpose ){
+# 		X = t(X)
+# 	}
+
+# 	if( ncol(X) != nrow(U1) ){
+# 		stop("Incompatable dimensions:\nData matrix X has ", ncol(X), ' columns, but low rank component has ', nrow(U1), " rows")
+# 	}
+
+# 	X_U1 = X %*% U1
+#  	result = X_U1 %*% ((v^alpha) * t(U1)) + (X - tcrossprod(X_U1,U1) ) *((lambda*nu)^alpha)
+
+#  	if( transpose ){
+#  		result = t(result)
+#  	}
+
+# 	result
+# }
 
 # I trued to make the last lime faster by avoiding transpose  
 #  by using eachrow() to scale each column.
 #  This is faster then sweep(), but the original code is faster
 # tcrossprod(X_U1, eachrow(U1, v^alpha, oper = "*")) + (X - tcrossprod(X_U1,U1) ) *(lambda^alpha)
+
+
+
+
+
 
 
 
@@ -65,6 +97,8 @@ mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha, transpose=FALSE){
 #'
 #' @details
 #'' FIX NOTATION HERE: Given a vector \eqn{x ~ N(0, \Sigma)} where \eqn{\Sigma = U diag(d_1^2) U^T + diag(\sigma^2)}, transform x so that it has an identity covariance matrix.  \eqn{\Sigma^{-0.5}x} is such a projection (see Strimmer whitening).  When \eqn{\Sigma} is \eqn{p \times p}, computing this projection naively is \eqn{O(p^3)}.  Here we take advantage of the fact that \eqn{\Sigma} is the sum of a low rank decomposition, plus a scaled identity matrix
+#'
+#' @return a matrix following the decorrelation transformation
 #'
 #' @examples
 #' 

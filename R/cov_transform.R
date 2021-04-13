@@ -10,13 +10,16 @@
 #' Given covariance between features in the original data, estimate the covariance matrix after applying a transformation to each feature.  Here we use the eclairs decomposition of the original covariance matrix, perform a parametric bootstrap and return the eclairs decomposition of the covariance matrix of the transformed data.  
 #'
 #' @param Sigma.eclairs covariance/correlation matrix as an \link{eclairs} object
+#' @param f function specifying the transformation.  
+# The default function is \eqn{\log(x^2 + 1e-3)} which offsets \eqn{x^2} away from zero since \eqn{\log(x^2)} is not defined for \eqn{x=0}.
 #' @param n.boot number of parametric bootstrap samples.  Increasing n gives more precise estimates.
-#' @param f function specifying the transformation.  The default function is \eqn{\log(x^2 + 1e-3)} which offsets \eqn{x^2} away from zero since \eqn{\log(x^2)} is not defined for \eqn{x=0}.
 #' @param lambda shrinkage parameter.  If not specified, it is estimated from the data.
 #' @param compute compute the 'covariance' (default) or 'correlation'
 #'
 #' @details
-#' When the transformation is linear, these covariance matrices are the same.   
+#' When the transformation is linear, these covariance matrices are the same.  
+#'
+#' @return \link{eclairs} decomposition represented correlation/covariance on the transformed data
 #'
 #' @examples
 #' library(Matrix)
@@ -53,7 +56,7 @@
 #' n_boot = 50000
 #' 
 #' # Evaluate eclairs decomposition on boostrap samples
-#' ecl2 = cov_transform( ecl, n_boot, f=f, lambda = 1e-4)
+#' ecl2 = cov_transform( ecl, f=f, n_boot, lambda = 1e-4)
 #' 
 #' # Get full covariance matrix from eclairs decomposition
 #' C1 = getCov(ecl2)
@@ -77,7 +80,7 @@
 #' # Save above but compute eclairs for correlation matrix
 #' 
 #' # Evaluate eclairs decomposition on boostrap samples
-#' ecl2 = cov_transform( ecl, n_boot, f=f, compute="correlation", lambda = 1e-4)
+#' ecl2 = cov_transform( ecl, f=f, n_boot, compute="correlation", lambda = 1e-4)
 #' 
 #' # Get full covariance matrix from eclairs decomposition
 #' C1 = getCor(ecl2)
@@ -98,7 +101,7 @@
 #' abline(0, 1, col='red')
 #' 
 #' @export
-cov_transform = function(Sigma.eclairs, n.boot, f = function(x) log(x^2 + 1e-3), lambda=NULL, compute=c("covariance", "correlation")){
+cov_transform = function(Sigma.eclairs, f, n.boot, lambda=NULL, compute=c("covariance", "correlation")){
 
 	stopifnot(is(Sigma.eclairs, "eclairs"))
 	stopifnot(is(f, "function"))

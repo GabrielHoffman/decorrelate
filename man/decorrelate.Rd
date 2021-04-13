@@ -15,6 +15,9 @@ decorrelate(X, Sigma.eclairs, lambda, transpose = FALSE)
 
 \item{transpose}{logical, (default FALSE) indicating if X should be transposed first}
 }
+\value{
+a matrix following the decorrelation transformation
+}
 \description{
 Efficient decorrelation projection using \link{eclairs} decomposition
 }

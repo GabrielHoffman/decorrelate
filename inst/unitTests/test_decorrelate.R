@@ -289,6 +289,71 @@ test_lm_each_eclairs = function(){
 }
 
 
+test_reform_decomp = function(){
+
+	library(RUnit)
+	library(PRIMME)
+	library(decorrelate)
+	library(Matrix)
+	library(Rfast)
+	set.seed(1)
+	n = 800 # number of samples
+	p = 8*200 # number of features
+
+	# Create correlation matrix with autocorrelation
+	autocorr.mat <- function(p = 100, rho = 0.9) {
+	mat <- diag(p)
+	return(rho^abs(row(mat)-col(mat)))
+	}
+
+	# create correlation matrix
+	Sigma = autocorr.mat(p/8, .9)
+	Sigma = bdiag(Sigma, Sigma)
+	Sigma = bdiag(Sigma, Sigma)
+	Sigma = bdiag(Sigma, Sigma)
+
+	# draw data from correlation matrix Sigma
+	Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
+	rownames(Y) = paste0("sample_", 1:n)
+	colnames(Y) = paste0("gene_", 1:p)
+
+	# Correlation
+	#------------
+
+	# eclairs decomposition
+	Sigma.eclairs = eclairs(Y, compute="correlation")
+
+	# Compute SVD on subset of eclairs decomposition
+	drop = paste0("gene_",1:100)
+
+	ecl1 = reform_decomp( Sigma.eclairs, drop=drop)
+
+	ecl2 = eclairs(Y[,!colnames(Y) %in% drop], compute="correlation")
+
+	# Since the sign of singular vectors can change, use abs()
+	res1 = checkEqualsNumeric( abs(ecl1$V), abs(ecl2$V))
+	res2 = checkEqualsNumeric( abs(ecl1$U), abs(ecl2$U), tolerance=1e-3)
+
+
+	# Covariance
+	############# 
+
+	# eclairs decomposition
+	Sigma.eclairs = eclairs(Y, compute="covariance")
+
+	# Compute SVD on subset of eclairs decomposition
+	drop = paste0("gene_",1:100)
+
+	ecl1 = reform_decomp( Sigma.eclairs, drop=drop)
+
+	ecl2 = eclairs(Y[,!colnames(Y) %in% drop], compute="covariance")
+
+	# Since the sign of singular vectors can change, use abs()
+	res3 = checkEqualsNumeric( abs(ecl1$V), abs(ecl2$V))
+	res4 = checkEqualsNumeric( abs(ecl1$U), abs(ecl2$U), tolerance=1e-3)
+
+	res1 & res2 & res3 & res4
+}
 
 
 
@@ -297,6 +362,38 @@ test_lm_each_eclairs = function(){
 
 
 
+test_decorrelate_transpose = function(){
+
+	library(Matrix)
+	library(Rfast)
+	set.seed(1)
+	n = 800 # number of samples
+	p = 8*200 # number of features
+
+	# Create correlation matrix with autocorrelation
+	autocorr.mat <- function(p = 100, rho = 0.9) {
+	mat <- diag(p)
+	return(rho^abs(row(mat)-col(mat)))
+	}
+
+	# create correlation matrix
+	Sigma = autocorr.mat(p/8, .9)
+	Sigma = bdiag(Sigma, Sigma)
+	Sigma = bdiag(Sigma, Sigma)
+	Sigma = bdiag(Sigma, Sigma)
+
+	# draw data from correlation matrix Sigma
+	Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
+	
+
+	# eclairs decomposition
+	ecl = eclairs(Y, k=10)
+
+	a <- decorrelate(Y, ecl)
+	b <- t(decorrelate(t(Y), ecl, transpose=TRUE))
+
+	checkEqualsNumeric(a,b)
+}
 
 
 

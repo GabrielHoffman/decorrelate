@@ -21,6 +21,9 @@ mult_eclairs(X, U1, dSq1, lambda, nu, alpha, transpose = FALSE)
 
 \item{transpose}{logical, (default FALSE) indicating if X should be transposed first}
 }
+\value{
+a matrix product
+}
 \description{
 Multiply by \link{eclairs} matrix using special structure to achieve linear instead of cubic time complexity.
 }

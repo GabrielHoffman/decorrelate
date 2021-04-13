@@ -62,6 +62,36 @@ setMethod("print", 'eclairs',
 #'
 #' @details The full matrix is computationally expensive to compute and uses a lot of memory for large p.  So it is better to use \link{decorrelate} or \link{mult_eclairs} to perform projections in \eqn{O(np)} time.
 #'
+#' @examples
+#' library(Matrix)
+#' library(Rfast)
+#' set.seed(1)
+#' n = 800 # number of samples
+#' p = 8*200 # number of features
+#' 
+#' # Create correlation matrix with autocorrelation
+#' autocorr.mat <- function(p = 100, rho = 0.9) {
+#' mat <- diag(p)
+#' return(rho^abs(row(mat)-col(mat)))
+#' }
+#' 
+#' # create correlation matrix
+#' Sigma = autocorr.mat(p/8, .9)
+#' Sigma = bdiag(Sigma, Sigma)
+#' Sigma = bdiag(Sigma, Sigma)
+#' Sigma = bdiag(Sigma, Sigma)
+#' 
+#' # draw data from correlation matrix Sigma
+#' Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
+#' rownames(Y) = paste0("sample_", 1:n)
+#' colnames(Y) = paste0("gene_", 1:p)
+#' 
+#' # eclairs decomposition
+#' Sigma.eclairs = eclairs(Y)
+#'
+#' # extract covariance implied by eclairs decomposition
+#' getCov(Sigma.eclairs)[1:3, 1:3]
+#'
 #' @rdname getCov
 #' @export
 setGeneric("getCov", function(Sigma.eclairs,...) standardGeneric("getCov"))
@@ -135,6 +165,35 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 #' @details
 #' Compute \eqn{U}, \eqn{d^2} to approximate the covariance/correlation matrix between columns of data matrix X by \eqn{U diag(d^2 (1-\lambda)) U^T + diag(\nu * \lambda)}.  When computing the covariance matrix \eqn{\nu} is the constant variance which is the mean of all feature-wise variances.  When computing the correlation matrix, \eqn{\nu = 1}.   
 #'
+#' @examples
+#' library(Matrix)
+#' library(Rfast)
+#' set.seed(1)
+#' n = 800 # number of samples
+#' p = 8*200 # number of features
+#' 
+#' # Create correlation matrix with autocorrelation
+#' autocorr.mat <- function(p = 100, rho = 0.9) {
+#' mat <- diag(p)
+#' return(rho^abs(row(mat)-col(mat)))
+#' }
+#' 
+#' # create correlation matrix
+#' Sigma = autocorr.mat(p/8, .9)
+#' Sigma = bdiag(Sigma, Sigma)
+#' Sigma = bdiag(Sigma, Sigma)
+#' Sigma = bdiag(Sigma, Sigma)
+#' 
+#' # draw data from correlation matrix Sigma
+#' Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
+#' rownames(Y) = paste0("sample_", 1:n)
+#' colnames(Y) = paste0("gene_", 1:p)
+#' 
+#' # eclairs decomposition
+#' Sigma.eclairs = eclairs(Y, compute="covariance")
+#'
+#' Sigma.eclairs
+#'
 #' @importFrom Rfast standardise colVars
 #' @importFrom PRIMME svds
 #' @importFrom methods new
@@ -155,7 +214,10 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 	n = nrow(X)
 	p = ncol(X)
 
-	center = TRUE
+	# save row and columns names since X is overwritten
+	rn = rownames(X)
+	cn = colnames(X)
+
 	# scale=TRUE
 	# if correlation is computed, scale features
 	scale = ifelse( compute == "correlation", TRUE, FALSE)
@@ -170,17 +232,12 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 	#	so the using a single sigSq across all columns is a good
 	# 	approximation
 	# X = scale(X) / sqrt(n-1)
-	if( center | scale ){
-		X = standardise(X, center=center, scale=scale) 
-	}
-
+	# if( center | scale ){
+	# 	X = standardise(X, center=center, scale=scale) 
+	# }
 	# always divide by sqrt(n-1) so that var(x[,1]) 
 	# is crossprod(x[,1])/(n-1) when center is TRUE
-	X = X / sqrt(n-1)
-
-	# C.cor = cor(X)
-	# C.cp = crossprod(X)
-	# range(C.cor - C.cp)
+	X = standardise(X, center=TRUE, scale=scale)  / sqrt(n-1)
 
 	if( missing(k) ){
 		k = min(n,p)
@@ -190,7 +247,7 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 	}
 
 	# SVD of X to get low rank estimate of Sigma
-	if( k < min(p, n)/2){
+	if( k < min(p, n)/3){
 		# Setting nv = nu = k doesn't work with warm start
 		# see https://github.com/bwlewis/irlba/issues/58
 		# # but setting nu=k+1 works
@@ -205,9 +262,9 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 		}
 	}else{
 		dcmp = svd(X) 
-		dcmp$u = dcmp$u[,1:k, drop=FALSE]
-		dcmp$v = dcmp$v[,1:k, drop=FALSE]
-		dcmp$d = dcmp$d[1:k]
+		dcmp$u = dcmp$u[,seq_len(k), drop=FALSE]
+		dcmp$v = dcmp$v[,seq_len(k), drop=FALSE]
+		dcmp$d = dcmp$d[seq_len(k)]
 	}
 
 	# Estimate lambda 
@@ -228,6 +285,7 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 				# estimate lambda for shrinkage
 				# but use lambda reconstructed from low rank decomp
 				# lambda = mvIC:::shrinkcovmat.equal_lambda( t(X) )$lambda
+				v = d = u = NULL # pass R CMD BiocCheck
 				X_reconstruct = with(dcmp, u %*% (d * t(v)))
 				lambda = shrinkcovmat.equal_lambda( t(X_reconstruct) )$lambda_hat
 			}
@@ -238,11 +296,14 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 
 	result = list(	U 		= dcmp$v, 
 					dSq 	= dcmp$d^2, 
+					V 		= dcmp$u,
 					lambda 	= lambda,
 					nu 		= nu,
 					n 		= n,
 					p 		= p,
-					k 		= k)
+					k 		= k,
+					rownames= rn,
+					colnames= cn)
 
 	new("eclairs",	result)
 }
