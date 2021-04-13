@@ -1,4 +1,9 @@
 
+Papers:
+	https://openreview.net/pdf?id=4sCyjwaVtZ9
+	https://www-users.cs.umn.edu/~saad/PDF/ys-2013-6.pdf
+	https://arxiv.org/pdf/1904.03441.pdf
+
 
 DONE: see eclairs(...,fastLambda=TRUE)
 1) Estimate lambda faster using only dSq, n, p?
@@ -41,5 +46,48 @@ DONE: added lm_eclairs()
 decorrelate() working on transposed data
 	check dimension of X vs U and report error
 
+DONE
 lm_eclairs() and lm_each_eclairs()
 	This function fit a linear regression to the transformed response, and transformed design matrix.  Note that the design matrix, not just the data.frame of variables is transformed so that 1) factors are transformed and 2) the intercept term is transformed.  
+
+DONE
+	eclairs_reform() to compute SVD after dropping features
+
+
+DONE
+This spends a substantial amount of time in t() within mult_eclairs()
+Need a faster way to handle this, since transpose=TRUE is a bottneck
+	
+	X = matrnorm(p, 10000)
+	colnames(X) = paste0('set_', 1:ncol(X))
+
+	system.time({
+	res <- lm_each_eclairs(y ~ v1 + v2, data, X, ecl )
+	})
+
+	sweep, mapply, Rfast each, X %*% diag(), X %*% Diagonal()
+
+DONE
+	assign sign consistancy with in eclairs() and reform_decomp()
+
+
+
+a special case is identical to whiten
+	ecl <- eclairs(Y, compute="covariance", lambda=0)
+	Z1 <- decorrelate(Y, ecl)
+	Z2 = whiten(Y)
+	checkEqualsNumeric(Z1, Z2)
+
+implicit whitening matrix
+shrinkage
+compute="correlation" rotates but keeps scale
+
+
+
+
+
+
+
+
+
+

@@ -100,6 +100,13 @@ reform_decomp = function(Sigma.eclairs, k = Sigma.eclairs$k, drop=NULL){
 		dcmp$d = dcmp$d[seq_len(k)]
 	}
 
+	# Modify sign of dcmp$v and dcmp$u so principal components are consistant
+	# This is motivated by whitening:::makePositivDiagonal()
+	# but here adjust both U and V so reconstructed data is correct
+	values = sign(diag(dcmp$v))
+	dcmp$v = sweep(dcmp$v, 2, values, "*")
+	dcmp$u = sweep(dcmp$u, 2, values, "*")
+
 	# return result as eclairs decomposition
 	result = list(	U 		= dcmp$v, 
 					dSq 	= dcmp$d^2, 

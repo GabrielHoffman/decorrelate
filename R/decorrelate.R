@@ -37,7 +37,14 @@ mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha, transpose=FALSE){
 
 		# decorrelate rows
 		X_U1 = crossprod(X, U1)
-		result = crossprod((v^alpha)* t(U1), t(X_U1)) + ((X - tcrossprod(U1,X_U1) ) *((lambda*nu)^alpha))
+
+		# when lambda is zero, avoid computing the second part
+		part1 = 0
+		if( lambda > 0){
+			part1 = ((X - tcrossprod(U1,X_U1) ) *((lambda*nu)^alpha))
+		}
+
+		result = crossprod((v^alpha)* t(U1), t(X_U1)) + part1
 	}else{
 
 		if( ncol(X) != nrow(U1) ){
@@ -46,7 +53,14 @@ mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha, transpose=FALSE){
 
 		# decorrelate columns
 		X_U1 = X %*% U1
- 		result = X_U1 %*% ((v^alpha) * t(U1)) + (X - tcrossprod(X_U1,U1) ) *((lambda*nu)^alpha)
+
+		# when lambda is zero, avoid computing the second part
+		part1 = 0
+		if( lambda > 0){
+			part1 = (X - tcrossprod(X_U1,U1) ) *((lambda*nu)^alpha)
+		}
+
+ 		result = X_U1 %*% ((v^alpha) * t(U1)) + part1
 	}
 	result
 }

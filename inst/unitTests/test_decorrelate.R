@@ -321,42 +321,56 @@ test_reform_decomp = function(){
 	#------------
 
 	# eclairs decomposition
-	Sigma.eclairs = eclairs(Y, compute="correlation")
+	Sigma.eclairs = eclairs(Y, compute="correlation", lambda=.1)
 
 	# Compute SVD on subset of eclairs decomposition
-	drop = paste0("gene_",1:100)
+	drop = paste0("gene_",1:200)
 
+	# reform
 	ecl1 = reform_decomp( Sigma.eclairs, drop=drop)
 
-	ecl2 = eclairs(Y[,!colnames(Y) %in% drop], compute="correlation")
+	# eclairs using original data
+	ecl2 = eclairs(Y[,!colnames(Y) %in% drop], compute="correlation", lambda=.1)
+	
 
-	# Since the sign of singular vectors can change, use abs()
-	res1 = checkEqualsNumeric( abs(ecl1$V), abs(ecl2$V))
-	res2 = checkEqualsNumeric( abs(ecl1$U), abs(ecl2$U), tolerance=1e-3)
+	# since the last singular value is very small (below machine precision)
+	# the large singular vectors of U and V are unstable 
+	# and should be ommitted from the check
+	idx = seq(1:(Sigma.eclairs$k-1))
+	# max(ecl1$U[,idx] - ecl2$U[,idx])
+	# max(ecl1$V[,idx] - ecl2$V[,idx])
 
+	res1 = checkEqualsNumeric( ecl1$V[,idx], ecl2$V[,idx])
+	res2 = checkEqualsNumeric( ecl1$U[,idx], ecl2$U[,idx])
 
 	# Covariance
 	############# 
 
 	# eclairs decomposition
-	Sigma.eclairs = eclairs(Y, compute="covariance")
+	Sigma.eclairs = eclairs(Y, compute="covariance", lambda=.1)
 
 	# Compute SVD on subset of eclairs decomposition
-	drop = paste0("gene_",1:100)
+	drop = paste0("gene_",1:200)
 
+	# reform
 	ecl1 = reform_decomp( Sigma.eclairs, drop=drop)
 
-	ecl2 = eclairs(Y[,!colnames(Y) %in% drop], compute="covariance")
+	# eclairs using original data
+	ecl2 = eclairs(Y[,!colnames(Y) %in% drop], compute="covariance", lambda=.1)
+	
 
-	# Since the sign of singular vectors can change, use abs()
-	res3 = checkEqualsNumeric( abs(ecl1$V), abs(ecl2$V))
-	res4 = checkEqualsNumeric( abs(ecl1$U), abs(ecl2$U), tolerance=1e-3)
+	# since the last singular value is very small (below machine precision)
+	# the large singular vectors of U and V are unstable 
+	# and should be ommitted from the check
+	idx = seq(1:(Sigma.eclairs$k-1))
+	# max(ecl1$U[,idx] - ecl2$U[,idx])
+	# max(ecl1$V[,idx] - ecl2$V[,idx])
+
+	res3 = checkEqualsNumeric( ecl1$V[,idx], ecl2$V[,idx])
+	res4 = checkEqualsNumeric( ecl1$U[,idx], ecl2$U[,idx])
 
 	res1 & res2 & res3 & res4
 }
-
-
-
 
 
 
@@ -397,7 +411,85 @@ test_decorrelate_transpose = function(){
 
 
 
+test_whitening_matrix = function(){
 
+	library(Matrix)
+	library(Rfast)
+	library(ggplot2)
+	library(cowplot)
+	library(whitening)
+
+	n = 2000
+	p = 3
+
+	Y = matrnorm(n,p)*10
+
+	# decorrelate with implicit whitening matrix
+	# give same result as explicity whitening matrix
+	ecl <- eclairs(Y, compute="covariance", lambda=0)
+
+	W = getWhiteningMatrix( ecl, lambda=0 )
+	Z1 = tcrossprod(Y, W)
+	Z2 = decorrelate(Y, ecl)
+	checkEqualsNumeric(Z1, Z2)
+
+	# compare decorrelate and whiten
+	ecl <- eclairs(Y, compute="covariance", lambda=0)
+	Z1 <- decorrelate(Y, ecl)
+	Z2 = whiten(Y)
+	checkEqualsNumeric(Z1, Z2)
+
+
+	# covariance
+	###############
+	ecl <- eclairs(Y, compute="covariance")
+
+	# compare whitening matrices
+	W1 = getWhiteningMatrix( ecl, lambda=0 )
+	W2 = whiteningMatrix(cov(Y), method='ZCA')
+	checkEqualsNumeric(W1, W2)
+
+	# compare transformed data
+	Z1 = tcrossprod(Y, W1)
+	Z2 = tcrossprod(Y, W2)
+	checkEqualsNumeric(Z1, Z2)
+
+	# since covariance is removed, 
+	# the covariance of the trasnformed data is identity
+	# cov(Z1)
+	# cor(Z1)
+
+	Z3 = whiten(Y, method="ZCA")
+	checkEqualsNumeric(Z3, Z2)
+
+
+	# correlation
+	ecl <- eclairs(Y, compute="correlation")
+
+	# compare whitening matrices
+	W1 = getWhiteningMatrix( ecl, lambda=0 )
+	W2 = whiteningMatrix(cor(Y), method='ZCA')
+	checkEqualsNumeric(W1, W2)
+
+	# compare transformed data
+	Z1 = tcrossprod(Y, W1)
+	Z2 = tcrossprod(Y, W2)
+	checkEqualsNumeric(Z1, Z2)
+
+
+	# since correlation is removed, 
+	# the correlation is shrunk toward zero.
+	# But because the diagonal cov is not exactly zero, the 
+	# decorrelation is approximate.  
+	# But if diagonal elements are very similar, method is very good
+	# are 
+	# cov(Z1)
+	# cor(Z1)
+
+	# Z3 = whiten(scale(Y), method="PCA")
+	# checkEqualsNumeric(Z3, Z2)
+
+}
 
 
 

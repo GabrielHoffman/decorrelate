@@ -237,7 +237,7 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 	# }
 	# always divide by sqrt(n-1) so that var(x[,1]) 
 	# is crossprod(x[,1])/(n-1) when center is TRUE
-	X = standardise(X, center=TRUE, scale=scale)  / sqrt(n-1)
+	X = standardise(X, center=TRUE, scale=scale) / sqrt(n-1)
 
 	if( missing(k) ){
 		k = min(n,p)
@@ -294,6 +294,14 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 		lambda = min(1, max(1e-6, lambda))
 	}
 
+
+	# Modify sign of dcmp$v and dcmp$u so principal components are consistant
+	# This is motivated by whitening:::makePositivDiagonal()
+	# but here adjust both U and V so reconstructed data is correct
+	values = sign(diag(dcmp$v))
+	dcmp$v = sweep(dcmp$v, 2, values, "*")
+	dcmp$u = sweep(dcmp$u, 2, values, "*")
+
 	result = list(	U 		= dcmp$v, 
 					dSq 	= dcmp$d^2, 
 					V 		= dcmp$u,
@@ -307,6 +315,9 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 
 	new("eclairs",	result)
 }
+
+
+
 
 
 
