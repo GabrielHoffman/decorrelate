@@ -48,7 +48,7 @@ library(whitening)
 n = 100
 
 # due to parallel processing, curves are not exactly cubic and linear
-values = c(seq(100, 1200, length.out=10), seq(1500, 5000, length.out=5))
+values = c(seq(100, 1200, length.out=50), seq(1500, 150000, length.out=50))
 values = as.integer(values)
 
 df_time = lapply( values, function(p){
