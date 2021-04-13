@@ -36,6 +36,12 @@ https://hoffmg01.u.hpc.mssm.edu/software/decorrelate/computational_scaling.html
 
 
 ```{r setup, include=FALSE}
+library(data.table)
+library(lubridate)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
 knitr::opts_chunk$set(
   echo = FALSE,
   warning=FALSE,
@@ -45,6 +51,7 @@ knitr::opts_chunk$set(
   dev = c("png", "pdf"),
   cache = TRUE)
 ```
+
 
 ```{r simulate.data}
 
@@ -58,8 +65,11 @@ library(whitening)
 n = 100
 
 # due to parallel processing, curves are not exactly cubic and linear
-values = c(seq(500, 5000, length.out=50), seq(6000, 150000, length.out=50))
-values = as.integer(values)
+values = c(	20000, seq(500, 5000, length.out=50), 
+			seq(6000, 150000, length.out=50)
+			seq(200000, 1000000, length.out=10))
+
+values = as.integer(sort(values))
 
 df_time = lapply( values, function(p){
 
@@ -105,11 +115,11 @@ fit2 = lm(naive ~ 0 + I(p^3), df_time)
 
 p_max = max(df_time$p)
 
-df_p = data.frame(p=seq(100, p_max, length.out=1000))
+df_p = data.table(p=seq(100, p_max, length.out=1000))
 
 df_p$decorrelate = predict(fit1, df_p)
 df_p$naive = predict(fit2, df_p)
-df_melt_p = reshape2::melt(df_p, id.vars='p')
+df_melt_p = melt(df_p, id.vars='p')
 df_melt_p$variable = factor(df_melt_p$variable, c("naive", "decorrelate"))
 
 df_melt = reshape2::melt(df_time, id.vars="p")
@@ -127,6 +137,40 @@ fig3 = fig + scale_y_log10()
 
 plot_grid(fig1, fig2, fig3, nrow=1)
 ```
+
+Run time at `r max(values)` features:
+```{r time.table}
+df2 = df_melt_p[, .SD[which.max(value),], by="variable"]
+df2$RunTime = seconds_to_period( round(df2$value, 0))
+
+df2 %>% rename(Method = variable) %>% 
+	select(Method,p, RunTime) %>% 
+	kable(caption="Compare run times") %>% kable_styling(full_width=FALSE) 
+```
+This is a speed up of `r format(max(df2$value) / min(df2$value), big.mark=',')`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
