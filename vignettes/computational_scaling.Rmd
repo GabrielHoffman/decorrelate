@@ -120,10 +120,12 @@ df_melt$variable = factor(df_melt$variable, c("naive", "decorrelate"))
 
 ```{r plot.results, cache=FALSE, fig.height=6, fig.width=12}
 fig = ggplot(df_melt, aes(p, value, color=variable)) + geom_point() + theme_bw(16) + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5), legend.position="bottom") + xlab("Number of features") + ylab("Time in seconds") + geom_line(data=df_melt_p, aes(p, value, color=variable)) + scale_color_manual(name="Method", values = c("red", "blue")) 
-fig1 = fig + xlim(0, NA) + ylim(0, max(df_time$naive, na.rm=TRUE))
-fig2 = fig + xlim(0, NA) + scale_y_log10()
 
-plot_grid(fig1, fig2, nrow=1)
+fig1 = fig + xlim(0, 12000) + ylim(0, max(df_time$naive, na.rm=TRUE))
+fig2 = fig + ylim(0, max(df_time$naive, na.rm=TRUE))
+fig3 = fig + scale_y_log10()
+
+plot_grid(fig1, fig2, fig3, nrow=1)
 ```
 
 
