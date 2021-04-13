@@ -1,0 +1,126 @@
+---
+title: "Computational scaling of data whitening"
+subtitle: ''
+author: "Developed by [Gabriel Hoffman](http://gabrielhoffman.github.io/)"
+date: "Run on `r Sys.time()`"
+documentclass: article
+output: 
+  html_document:
+  toc: true
+  smart: false
+vignette: >
+  %\VignetteIndexEntry{Computational scaling of data whitening}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\usepackage[utf8]{inputenc}
+---
+
+
+
+<!--- 
+
+rmarkdown::render("computational_scaling.Rmd");
+
+--->
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning=FALSE,
+  message=FALSE,
+  error = FALSE,
+  tidy = FALSE,
+  dev = c("png", "pdf"),
+  cache = TRUE)
+```
+
+
+
+
+
+```{r simulate.data}
+
+library(decorrelate)
+library(Matrix)
+library(Rfast)
+library(ggplot2)
+library(cowplot)
+library(whitening)
+
+library(profmem)
+options(profmem.threshold = 2000)
+
+n = 100
+
+# due to parallel processing, curves are not exactly cubic and linear
+values = c(seq(100, 1200, length.out=10), seq(1500, 5000, length.out=5))
+values = as.integer(values)
+
+df_time = lapply( values, function(p){
+
+	message("\r", p, '       ')
+
+	Y = matrnorm(n,p)
+	zstat = rnorm(p)
+
+	res1 = system.time({
+		ecl <- eclairs(Y, compute="covariance", lambda=0)
+		Z1 <- decorrelate(Y, ecl)
+	})
+	time_decorrelate = res1[3]
+
+	if(p <= 12000){
+		res2 = system.time({
+			# C <- cov(Y) 
+			# lambda <- 1e-3
+			# Sigma <- C*(1-lambda) + diag(lambda, p)
+			# zstat_indep2 <- array(zstat %*% chol(Sigma))
+			Z2 = whiten(Y)
+		})
+		time_naive = res2[3]
+	}else{
+		time_naive = NA
+	}
+
+	data.frame(p = p, decorrelate = time_decorrelate, naive = time_naive)
+})
+df_time = do.call(rbind, df_time)
+```
+
+```{r process.result, cache=FALSE}
+# predict based on curves
+fit1 = lm(decorrelate ~ 0 + p, df_time)
+fit2 = lm(naive ~ 0 + I(p^3), df_time)
+
+p_max = max(df_time$p)
+
+df_p = data.frame(p=seq(100, p_max, length.out=1000))
+
+df_p$decorrelate = predict(fit1, df_p)
+df_p$naive = predict(fit2, df_p)
+df_melt_p = reshape2::melt(df_p, id.vars='p')
+df_melt_p$variable = factor(df_melt_p$variable, c("naive", "decorrelate"))
+
+df_melt = reshape2::melt(df_time, id.vars="p")
+
+df_melt$variable = factor(df_melt$variable, c("naive", "decorrelate"))
+```
+
+
+```{r plot.results, cache=FALSE, fig.height=6, fig.width=12}
+fig = ggplot(df_melt, aes(p, value, color=variable)) + geom_point() + theme_bw(16) + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5), legend.position="bottom") + xlab("Number of features") + ylab("Time in seconds") + geom_line(data=df_melt_p, aes(p, value, color=variable)) + scale_color_manual(name="Method", values = c("red", "blue")) 
+fig1 = fig + xlim(0, 10000) + ylim(0, max(df_time$naive, na.rm=TRUE))
+fig2 = fig + xlim(0, 10000) + scale_y_log10()
+
+plot_grid(fig1, fig2, nrow=1)
+```
+
+
+
+
+
+
+
+
