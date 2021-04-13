@@ -36,10 +36,6 @@ knitr::opts_chunk$set(
   cache = TRUE)
 ```
 
-
-
-
-
 ```{r simulate.data}
 
 library(decorrelate)
@@ -48,9 +44,6 @@ library(Rfast)
 library(ggplot2)
 library(cowplot)
 library(whitening)
-
-library(profmem)
-options(profmem.threshold = 2000)
 
 n = 100
 
@@ -65,21 +58,27 @@ df_time = lapply( values, function(p){
 	Y = matrnorm(n,p)
 	zstat = rnorm(p)
 
+	lambda <- 1e-1
+
 	res1 = system.time({
-		ecl <- eclairs(Y, compute="covariance", lambda=0)
+		ecl <- eclairs(Y, compute="covariance", lambda=lambda)
 		Z1 <- decorrelate(Y, ecl)
 	})
 	time_decorrelate = res1[3]
 
 	if(p <= 12000){
 		res2 = system.time({
-			# C <- cov(Y) 
-			# lambda <- 1e-3
-			# Sigma <- C*(1-lambda) + diag(lambda, p)
-			# zstat_indep2 <- array(zstat %*% chol(Sigma))
-			Z2 = whiten(Y)
+			C <- cov(Y) 
+			Sigma <- C*(1-lambda) + diag(lambda*ecl$nu, p)
+			W = whiteningMatrix(Sigma, method="ZCA")
+			Z2 <- tcrossprod(Y, W)
+			# Z2 = whiten(Y)
 		})
 		time_naive = res2[3]
+
+		# Z1 and Z2 are identical to machine precision
+		# range(Z1 - Z2)
+
 	}else{
 		time_naive = NA
 	}
