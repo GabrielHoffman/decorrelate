@@ -23,9 +23,11 @@ cd /hpc/users/hoffmg01/build2/decorrelate/vignettes
 ml git pandoc
 
 R
+system("git pull")
+
 rmarkdown::render("computational_scaling.Rmd");
 
-cp /hpc/users/hoffmg01/build2/decorrelate/vignettes/computational_scaling.html ~/www/software/decorrelate/
+system('cp /hpc/users/hoffmg01/build2/decorrelate/vignettes/computational_scaling.html ~/www/software/decorrelate/')
 
 https://hoffmg01.u.hpc.mssm.edu/software/decorrelate/computational_scaling.html
 
@@ -56,7 +58,7 @@ library(whitening)
 n = 100
 
 # due to parallel processing, curves are not exactly cubic and linear
-values = c(seq(100, 1200, length.out=50), seq(1000, 150000, length.out=50))
+values = c(seq(500, 5000, length.out=50), seq(6000, 150000, length.out=50))
 values = as.integer(values)
 
 df_time = lapply( values, function(p){
