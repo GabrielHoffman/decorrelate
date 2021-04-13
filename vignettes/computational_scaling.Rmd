@@ -19,7 +19,15 @@ vignette: >
 
 <!--- 
 
+cd /hpc/users/hoffmg01/build2/decorrelate/vignettes
+ml git pandoc
+
+R
 rmarkdown::render("computational_scaling.Rmd");
+
+cp /hpc/users/hoffmg01/build2/decorrelate/vignettes/computational_scaling.html ~/www/software/decorrelate/
+
+https://hoffmg01.u.hpc.mssm.edu/software/decorrelate/computational_scaling.html
 
 --->
 
@@ -48,7 +56,7 @@ library(whitening)
 n = 100
 
 # due to parallel processing, curves are not exactly cubic and linear
-values = c(seq(100, 1200, length.out=50), seq(1500, 150000, length.out=50))
+values = c(seq(100, 1200, length.out=50), seq(1000, 150000, length.out=50))
 values = as.integer(values)
 
 df_time = lapply( values, function(p){
@@ -110,8 +118,8 @@ df_melt$variable = factor(df_melt$variable, c("naive", "decorrelate"))
 
 ```{r plot.results, cache=FALSE, fig.height=6, fig.width=12}
 fig = ggplot(df_melt, aes(p, value, color=variable)) + geom_point() + theme_bw(16) + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5), legend.position="bottom") + xlab("Number of features") + ylab("Time in seconds") + geom_line(data=df_melt_p, aes(p, value, color=variable)) + scale_color_manual(name="Method", values = c("red", "blue")) 
-fig1 = fig + xlim(0, 10000) + ylim(0, max(df_time$naive, na.rm=TRUE))
-fig2 = fig + xlim(0, 10000) + scale_y_log10()
+fig1 = fig + xlim(0, NA) + ylim(0, max(df_time$naive, na.rm=TRUE))
+fig2 = fig + xlim(0, NA) + scale_y_log10()
 
 plot_grid(fig1, fig2, nrow=1)
 ```
