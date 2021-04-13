@@ -11,7 +11,7 @@
 #' @param n sample size
 #' @param mu mean vector
 #' @param Sigma.eclairs covariance matrix as an \link{eclairs} object
-#' @param v degrees of freedom, defaults to Inf.  If finite, uses a Multivariate t distribution
+#' @param v degrees of freedom, defaults to Inf.  If finite, uses a multivariate t distribution
 #'
 #' @details 
 #' Draw from multivariate normal and t distributions using eclairs decomposition.  If the (implied) covariance matrix is \eqn{p \times p}, the standard approach is \eqn{O(p^3)}. Taking advantage of the previously computed eclairs decomposition of rank \eqn{k}, this can be done in \eqn{O(pk^2)}.

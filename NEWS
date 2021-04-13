@@ -1,3 +1,8 @@
+CHANGES IN VERSION 0.0.4
+-------------------------
+	o add lm_eclairs() and lm_each_eclairs()
+	o add R/lm_projection.R
+
 CHANGES IN VERSION 0.0.1
 -------------------------
 	o initial version

@@ -22,3 +22,24 @@ DONE: 6) Currently eclairs only shrinks to target identity matrix.
 
 DONE: see decorrelate.Rmd
 	7) Show effect of lambda on transformation	
+
+show time versus dimension curve for eclair + decorrelate compared to naive method.
+
+DONE: Additional testing on lm_eclairs(), add unit tests
+
+DONE: added lm_eclairs()
+
+	Joint analysis to score annotations
+		joint_lm_eclairs = function(formula, data){
+
+			fit = lm(y.transform ~ ., data)
+
+			or use mr.ash or vrbs?
+			
+		}
+
+decorrelate() working on transposed data
+	check dimension of X vs U and report error
+
+lm_eclairs() and lm_each_eclairs()
+	This function fit a linear regression to the transformed response, and transformed design matrix.  Note that the design matrix, not just the data.frame of variables is transformed so that 1) factors are transformed and 2) the intercept term is transformed.  

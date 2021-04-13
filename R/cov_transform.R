@@ -10,8 +10,8 @@
 #' Given covariance between features in the original data, estimate the covariance matrix after applying a transformation to each feature.  Here we use the eclairs decomposition of the original covariance matrix, perform a parametric bootstrap and return the eclairs decomposition of the covariance matrix of the transformed data.  
 #'
 #' @param Sigma.eclairs covariance/correlation matrix as an \link{eclairs} object
-#' @param n number of parametric bootstrap samples.  Increasing n gives more precise estimates.
-#' @param f function specifying the transformation.  The default function is \eqn{2\log(|x| + 1e-4)} which is a stable approximation of \eqn{\log(x^2)}
+#' @param n.boot number of parametric bootstrap samples.  Increasing n gives more precise estimates.
+#' @param f function specifying the transformation.  The default function is \eqn{\log(x^2 + 1e-3)} which offsets \eqn{x^2} away from zero since \eqn{\log(x^2)} is not defined for \eqn{x=0}.
 #' @param lambda shrinkage parameter.  If not specified, it is estimated from the data.
 #' @param compute compute the 'covariance' (default) or 'correlation'
 #'
@@ -46,8 +46,8 @@
 #' # Parametric boostrap to estimate covariance
 #' # after transformation
 #' 
-#' # transformation function is stable approximation of log(x^2)
-#' f = function(x) 2*log(abs(x)+1e-4)
+#' # transformation function
+#' f = function(x) log(x^2 + 1e-3)
 #' 
 #' # number of bootstrap samples
 #' n_boot = 50000
@@ -98,19 +98,16 @@
 #' abline(0, 1, col='red')
 #' 
 #' @export
-cov_transform = function(Sigma.eclairs, n, f = function(x) 2*log(abs(x)+1e-4), lambda=NULL, compute=c("covariance", "correlation")){
+cov_transform = function(Sigma.eclairs, n.boot, f = function(x) log(x^2 + 1e-3), lambda=NULL, compute=c("covariance", "correlation")){
 
 	stopifnot(is(Sigma.eclairs, "eclairs"))
 	stopifnot(is(f, "function"))
 	compute = match.arg(compute)
 
-	# f1 = function(x) 2*log(abs(x)+1e-4) 
-	# f2 = function(x) log(x^2)
-
 	mu = rep(0, Sigma.eclairs$p)
 
 	# draw samples from the multivariate normal with covariance Sigma.eclairs
-	X = rmvnorm_eclairs(n, mu, Sigma.eclairs)
+	X = rmvnorm_eclairs(n.boot, mu, Sigma.eclairs)
 
 	# Perofrm eclairs decomposition of sampled data after applying transform f
 	# set scale=FALSE to get covariance

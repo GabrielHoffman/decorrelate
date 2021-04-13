@@ -157,7 +157,9 @@ n = 100
 
 # memory and time are linear
 
-values = c(seq(100, 10000, length.out=50), seq(15000, 1000000, length.out=100))
+
+# due to parallel processing across 48 cores, curves are not exactly cubic and linear
+values = c(seq(100, 12000, length.out=50), seq(15000, 1000000, length.out=15))
 values = as.integer(values)
 
 df_time = lapply( values, function(p){
@@ -173,9 +175,9 @@ df_time = lapply( values, function(p){
 	})
 	time_decorrelate = res1[3]
 
-	if(p < 10000){
+	if(p <= 12000){
 		res2 = system.time({
-			C <- cov(Y)
+			C <- cov(Y) 
 			lambda <- 1e-3
 			Sigma <- C*(1-lambda) + diag(lambda, p)
 			zstat_indep2 <- array(zstat %*% chol(Sigma))
@@ -198,20 +200,22 @@ p_max = max(df_time$p)
 
 df_p = data.frame(p=seq(100, p_max, length.out=1000))
 
-df_p$y1 = predict(fit1, df_p)
-df_p$y2 = predict(fit2, df_p)
+df_p$decorrelate = predict(fit1, df_p)
+df_p$naive = predict(fit2, df_p)
 df_melt_p = reshape2::melt(df_p, id.vars='p')
-
-
+df_melt_p$variable = factor(df_melt_p$variable, c("naive", "decorrelate"))
 
 
 df_melt = reshape2::melt(df_time, id.vars="p")
 
 df_melt$variable = factor(df_melt$variable, c("naive", "decorrelate"))
 
-ggplot(df_melt, aes(p, value, color=variable)) + scale_color_brewer(name="Method", palette = "Set1") + geom_point() + theme_bw(16) + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5)) + xlab("Number of features") + ylab("Time in seconds") + geom_line(data=df_melt_p, aes(p, value, color=variable)) + scale_y_log10() 
+fig1 = ggplot(df_melt, aes(p, value, color=variable)) + geom_point() + theme_bw(16) + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5)) + xlab("Number of features") + ylab("Time in seconds") + geom_line(data=df_melt_p, aes(p, value, color=variable)) + scale_color_manual(name="Method", values = c("red", "blue")) 
+
+fig1 + xlim(0, 10000) + ylim(0, max(df_time$naive, na.rm=TRUE))
 
 
+fig1 + scale_y_log10() 
 
 
 

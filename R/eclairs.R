@@ -136,7 +136,6 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 #' Compute \eqn{U}, \eqn{d^2} to approximate the covariance/correlation matrix between columns of data matrix X by \eqn{U diag(d^2 (1-\lambda)) U^T + diag(\nu * \lambda)}.  When computing the covariance matrix \eqn{\nu} is the constant variance which is the mean of all feature-wise variances.  When computing the correlation matrix, \eqn{\nu = 1}.   
 #'
 #' @importFrom Rfast standardise colVars
-# @importFrom irlba irlba
 #' @importFrom PRIMME svds
 #' @importFrom methods new
 #'
@@ -164,8 +163,6 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 	# Estimate num, the scale of the target matrix
 	# needs to be computed here, because X is overwritten
 	nu = ifelse( compute == "correlation", 1, mean(colVars(X)))
-
-
 
 	# scale so that cross-product gives correlation
 	# features are *columns*	

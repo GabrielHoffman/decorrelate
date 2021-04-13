@@ -4,7 +4,7 @@
 \alias{mult_eclairs}
 \title{Multiply by eclairs matrix}
 \usage{
-mult_eclairs(X, U1, dSq1, lambda, nu, alpha)
+mult_eclairs(X, U1, dSq1, lambda, nu, alpha, transpose = FALSE)
 }
 \arguments{
 \item{X}{matrix to be transformed so *columns* are independent}
@@ -18,9 +18,11 @@ mult_eclairs(X, U1, dSq1, lambda, nu, alpha)
 \item{nu}{diagonal value of target matrix in shrinkage}
 
 \item{alpha}{exponent to be evaluated}
+
+\item{transpose}{logical, (default FALSE) indicating if X should be transposed first}
 }
 \description{
-Multiply by eclairs matrix using special structure to achieve linear instead of cubic time complexity.
+Multiply by \link{eclairs} matrix using special structure to achieve linear instead of cubic time complexity.
 }
 \details{
 Let \eqn{\Sigma = U_1 diag(d_1^2) U_1^T * (1-\lambda) + diag(\nu\lambda, p)}, where \eqn{\lambda} shrinkage parameter for the convex combination between a low rank matrix and the diagonal matrix with values \eqn{\nu}.

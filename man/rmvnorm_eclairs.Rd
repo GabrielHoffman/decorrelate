@@ -13,7 +13,7 @@ rmvnorm_eclairs(n, mu, Sigma.eclairs, v = Inf)
 
 \item{Sigma.eclairs}{covariance matrix as an \link{eclairs} object}
 
-\item{v}{degrees of freedom, defaults to Inf.  If finite, uses a Multivariate t distribution}
+\item{v}{degrees of freedom, defaults to Inf.  If finite, uses a multivariate t distribution}
 }
 \value{
 matrix where rows are samples from multivariate normal or t distribution where columns have covariance specified by \code{Sigma.eclairs}

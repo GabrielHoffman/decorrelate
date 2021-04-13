@@ -27,7 +27,7 @@ test_decorrelate = function(){
 
 	z.decorr = t(mult_eclairs(t(zstat), cor.est$U, cor.est$dSq, cor.est$lambda, cor.est$nu, alpha = -1/2))
 
-	z.decorr2 = decorrelate(zstat, cor.est )
+	z.decorr2 = decorrelate(zstat, cor.est, transpose=TRUE )
 
 	checkIdentical(z.decorr, z.decorr2)
 }
@@ -134,6 +134,7 @@ test_decorrelate_full_rank = function(){
 				dSq = dcmp$values,
 				lambda =1e-10,
 				nu=1)
+	cor.est = new("eclairs", cor.est)
 
 	Y.decorr2 = decorrelate(Y, cor.est)
 
@@ -197,6 +198,106 @@ test_decorrelate_full_rank = function(){
 # 	hist(cor(Y))
 # 	hist(cor(Y.decorr2))
 # }
+
+
+
+
+
+
+
+
+
+
+test_lm_each_eclairs = function(){
+
+	library(Matrix)
+	library(Rfast)
+	set.seed(1)
+	n = 800 # number of samples
+	p = 8*200 # number of features
+
+	# Create correlation matrix with autocorrelation
+	autocorr.mat <- function(p = 100, rho = 0.9) {
+	mat <- diag(p)
+	return(rho^abs(row(mat)-col(mat)))
+	}
+
+	# create correlation matrix
+	Sigma = autocorr.mat(p/8, .9)
+	Sigma = bdiag(Sigma, Sigma)
+	Sigma = bdiag(Sigma, Sigma)
+	Sigma = bdiag(Sigma, Sigma)
+
+	# draw data from correlation matrix Sigma
+	Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
+
+	# eclairs decomposition
+	ecl = eclairs(Y)
+
+	# simulate covariates
+	data = data.frame(matrnorm(p,2))
+	colnames(data) = paste0('v', 1:2)
+
+	# simulate response
+	y = rnorm(p)
+
+	# Simulate 1000 features to test
+	X = matrnorm(p, 1000)
+	colnames(X) = paste0('set_', 1:ncol(X))
+
+	lm_each_eclairs_slow = function(formula, data, X, Sigma.eclairs,...){
+
+	    formula.mod = update(formula, . ~ . + x.tempVariable)
+
+	    res = t(apply(X, 2, function(x){
+
+	        # included this x vector in the data matrix
+	        data$x.tempVariable = x
+
+	        # fit regression
+	        fit = lm_eclairs( formula.mod, data, Sigma.eclairs,...)
+
+	        # extract hypothesis test
+	        coef(summary(fit))['x.tempVariable',,drop=FALSE]    
+	    }))
+
+	    rownames(res) = colnames(X)
+	    colnames(res) = c("beta", "se", "tstat", "pvalue")
+
+	    as.data.frame(res)
+	}
+
+	# Test time
+
+	# # Use slow version
+	# system.time({
+	# res1 <- lm_each_eclairs_slow(y ~ v1 + v2, data, X[,1:1000], ecl )
+	# })
+
+	# # fast version using pre-project ( ~ 50X faster!)
+	# system.time({
+	# res2 <- lm_each_eclairs(y ~ v1 + v2, data, X[,1:1000], ecl )
+	# })
+
+	# Use slow version
+	res1 = lm_each_eclairs_slow(y ~ v1 + v2, data, X[,1:10], ecl )
+
+	# fast version using pre-project
+	res2 = lm_each_eclairs(y ~ v1 + v2, data, X[,1:10], ecl )
+
+	checkEqualsNumeric(res1, res2)
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -6,8 +6,8 @@
 \usage{
 cov_transform(
   Sigma.eclairs,
-  n,
-  f = function(x) 2 * log(abs(x) + 1e-04),
+  n.boot,
+  f = function(x) log(x^2 + 0.001),
   lambda = NULL,
   compute = c("covariance", "correlation")
 )
@@ -15,9 +15,9 @@ cov_transform(
 \arguments{
 \item{Sigma.eclairs}{covariance/correlation matrix as an \link{eclairs} object}
 
-\item{n}{number of parametric bootstrap samples.  Increasing n gives more precise estimates.}
+\item{n.boot}{number of parametric bootstrap samples.  Increasing n gives more precise estimates.}
 
-\item{f}{function specifying the transformation.  The default function is \eqn{2\log(|x| + 1e-4)} which is a stable approximation of \eqn{\log(x^2)}}
+\item{f}{function specifying the transformation.  The default function is \eqn{\log(x^2 + 1e-3)} which offsets \eqn{x^2} away from zero since \eqn{\log(x^2)} is not defined for \eqn{x=0}.}
 
 \item{lambda}{shrinkage parameter.  If not specified, it is estimated from the data.}
 
@@ -57,8 +57,8 @@ ecl = eclairs(Y)
 # Parametric boostrap to estimate covariance
 # after transformation
 
-# transformation function is stable approximation of log(x^2)
-f = function(x) 2*log(abs(x)+1e-4)
+# transformation function
+f = function(x) log(x^2 + 1e-3)
 
 # number of bootstrap samples
 n_boot = 50000
