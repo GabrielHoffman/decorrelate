@@ -1,6 +1,6 @@
 ---
 title: "Computational scaling of eclairs data whitening"
-subtitle: '__E__stimate of __c__ovariance using __l__ow __r__ank and __s__hrinkage'
+subtitle: '_E_stimate of __c__ovariance using __l__ow __r__ank and __s__hrinkage'
 author: "Developed by [Gabriel Hoffman](http://gabrielhoffman.github.io/)"
 date: "Run on `r Sys.time()`"
 documentclass: article
