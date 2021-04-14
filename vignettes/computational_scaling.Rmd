@@ -86,7 +86,7 @@ df_time = lapply( values, function(p){
 	})
 	time_decorrelate = res1[3]
 
-	if(p <= 12000){
+	if(p <= 20000){
 		res2 = system.time({
 			C <- cov(Y) 
 			Sigma <- C*(1-lambda) + diag(lambda*ecl$nu, p)
