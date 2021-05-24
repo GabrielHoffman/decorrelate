@@ -222,7 +222,7 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 	# if correlation is computed, scale features
 	scale = ifelse( compute == "correlation", TRUE, FALSE)
 
-	# Estimate num, the scale of the target matrix
+	# Estimate nu, the scale of the target matrix
 	# needs to be computed here, because X is overwritten
 	nu = ifelse( compute == "correlation", 1, mean(colVars(X)))
 
@@ -272,26 +272,30 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 
 	if( missing(lambda) | is.null(lambda) ){
 
-		if( fastLambda ){
-			# fast approximation
-			lambda = est_lambda_ev( dcmp$d^2, n, p)
-		}else{
-			# if SVD is a full rank approximation
-			if( k == min(dim(X)) ){			
-				lambda = shrinkcovmat.equal_lambda( t(X) )$lambda_hat
-			}else{
+		# if( fastLambda ){
+		# 	# fast approximation
+		# 	lambda = est_lambda_ev( dcmp$d^2, n, p)
+		# }else{
+		# 	# if SVD is a full rank approximation
+		# 	if( k == min(dim(X)) ){			
+		# 		lambda = shrinkcovmat.equal_lambda( t(X) )$lambda_hat
+		# 	}else{
 
-				# if SVD is a low rank approximation
-				# estimate lambda for shrinkage
-				# but use lambda reconstructed from low rank decomp
-				# lambda = mvIC:::shrinkcovmat.equal_lambda( t(X) )$lambda
-				v = d = u = NULL # pass R CMD BiocCheck
-				X_reconstruct = with(dcmp, u %*% (d * t(v)))
-				lambda = shrinkcovmat.equal_lambda( t(X_reconstruct) )$lambda_hat
-			}
-		}
+		# 		# if SVD is a low rank approximation
+		# 		# estimate lambda for shrinkage
+		# 		# but use lambda reconstructed from low rank decomp
+		# 		# lambda = mvIC:::shrinkcovmat.equal_lambda( t(X) )$lambda
+		# 		v = d = u = NULL # pass R CMD BiocCheck
+		# 		X_reconstruct = with(dcmp, u %*% (d * t(v)))
+		# 		lambda = shrinkcovmat.equal_lambda( t(X_reconstruct) )$lambda_hat
+		# 	}
+		# }
 
-		lambda = min(1, max(1e-6, lambda))
+		# lambda = min(1, max(1e-6, lambda))
+
+		# Estimate lambda by empirical Bayes, using nu as scale of target
+		# Since data is scaled to have var 1 (instead of n), multiply by n
+		lambda = estimate_lambda_eb( n*dcmp$d^2, n, p, nu)
 	}
 
 
@@ -317,7 +321,55 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 }
 
 
+#' Plot eclairs object
+#'
+#' Plot eclairs object
+#' @param x eclairs object
+#' @param y extra argument, not used
+#' @param ... additional arguments
+#'
+#' @importFrom graphics points legend
+#' @export
+setMethod("plot", "eclairs", function(x, y, ...) {
+    
+    args = match.call(expand.dots=TRUE)
 
+    col = args$col
+    if( ! is(col, "character")){
+    	col = "deepskyblue"
+    }
+
+    main = args$main
+    if( ! is(main, "character")){
+    	main = "Eigen-values"
+    }
+
+	# plot observed eigen-values
+	plot(x$dSq, ylab="Eigen-values", main=main, ylim=c(0, max(x$dSq)))
+
+	# plot shrunk eigen-values
+	ev_shrunk = with(x, (1-lambda)*dSq + nu*lambda)
+	points(ev_shrunk, col=col, pch='+')
+
+	# add legend
+	legend("topright", legend=c("Observed", "Shrinkage estimate"), fill=c("black", col), box.lwd=0)
+
+	# get max x and y values
+	maxy = max(x$dSq)
+	maxx = length(ev_shrunk)
+	# 0.8*maxx, 0.9*maxy
+
+	# add info about dataset
+	legend("bottomleft", ncol = 2,
+	  legend = c(expression(lambda~':'), expression(nu~':'), expression(n~':'), expression(p~':'), 
+  				format(x$lambda, digits=3),
+	  			format(x$nu, digits=3),
+	  			format(x$n, digits=0, big.mark=','),
+	  			format(x$p, digits=0, big.mark=',')
+	  	),
+	  box.lwd=0,
+	  text.width=0	)
+})
 
 
 

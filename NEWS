@@ -1,3 +1,11 @@
+CHANGES IN VERSION 0.0.6 / May 25, 2021
+-------------------------
+	o add estimate_lambda_eb() to perform empirical Bayes estimation of lambda
+		- works for truncated SVD by setting missing ev's to the mean residual variance
+		- this makes estimation of lambda stable for varying ranks
+	o add plot() for eclairs
+
+
 CHANGES IN VERSION 0.0.5
 -------------------------
 	o add reform_decomp()

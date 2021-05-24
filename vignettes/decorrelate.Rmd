@@ -56,7 +56,7 @@ Y.decorr.exact = Y %*% with(eigen(Sigma), vectors %*% diag(values^-0.5) %*% t(ve
 
 # Estimate correlation with low rank and shrinkage
 ecl = eclairs(Y)
-plot(ecl$dSq, main = "Eigen values of Y")
+plot(ecl)
 C = getCor(ecl)
 image(C, main="Sample correlation matrix")
 
@@ -65,7 +65,6 @@ image(cor(Y.decorr2), main="Correlation after decorrelating")
 ```  
 
 When p >> n, the estimate of $\hat\Sigma$ is poor, even with shrinkage.  In this case `eclairs + decorrelate` does reduce the correlation, but the amount varies.  However, this is not an issue because in regression, the covariance matrix is actually known.  Can I prove this?
-
 
 
 ```{r eval=FALSE}
@@ -92,11 +91,17 @@ Sigma = bdiag(Sigma, Sigma)
 # draw data from correlation matrix Sigma
 Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
 
-# Compare fastLambda TRUE vs FALSE
-# eclairs(Y, fastLambda=FALSE)
-# eclairs(Y)
-
 ecl = eclairs(Y)
+plot(ecl)
+
+decorrelate:::shrinkcovmat.equal_lambda(Y)
+
+Y.decorr2 = decorrelate(Y, ecl)
+# image(cor(Y.decorr2), main="Correlation after decorrelating")
+
+
+
+
 diag(cov(Y))
 
 
@@ -118,107 +123,6 @@ Z = do.call(cbind, Z)
 
 image(cor(Z), zlim=c(0,1))
 ```
-
-
-
-
-devtools::reload('/Users/gabrielhoffman/workspace/repos/decorrelate')
-
-
-
-system.time({
-ecl <- eclairs(Y, k=300)
-})
-
-system.time({
-ecl <- eclairs(Y, k=100)
-})
-
-system.time({
-ecl2 <- eclairs(Y, k=300, warmStart=ecl)
-})
-
-
-
-
-system.time({
-a <- svds(Y, 10)
-})
-
-
-system.time({
-a <- svds(Y, 10, v0 = ecl$U)
-})
-
-
-library(ggplot2)
-
-n = 100
-
-# memory and time are linear
-
-
-# due to parallel processing across 48 cores, curves are not exactly cubic and linear
-values = c(seq(100, 12000, length.out=50), seq(15000, 1000000, length.out=15))
-values = as.integer(values)
-
-df_time = lapply( values, function(p){
-
-	cat("\r", p, '       ')
-
-	Y = matrnorm(n,p)
-	zstat = rnorm(p)
-
-	res1 = system.time({
-		ecl <- eclairs(Y)
-		zstat_indep <- decorrelate(zstat, ecl)
-	})
-	time_decorrelate = res1[3]
-
-	if(p <= 12000){
-		res2 = system.time({
-			C <- cov(Y) 
-			lambda <- 1e-3
-			Sigma <- C*(1-lambda) + diag(lambda, p)
-			zstat_indep2 <- array(zstat %*% chol(Sigma))
-		})
-		time_naive = res2[3]
-	}else{
-		time_naive = NA
-	}
-
-	data.frame(p = p, decorrelate = time_decorrelate, naive = time_naive)
-})
-df_time = do.call(rbind, df_time)
-
-
-# predict based on curves
-fit1 = lm(decorrelate ~ 0 + p, df_time)
-fit2 = lm(naive ~ 0 + I(p^3), df_time)
-
-p_max = max(df_time$p)
-
-df_p = data.frame(p=seq(100, p_max, length.out=1000))
-
-df_p$decorrelate = predict(fit1, df_p)
-df_p$naive = predict(fit2, df_p)
-df_melt_p = reshape2::melt(df_p, id.vars='p')
-df_melt_p$variable = factor(df_melt_p$variable, c("naive", "decorrelate"))
-
-
-df_melt = reshape2::melt(df_time, id.vars="p")
-
-df_melt$variable = factor(df_melt$variable, c("naive", "decorrelate"))
-
-fig1 = ggplot(df_melt, aes(p, value, color=variable)) + geom_point() + theme_bw(16) + theme(aspect.ratio=1, plot.title = element_text(hjust = 0.5)) + xlab("Number of features") + ylab("Time in seconds") + geom_line(data=df_melt_p, aes(p, value, color=variable)) + scale_color_manual(name="Method", values = c("red", "blue")) 
-
-fig1 + xlim(0, 10000) + ylim(0, max(df_time$naive, na.rm=TRUE))
-
-
-fig1 + scale_y_log10() 
-
-
-
 
 
 

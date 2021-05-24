@@ -88,9 +88,9 @@ df_time = lapply( values, function(p){
 
 	if(p <= 20000){
 		res2 = system.time({
-			C <- cov(Y) 
-			Sigma <- C*(1-lambda) + diag(lambda*ecl$nu, p)
-			W = whiteningMatrix(Sigma, method="ZCA")
+			# C <- cov(Y) 
+			# Sigma <- C*(1-lambda) + diag(lambda*ecl$nu, p)
+			W = whiteningMatrix(cov(Y)*(1-lambda) + diag(lambda*ecl$nu, p), method="ZCA")
 			Z2 <- tcrossprod(Y, W)
 			# Z2 = whiten(Y)
 		})

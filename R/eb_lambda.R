@@ -84,7 +84,10 @@ logML = function(delta, p, n, eigs, logdetD){
 	if( n > p){
 		out = out - 0.5*(delta+n)*sum(log((delta-p-1)+eigs))
 	}else{	
-		out = out - 0.5*(delta+n)*(sum(log((delta-p-1)+eigs)) + (p-n)*sum(log(delta-p-1))) 
+		# if full svd, length(eigs) is 0
+		# but for low rank svd, use lenght(eigs)
+		# out = out - 0.5*(delta+n)*(sum(log((delta-p-1)+eigs)))+ (p-n)*sum(log(delta-p-1))) 
+		out = out - 0.5*(delta+n)*(sum(log((delta-p-1)+eigs)) + (p-length(eigs))*sum(log(delta-p-1))) 
 	}
 
 	out = out - 0.5*n*logdetD;
@@ -166,6 +169,23 @@ estimate_lambda_eb = function(ev, n, p, nu){
 
 	# D = diag(nu, p)
 	# logdetD = 2*sum(log(diag(chol(D))))	
+
+
+	# if is low rank
+	if( length(ev) < p){
+
+		# if eigen-values are truncated, include additial eigen-values
+		# so that sum(ev) equals the total variance, regardless of rank
+		# Note tthat ecails calls 
+		# 	estimate_lambda_eb( n*dcmp$d^2, n, p, nu)
+		# so eigen-values are already scaled by n
+		totalVar = p * n
+
+		# min(n,p) so works regardless of n > p or m < p
+		idx = seq(length(ev)+1, min(n,p))
+
+		ev[idx] = (totalVar-sum(ev)) / length(idx)
+	}
 
 	# estimate optimal lambda (i.e. alpha) value
 	getShrinkageValue(n, p, ev / nu, logdetD=2*p*log(sqrt(nu)), minimum = 1e-4)
