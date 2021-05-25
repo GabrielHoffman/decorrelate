@@ -134,14 +134,14 @@ getShrinkageValue = function(n, p, eigs, logdetD, minimum = 1e-4){
 #'
 #' Estimate shrinkage parameter by empirical Bayes
 #'
-#' @param ev array of eigen values
+#' @param ev array of eigen values 
 #' @param n number of samples
 #' @param p number of features
 #' @param nu scale of prior covariance matrix
 #'
 # @seealso \link{getShrinkageValue}
 #'
-#' @details Estimate shrinkage parameter for covariance matrix estimation using empirical Bayes method (Leday and Richardson, 2019).  The shrinage estimate of the covariance matrix is \eqn{(1-\lambda)\hat\Sigma + \lambda \nu I}, where \eqn{\hat\Sigma} is the sample covariance matrix, given a value of \eqn{lambda}.  A large value of \eqn{\lambda} indicates more weight on the prior.
+#' @details Estimate shrinkage parameter for covariance matrix estimation using empirical Bayes method (Hannart and Naveau, 2014; Leday and Richardson, 2019).  The shrinage estimate of the covariance matrix is \eqn{(1-\lambda)\hat\Sigma + \lambda \nu I}, where \eqn{\hat\Sigma} is the sample covariance matrix, given a value of \eqn{lambda}.  A large value of \eqn{\lambda} indicates more weight on the prior.
 #'
 #' @return value \eqn{\lambda} indicating the shrinkage between sample and prior covariance matrices.
 #'
@@ -155,6 +155,8 @@ getShrinkageValue = function(n, p, eigs, logdetD, minimum = 1e-4){
 #' 
 #' @references{
 #'   \insertRef{leday2019fast}{decorrelate}
+#'
+#'   \insertRef{hannart2014estimating}{decorrelate}
 #' }
 #'
 #' @import Rdpack
@@ -170,7 +172,6 @@ estimate_lambda_eb = function(ev, n, p, nu){
 	# D = diag(nu, p)
 	# logdetD = 2*sum(log(diag(chol(D))))	
 
-
 	# if is low rank
 	if( length(ev) < min(n,p)){
 
@@ -179,7 +180,7 @@ estimate_lambda_eb = function(ev, n, p, nu){
 		# Note tthat ecails calls 
 		# 	estimate_lambda_eb( n*dcmp$d^2, n, p, nu)
 		# so eigen-values are already scaled by n
-		totalVar = p * n
+		totalVar = p * n * nu
 
 		# min(n,p) so works regardless of n > p or m < p
 		idx = seq(length(ev)+1, min(n,p))

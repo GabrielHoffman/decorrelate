@@ -4,6 +4,7 @@ test_estimate_lambda = function(){
 
 	library(decorrelate)
 	# source("~/workspace/repos/decorrelate/R/eb_lambda.R")
+	# devtools::reload("./")
 	set.seed(1)
 
 	n = 100
@@ -71,6 +72,14 @@ test_estimate_lambda = function(){
  #   	decorrelate:: estimate_lambda_eb(n*ev, n, p, nu)
 
 
+ 	 # estimate_lambda_eb(n * ecl$dSq, n, ecl$p, nu)
+
+ 	 # ev = n * ecl$dSq
+ 	 # p =  ecl$p
+
+
+ 	 # estimate_lambda_eb(ev, n, ecl$p, nu)
+
 
 	# ev = eigs
 	# ev[p:length(ev)] = 0
@@ -100,9 +109,6 @@ test_estimate_lambda = function(){
 	# check two estimates of lambda
 	checkEqualsNumeric( fit@alphaOpt, est, tolerance=1e-4) & checkEqualsNumeric( fit@alphaOpt, ecl$lambda, tolerance=1e-4)
 }
-
-
-
 
 test_large_scale = function(){
 
@@ -137,7 +143,20 @@ test_large_scale = function(){
 	Y = matrnorm(n, ncol(Sigma.ch)) %*% Sigma.ch
 	Y = as.matrix(Y)
 
-	ecl = eclairs(Y, k = 50)
+	ecl = eclairs(Y[,1:50000 + 100000])
 
 	plot(ecl)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

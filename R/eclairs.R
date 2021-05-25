@@ -357,10 +357,9 @@ setMethod("plot", "eclairs", function(x, y, ...) {
 	# get max x and y values
 	maxy = max(x$dSq)
 	maxx = length(ev_shrunk)
-	# 0.8*maxx, 0.9*maxy
 
 	# add info about dataset
-	legend("bottomleft", ncol = 2,
+	legend( 0.6*maxx, 0.8*maxy, ncol = 2,
 	  legend = c(expression(lambda~':'), expression(nu~':'), expression(n~':'), expression(p~':'), 
   				format(x$lambda, digits=3),
 	  			format(x$nu, digits=3),
