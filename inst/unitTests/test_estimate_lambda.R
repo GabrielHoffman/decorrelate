@@ -121,7 +121,7 @@ test_large_scale = function(){
 	library(Rfast)
 
 	set.seed(1)
-	n = 1200 # number of samples
+	n = 10200 # number of samples
 	p = 100 # number of feature per block
 
 	# Create correlation matrix with autocorrelation
@@ -133,7 +133,7 @@ test_large_scale = function(){
 	# create correlation 
 	Sigma.ch = chol(autocorr.mat(p, .9))
 	
-	for( i in 1:2)
+	for( i in 1:4)
 		Sigma.ch = bdiag(Sigma.ch, Sigma.ch)
 
 	ncol(Sigma.ch)
@@ -143,10 +143,65 @@ test_large_scale = function(){
 	Y = matrnorm(n, ncol(Sigma.ch)) %*% Sigma.ch
 	Y = as.matrix(Y)
 
-	ecl = eclairs(Y[,1:50000 + 100000])
+	ecl = eclairs(Y)
 
 	plot(ecl)
+
+	Sigma = crossprod(Sigma.ch)
+
+	ecl2 = eclairs(Y[,1:1000], lambda=ecl$lambda)
+	C = decorrelate(decorrelate(Sigma[1:1000,1:1000], ecl2), ecl2)
+	C = as.matrix(C)
+	# corrplot::corrplot(cov2cor(C), main="C", method="color", tl.pos='n')
+
+	A = cora(Y[,1:1000])
+
+	hist(A - C)
+
+	i = which(abs(A) > .1)
+
+	mean(A[i]^2 - C[i]^2)
+
+
+	a = A[lower.tri(A)][i]
+	b = C[lower.tri(C)][i]
+
+	fit = mgcv::gam(b ~ s(a))
+
+	plot(fit, xlim=c(0, 1), ylim=c(0, 1), se=FALSE, xlab="Sample correlation", ylab="Estimated correlation")
+	points(a,b)
+	abline(0, 1, col="red")
+
+
+
 }
+
+
+a <- sweep(x,2,x[1,], FUN="*")
+b <- Rfast::eachrow(x,x[1,],"*")
+
+a[1:3,1:3]
+b[1:3,1:3]
+
+
+V = Sigma.eclairs$U
+values = sign(diag(Sigma.eclairs$U))
+
+a = sweep(V, 2, values, "*")
+b = Rfast::eachrow(V, values, "*")
+
+range(a-b)
+
+
+
+
+
+
+
+
+
+
+
 
 
 

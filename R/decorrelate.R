@@ -23,7 +23,7 @@
 #'
 #' @return a matrix product
 #'
-#' @importFrom Matrix tcrossprod
+#' @importFrom Matrix crossprod tcrossprod t
 #' @export
 mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha, transpose=FALSE){
 

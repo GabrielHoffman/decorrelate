@@ -23,16 +23,14 @@ rmarkdown::render("decorrelate.Rmd");
 
 --->
 
-
-# Test statistical performance of decorrelate 
-## p >> n
-```{r decorrelate.test1, fig.width=5}
+```{r load.packages}
 library(decorrelate)
 library(Matrix)
 library(Rfast)
-set.seed(1)
-n = 2000 # number of samples
-p = 8*3 # number of features
+library(ggplot2)
+library(cowplot)
+library(corrplot)
+library(viridis)
 
 # Create correlation matrix with autocorrelation
 autocorr.mat <- function(p = 100, rho = 0.9) {
@@ -40,96 +38,112 @@ autocorr.mat <- function(p = 100, rho = 0.9) {
     return(rho^abs(row(mat)-col(mat)))
 }
 
-# create correlation matrix
-Sigma = autocorr.mat(p/8, .9)
-Sigma = bdiag(Sigma, Sigma)
-Sigma = bdiag(Sigma, Sigma)
-Sigma = bdiag(Sigma, Sigma)
+# make scatter plot with 2D density using viridis colors
+plotScatterDensity = function(value1, value2){
 
-image(as.matrix(Sigma), main="True correlation matrix")
+  # Compute two dimensional density
+  get_density <- function(x, y, n = 250) {
+    dens <- MASS::kde2d(x = x, y = y, n = n)
+    ix <- findInterval(x, dens$x)
+    iy <- findInterval(y, dens$y)
+    ii <- cbind(ix, iy)
+    return(dens$z[ii])
+  }
+
+  # convert two vectors to a data frame
+  df = data.frame(cbind(value1, value2))
+
+  # determine limits of the plot
+  lim = with(df, max(abs(c(value1, value2))))
+
+  # Compute 2D density
+  df$density <- get_density(df$value1, df$value2, n = 100)
+
+  # Scatter plot colored by density
+  ggplot(df, aes(value1, value2, color=density)) + geom_point(size=.4) + theme_bw(16) + theme(aspect.ratio=1, legend.position="bottom", plot.title = element_text(hjust = 0.5)) + geom_abline(color="red") + geom_vline(xintercept=0, col="grey40", linetype="dashed") + geom_hline(yintercept=0, col="grey40", linetype="dashed") + xlim(-lim, lim) + ylim(-lim, lim) + scale_color_viridis() + geom_smooth(method="gam", se=FALSE, color="darkorange")
+}
+```
+
+
+
+# Test statistical performance of decorrelate 
+## p >> n
+```{r decorrelate.test1}
+set.seed(1)
+n = 2000 # number of samples
+p = 200 # number of features per block
+n_blocks = 2^4
+
+# create correlation matrix
+Sigma = autocorr.mat(p, .95)
+for( i in 1:log2(n_blocks)){
+    Sigma = bdiag(Sigma, Sigma)
+}
 
 # sample matrix from MVN with covariance Sigma
-Y = rmvnorm(n, rep(0, p), sigma=Sigma)
-
-# decorrelated using *true* correlation matrix
-Y.decorr.exact = Y %*% with(eigen(Sigma), vectors %*% diag(values^-0.5) %*% t(vectors))
+Y = rmvnorm(n, rep(0, ncol(Sigma)), sigma=Sigma)
 
 # Estimate correlation with low rank and shrinkage
 ecl = eclairs(Y)
+
+# Approximate decorrelation transformation using eclairs
+Y.decorr = decorrelate(Y, ecl)
+```
+
+
+```{r show.plots, fig.width=7, fig.height=7.5}
+par(mfrow=c(2,2))
+n_features = 300
+i = 1:n_features
+
+corrplot(as.matrix(Sigma[i,i]), main="True correlation matrix", method="color", tl.pos='n', mar=c(0,0,1,0))
 plot(ecl)
-C = getCor(ecl)
-image(C, main="Sample correlation matrix")
+corrplot(getCor(ecl)[i,i], main="Estimated correlation matrix", method="color", tl.pos='n', mar=c(0,0,1,0))
+corrplot(cor(Y.decorr[,i]), main="Correlation after ADT", method="color", tl.pos='n', mar=c(0,0,1,0))
+```
 
-Y.decorr2 = decorrelate(Y, ecl)
-image(cor(Y.decorr2), main="Correlation after decorrelating")
-```  
+```{r corr.subet, fig.width=5, fig.height=5}
+# Evaluate correlatilon between a subset of features
+n_features = ncol(Y)
+ecl2 = eclairs(Y[,1:n_features], lambda=ecl$lambda)
 
-When p >> n, the estimate of $\hat\Sigma$ is poor, even with shrinkage.  In this case `eclairs + decorrelate` does reduce the correlation, but the amount varies.  However, this is not an issue because in regression, the covariance matrix is actually known.  Can I prove this?
+# Evaluate the correlation remaining after applying ADT
+C_decor = decorrelate(decorrelate(Sigma[1:n_features,1:n_features], ecl2), ecl2, transpose=TRUE)
 
+# Sample correlation
+C_sample = cora(Y[,1:n_features])
 
-```{r test2, fig.width=5}
-library(decorrelate)
+# extract correlation values
+C_decor.array = C_decor[lower.tri(C_decor)]
+C_sample.array = C_sample[lower.tri(C_sample)]
 
-library(Matrix)
-library(Rfast)
-set.seed(1)
-n = 800 # number of samples
-p = 8*1000 # number of features
+# fig1 = plotScatterDensity( abs(a),abs(b)) + xlim(0, 1) + ylim(0,1) + xlab("Sample correlation") + ylab("Correlation after transformation") + scale_x_continuous(expand=c(0, 0), limits=c(0, 1)) + scale_y_continuous(expand=c(0, 0), limits=c(0, 1))
+# plot_grid(fig1, fig2, nrow=1)
 
-# Create correlation matrix with autocorrelation
-autocorr.mat <- function(p = 100, rho = 0.9) {
- mat <- diag(p)
- return(rho^abs(row(mat)-col(mat)))
-}
+plotScatterDensity( C_sample.array, C_decor.array ) + xlim(NA, 1) + ylim(-NA,1) + xlab("Sample correlation") + ylab("Correlation after ADT")  
+```
 
-# create correlation matrix
-Sigma = autocorr.mat(p/8, .9)
-Sigma = bdiag(Sigma, Sigma)
-Sigma = bdiag(Sigma, Sigma)
-Sigma = bdiag(Sigma, Sigma)
+```{r plot.density, fig.width=5, fig.height=15}
+df = rbind( data.frame(Correlation = C_sample.array, Method = "Sample correlation"),
+            data.frame(Correlation = C_decor.array, Method = "Correlation after ADT"))
 
-# draw data from correlation matrix Sigma
-Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
+df$Method = factor(df$Method, unique(df$Method))
 
-ecl = eclairs(Y)
-plot(ecl)
+ggplot(df, aes(Correlation, fill=Method, color=Method)) + geom_density(alpha = .1) + theme_classic() + geom_vline(xintercept=0, color="grey50", linetype="dashed") + scale_color_brewer(palette="Set1") + scale_fill_brewer(palette="Set1") + scale_y_continuous(expand=c(0, 0), limits=c(0, NA)) + theme(aspect.ratio=1, legend.position="right")
+
+ggplot(df, aes(Correlation, fill=Method, color=Method)) + geom_freqpoly(alpha=1, bins=200) + theme_classic() + geom_vline(xintercept=0, color="grey50", linetype="dashed") + scale_color_brewer(palette="Set1") + scale_fill_brewer(palette="Set1") + scale_y_continuous(expand=c(0, 0), limits=c(0, NA)) + theme(aspect.ratio=1, legend.position="right") 
+
+ggplot(df, aes(Correlation, fill=Method, color=Method)) + geom_freqpoly(alpha=1, bins=200) + theme_classic() + geom_vline(xintercept=0, color="grey50", linetype="dashed") + scale_color_brewer(palette="Set1") + scale_fill_brewer(palette="Set1") + scale_y_log10(expand=c(0, 0), limits=c(1000, NA)) + theme(aspect.ratio=1, legend.position="right") 
 ```
 
 ```{r eval=FALSE}
-decorrelate:::shrinkcovmat.equal_lambda(Y)
-
-Y.decorr2 = decorrelate(Y, ecl)
-# image(cor(Y.decorr2), main="Correlation after decorrelating")
-
-
-
-
-diag(cov(Y))
-
-
-ecl$lambda = .8
-diag(getCov(ecl))
-
-
-
-# How sensitive is the decorrelation projection to lambda
-
-eps = 1e-4
-lambdaArray = seq(eps, 1-eps, length.out=300)
-
-Z = lapply(lambdaArray, function(lambda){
-	decorrelate(Y[1,,drop=FALSE], ecl, lambda = lambda)
-	})
-Z = do.call(cbind, Z)
-
-
-image(cor(Z), zlim=c(0,1))
+knitr::knit_exit()
 ```
 
 
 
 
-
+When p >> n, the estimate of $\hat\Sigma$ is poor, even with shrinkage.  In this case `eclairs + decorrelate` does reduce the correlation, but the amount varies.  However, this is not an issue because in regression, the covariance matrix is actually known.  Can I prove this?
 
 
 

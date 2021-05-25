@@ -281,7 +281,6 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 		lambda = estimate_lambda_eb( n*dcmp$d^2, n, p, nu)
 	}
 
-
 	# Modify sign of dcmp$v and dcmp$u so principal components are consistant
 	# This is motivated by whitening:::makePositivDiagonal()
 	# but here adjust both U and V so reconstructed data is correct
