@@ -194,7 +194,7 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 #'
 #' Sigma.eclairs
 #'
-#' @importFrom Rfast standardise colVars
+#' @importFrom Rfast standardise colVars eachrow
 #' @importFrom PRIMME svds
 #' @importFrom methods new
 #'
@@ -262,9 +262,13 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 		}
 	}else{
 		dcmp = svd(X) 
-		dcmp$u = dcmp$u[,seq_len(k), drop=FALSE]
-		dcmp$v = dcmp$v[,seq_len(k), drop=FALSE]
-		dcmp$d = dcmp$d[seq_len(k)]
+
+		# if k < min(n,p) truncate spectrum
+		if( k < length(dcmp$d)){
+			dcmp$u = dcmp$u[,seq_len(k), drop=FALSE]
+			dcmp$v = dcmp$v[,seq_len(k), drop=FALSE]
+			dcmp$d = dcmp$d[seq_len(k)]
+		}
 	}
 
 	# Estimate lambda 
@@ -285,8 +289,9 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 	# dcmp$v = sweep(dcmp$v, 2, values, "*")
 	# dcmp$u = sweep(dcmp$u, 2, values, "*")
 
-	dcmp$v = Rfast::eachrow(dcmp$v, values, "*")
-	dcmp$u = Rfast::eachrow(dcmp$u, values, "*")
+	# faster version
+	dcmp$v = eachrow(dcmp$v, values, "*")
+	dcmp$u = eachrow(dcmp$u, values, "*")
 
 	result = list(	U 		= dcmp$v, 
 					dSq 	= dcmp$d^2, 
