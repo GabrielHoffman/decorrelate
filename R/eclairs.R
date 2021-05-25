@@ -272,27 +272,6 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 
 	if( missing(lambda) | is.null(lambda) ){
 
-		# if( fastLambda ){
-		# 	# fast approximation
-		# 	lambda = est_lambda_ev( dcmp$d^2, n, p)
-		# }else{
-		# 	# if SVD is a full rank approximation
-		# 	if( k == min(dim(X)) ){			
-		# 		lambda = shrinkcovmat.equal_lambda( t(X) )$lambda_hat
-		# 	}else{
-
-		# 		# if SVD is a low rank approximation
-		# 		# estimate lambda for shrinkage
-		# 		# but use lambda reconstructed from low rank decomp
-		# 		# lambda = mvIC:::shrinkcovmat.equal_lambda( t(X) )$lambda
-		# 		v = d = u = NULL # pass R CMD BiocCheck
-		# 		X_reconstruct = with(dcmp, u %*% (d * t(v)))
-		# 		lambda = shrinkcovmat.equal_lambda( t(X_reconstruct) )$lambda_hat
-		# 	}
-		# }
-
-		# lambda = min(1, max(1e-6, lambda))
-
 		# Estimate lambda by empirical Bayes, using nu as scale of target
 		# Since data is scaled to have var 1 (instead of n), multiply by n
 		lambda = estimate_lambda_eb( n*dcmp$d^2, n, p, nu)
@@ -303,8 +282,11 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 	# This is motivated by whitening:::makePositivDiagonal()
 	# but here adjust both U and V so reconstructed data is correct
 	values = sign(diag(dcmp$v))
-	dcmp$v = sweep(dcmp$v, 2, values, "*")
-	dcmp$u = sweep(dcmp$u, 2, values, "*")
+	# dcmp$v = sweep(dcmp$v, 2, values, "*")
+	# dcmp$u = sweep(dcmp$u, 2, values, "*")
+
+	dcmp$v = Rfast::eachrow(dcmp$v, values, "*")
+	dcmp$u = Rfast::eachrow(dcmp$u, values, "*")
 
 	result = list(	U 		= dcmp$v, 
 					dSq 	= dcmp$d^2, 
