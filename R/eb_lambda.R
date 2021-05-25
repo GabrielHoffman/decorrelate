@@ -172,7 +172,7 @@ estimate_lambda_eb = function(ev, n, p, nu){
 
 
 	# if is low rank
-	if( length(ev) < p){
+	if( length(ev) < min(n,p)){
 
 		# if eigen-values are truncated, include additial eigen-values
 		# so that sum(ev) equals the total variance, regardless of rank

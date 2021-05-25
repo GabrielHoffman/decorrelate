@@ -49,7 +49,7 @@ test_estimate_lambda = function(){
     # sapply((n-20):n, function(k){
     # 	ev = ecl$dSq[1:k]
 	   #  estimate_lambda_eb(n*ev, n, p, nu)
-	 })
+	 # })
 
 
 	# x = 3
@@ -137,7 +137,7 @@ test_large_scale = function(){
 	Y = matrnorm(n, ncol(Sigma.ch)) %*% Sigma.ch
 	Y = as.matrix(Y)
 
-	ecl = eclairs(Y)
+	ecl = eclairs(Y, k = 50)
 
 	plot(ecl)
 }
