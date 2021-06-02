@@ -9,8 +9,7 @@ eclairs(
   k,
   lambda = NULL,
   compute = c("covariance", "correlation"),
-  warmStart = NULL,
-  fastLambda = TRUE
+  warmStart = NULL
 )
 }
 \arguments{
@@ -23,8 +22,6 @@ eclairs(
 \item{compute}{compute the 'covariance' (default) or 'correlation'}
 
 \item{warmStart}{result of previous SVD to initialize values}
-
-\item{fastLambda}{use fast approximation to estimate lambda (default: TRUE)}
 }
 \value{
 \link{eclairs} object storing:
@@ -32,10 +29,14 @@ eclairs(
  \item{U: }{orthonormal matrix with k columns representing the low rank component}
  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}
- \item{nu: }{diagonal value of target matrix in shrinkage}
+ \item{nu: }{diagonal value, \eqn{\nu}, of target matrix in shrinkage}
  \item{n: }{number of samples (i.e. rows) in the original data}
  \item{p: }{number of features (i.e. columns) in the original data}
  \item{k: }{rank of low rank component}
+ \item{rownames: }{sample names from the original matrix}
+ \item{colnames: }{features names from the original matrix}
+ \item{method: }{method used for decomposition}
+ \item{call: }{the function call}
 }
 }
 \description{

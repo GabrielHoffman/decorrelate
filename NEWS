@@ -1,3 +1,9 @@
+CHANGES IN VERSION 0.0.7 / June 1, 2021
+-------------------------
+	o add whiten() that combines eclairs() and decorrelate() into one function call
+	o add eclairs_corMat() to perform decomposition on correlation matrix
+	o extend reform_decomp2() to work with result of eclairs_corMat() 
+
 CHANGES IN VERSION 0.0.6 / May 25, 2021
 -------------------------
 	o add estimate_lambda_eb() to perform empirical Bayes estimation of lambda

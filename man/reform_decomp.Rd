@@ -20,7 +20,7 @@ reform_decomp(Sigma.eclairs, k = Sigma.eclairs$k, drop = NULL)
 Recompute eclairs after dropping features
 }
 \details{
-Reform the dataset from the SVD, drop features, then recompute the SVD.  If the original SVD was truncated, then the reconstruction of the original data will be approximate.  Note that the target shrinkage matrix is the same as in \code{Sigma.eclairs}, so \eqn{\nu} is not recomputed from the retained features.
+Reform the dataset from the eclairs decomposition, drop features, then recompute the eclairs decomposition.  If the original SVD/eigen was truncated, then the reconstruction of the original data will be approximate.  Note that the target shrinkage matrix is the same as in \code{Sigma.eclairs}, so \eqn{\nu} is not recomputed from the retained features.
 }
 \examples{
 library(Matrix)

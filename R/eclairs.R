@@ -18,6 +18,10 @@
 #'  \item{n: }{number of samples (i.e. rows) in the original data}
 #'  \item{p: }{number of features (i.e. columns) in the original data}
 #'  \item{k: }{rank of low rank component}
+#'  \item{rownames: }{sample names from the original matrix}
+#'  \item{colnames: }{features names from the original matrix}
+#'  \item{method: }{method used for decomposition}
+#'  \item{call: }{the function call}
 #' }
 #' @name eclairs-class
 #' @rdname eclairs-class
@@ -42,12 +46,12 @@ setMethod("show", 'eclairs',
 setMethod("print", 'eclairs',
       function(x){
           
-        cat("       Estimate covariance/correlation with low rank and shrinkage\n\n")
+	cat("       Estimate covariance/correlation with low rank and shrinkage\n\n")
 
-        cat("  Original data dims:", x$n, 'x',x$p, "\n")
-        cat("  Low rank component:", length(x$dSq), "\n")
-      	cat("  lambda:            ", format(x$lambda, digits=3), "\n")
-      	cat("  nu:                ", format(x$nu, digits=3), "\n")
+	cat("  Original data dims:", x$n, 'x',x$p, "\n")
+	cat("  Low rank component:", length(x$dSq), "\n")
+	cat("  lambda:            ", format(x$lambda, digits=3), "\n")
+	cat("  nu:                ", format(x$nu, digits=3), "\n")
 })
 
 
@@ -149,17 +153,20 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 # @param center center columns of X (default: TRUE) 
 # @param scale scale columns of X (default: TRUE) 
 #' @param warmStart result of previous SVD to initialize values
-#' @param fastLambda use fast approximation to estimate lambda (default: TRUE)
 #'
 #' @return \link{eclairs} object storing:
 #' \itemize{
 #'  \item{U: }{orthonormal matrix with k columns representing the low rank component}
 #'  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
 #'  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}
-#'  \item{nu: }{diagonal value of target matrix in shrinkage}
+#'  \item{nu: }{diagonal value, \eqn{\nu}, of target matrix in shrinkage}
 #'  \item{n: }{number of samples (i.e. rows) in the original data}
 #'  \item{p: }{number of features (i.e. columns) in the original data}
 #'  \item{k: }{rank of low rank component}
+#'  \item{rownames: }{sample names from the original matrix}
+#'  \item{colnames: }{features names from the original matrix}
+#'  \item{method: }{method used for decomposition}
+#'  \item{call: }{the function call}
 #' }
 #'
 #' @details
@@ -199,7 +206,7 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 #' @importFrom methods new
 #'
 #' @export
-eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), warmStart=NULL, fastLambda = TRUE){
+eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), warmStart=NULL){
 
 	stopifnot(is.matrix(X))
 	compute = match.arg(compute)
@@ -248,13 +255,6 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 
 	# SVD of X to get low rank estimate of Sigma
 	if( k < min(p, n)/3){
-		# Setting nv = nu = k doesn't work with warm start
-		# see https://github.com/bwlewis/irlba/issues/58
-		# # but setting nu=k+1 works
-		# dcmp = irlba(X, nv=k, nu=k+1, v = warmStart)
-		# dcmp$u = dcmp$u[,1:k]
-		# dcmp$d = dcmp$d[1:k]
-		# dcmp = irlba(X, nv=k, nu=k)
 		if( is.null(warmStart) ){
 			dcmp = svds(X, k, isreal=TRUE)
 		}else{			
@@ -293,15 +293,17 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 	dcmp$u = eachrow(dcmp$u, values, "*")
 
 	result = list(	U 		= dcmp$v, 
-					dSq 	= dcmp$d^2, 
-					V 		= dcmp$u,
-					lambda 	= lambda,
-					nu 		= nu,
-					n 		= n,
-					p 		= p,
-					k 		= k,
-					rownames= rn,
-					colnames= cn)
+				dSq 		= dcmp$d^2, 
+				V 		= dcmp$u,
+				lambda 	= lambda,
+				nu 		= nu,
+				n 		= n,
+				p 		= p,
+				k 		= k,
+				rownames	= rn,
+				colnames	= cn,
+				method 	= "svd",
+				call 		= match.call())
 
 	new("eclairs",	result)
 }

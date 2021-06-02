@@ -110,6 +110,48 @@ GPCA/ERGPCA
 	get this to work with covarianc is known: ORACLE
 
 
+May 26, 2021
+	iterative application of eclairs/decorrelate does not work because
+		after first transformation, eigen-values are almost equal so
+		lambda is almost one.  This means that the transformation puts
+		most of the weight on the identity prior and doesn't do much.
+
+	There should be a way to adjust the sample eigen-values following Gavish
+		and then use the new values in the transformation.
+		Either hard thresholding or nonlinear shrinkage
+
+	covariance estimation is usually based on 
+		sparsity or low rank
+
+Decorrelation by Orthoginak transformation
+https://cran.r-project.org/web/packages/dotgen/index.html		
+
+Also???
+https://r-forge.r-project.org/scm/viewvc.php/*checkout*/www/article.pdf?root=correg
+
+
+Compare to pseudoinverse whitening?
+
+
+SPLD
+	only does signed
+	only considers a single annotation at a time
+		instead of jointly using a baseline model
+	Uses bootstrap by flipping signs of chunks of annotations
+		to get standard errors
+	Uses regression coefficients, correlations instead of t-statistics?????
+
+Boostrap uncertainly around estimating lambda
+
+Alz risk variants are enriched in SP1 binding sites.
+	Do they improve or disrupt (predicted) TF binding
+
+
+
+
+
+
+
 
 
 

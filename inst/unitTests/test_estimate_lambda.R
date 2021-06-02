@@ -113,95 +113,57 @@ test_estimate_lambda = function(){
 test_large_scale = function(){
 
 	# run eclairs on very large dataset
+	# library(decorrelate)
+	# library(Matrix)
+	# library(Rfast)
 
-	q()
-	R
-	library(decorrelate)
-	library(Matrix)
-	library(Rfast)
+	# set.seed(1)
+	# n = 600 # number of samples
+	# p = 100 # number of feature per block
 
-	set.seed(1)
-	n = 10200 # number of samples
-	p = 100 # number of feature per block
+	# # Create correlation matrix with autocorrelation
+	# autocorr.mat <- function(p = 100, rho = 0.9) {
+	#  mat <- diag(p)
+	#  return(rho^abs(row(mat)-col(mat)))
+	# }
 
-	# Create correlation matrix with autocorrelation
-	autocorr.mat <- function(p = 100, rho = 0.9) {
-	 mat <- diag(p)
-	 return(rho^abs(row(mat)-col(mat)))
-	}
-
-	# create correlation 
-	Sigma.ch = chol(autocorr.mat(p, .9))
+	# # create correlation 
+	# Sigma.ch = chol(autocorr.mat(p, .9))
 	
-	for( i in 1:4)
-		Sigma.ch = bdiag(Sigma.ch, Sigma.ch)
+	# for( i in 1:4){
+	# 	Sigma.ch = bdiag(Sigma.ch, Sigma.ch)
+	# }
 
-	ncol(Sigma.ch)
+	# ncol(Sigma.ch)
 
-	# draw data from correlation matrix Sigma
-	# Y = rmvnorm(n, rep(0, nrow(Sigma)), sigma=Sigma*5.1)
-	Y = matrnorm(n, ncol(Sigma.ch)) %*% Sigma.ch
-	Y = as.matrix(Y)
+	# # draw data from correlation matrix Sigma
+	# # Y = rmvnorm(n, rep(0, nrow(Sigma)), sigma=Sigma*5.1)
+	# Y = matrnorm(n, ncol(Sigma.ch)) %*% Sigma.ch
+	# Y = as.matrix(Y)
 
-	ecl = eclairs(Y)
+	# ecl = eclairs(Y)
 
-	plot(ecl)
+	# plot(ecl)
 
-	Sigma = crossprod(Sigma.ch)
+	# Sigma = crossprod(Sigma.ch)
 
-	ecl2 = eclairs(Y[,1:1000], lambda=ecl$lambda)
-	C = decorrelate(decorrelate(Sigma[1:1000,1:1000], ecl2), ecl2)
-	C = as.matrix(C)
-	# corrplot::corrplot(cov2cor(C), main="C", method="color", tl.pos='n')
+	# n_features = 1100
 
-	A = cora(Y[,1:1000])
+	# ecl2 = eclairs(Y[,1:n_features], lambda=ecl$lambda)
+	# C_decor = decorrelate(decorrelate(Sigma[1:n_features,1:n_features], ecl2), ecl2)
+	
+	# # Sample correlation
+	# C_sample = cora(Y[,1:n_features])
 
-	hist(A - C)
+	# # extract correlation values
+	# C_decor.array = C_decor[lower.tri(C_decor)]
+	# C_sample.array = C_sample[lower.tri(C_sample)]
 
-	i = which(abs(A) > .1)
-
-	mean(A[i]^2 - C[i]^2)
-
-
-	a = A[lower.tri(A)][i]
-	b = C[lower.tri(C)][i]
-
-	fit = mgcv::gam(b ~ s(a))
-
-	plot(fit, xlim=c(0, 1), ylim=c(0, 1), se=FALSE, xlab="Sample correlation", ylab="Estimated correlation")
-	points(a,b)
-	abline(0, 1, col="red")
-
+	# i = 1:500000
+	# plotScatterDensity( C_sample.array[i], C_decor.array[i] ) + xlim(NA, 1) + ylim(-NA,1) + xlab("Sample correlation") + ylab("Correlation after ADT")  
 
 
 }
-
-
-a <- sweep(x,2,x[1,], FUN="*")
-b <- Rfast::eachrow(x,x[1,],"*")
-
-a[1:3,1:3]
-b[1:3,1:3]
-
-
-V = Sigma.eclairs$U
-values = sign(diag(Sigma.eclairs$U))
-
-a = sweep(V, 2, values, "*")
-b = Rfast::eachrow(V, values, "*")
-
-range(a-b)
-
-
-
-
-
-
-
-
-
-
-
 
 
 

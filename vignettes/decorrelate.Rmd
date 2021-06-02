@@ -23,6 +23,19 @@ rmarkdown::render("decorrelate.Rmd");
 
 --->
 
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning=FALSE,
+  message=FALSE,
+  error = FALSE,
+  tidy = FALSE,
+  dev = c("png", "pdf"),
+  cache = TRUE)
+```
+
 ```{r load.packages}
 library(decorrelate)
 library(Matrix)
@@ -60,7 +73,7 @@ plotScatterDensity = function(value1, value2){
   df$density <- get_density(df$value1, df$value2, n = 100)
 
   # Scatter plot colored by density
-  ggplot(df, aes(value1, value2, color=density)) + geom_point(size=.4) + theme_bw(16) + theme(aspect.ratio=1, legend.position="bottom", plot.title = element_text(hjust = 0.5)) + geom_abline(color="red") + geom_vline(xintercept=0, col="grey40", linetype="dashed") + geom_hline(yintercept=0, col="grey40", linetype="dashed") + xlim(-lim, lim) + ylim(-lim, lim) + scale_color_viridis() + geom_smooth(method="gam", se=FALSE, color="darkorange")
+  ggplot(df, aes(value1, value2, color=density)) + geom_point(size=.4) + theme_classic(16) + theme(aspect.ratio=1, legend.position="bottom", plot.title = element_text(hjust = 0.5)) + geom_abline(color="red") + geom_vline(xintercept=0, col="grey40", linetype="dashed") + geom_hline(yintercept=0, col="grey40", linetype="dashed") + xlim(-lim, lim) + ylim(-lim, lim) + scale_color_viridis() + geom_smooth(method="gam", se=FALSE, color="darkorange")
 }
 ```
 
@@ -70,9 +83,9 @@ plotScatterDensity = function(value1, value2){
 ## p >> n
 ```{r decorrelate.test1}
 set.seed(1)
-n = 2000 # number of samples
-p = 200 # number of features per block
-n_blocks = 2^4
+n = 500 # number of samples
+p = 500 # number of features per block
+n_blocks = 2^5
 
 # create correlation matrix
 Sigma = autocorr.mat(p, .95)
@@ -90,6 +103,143 @@ ecl = eclairs(Y)
 Y.decorr = decorrelate(Y, ecl)
 ```
 
+eclairs_corMat(Sigma, n)
+
+eclairs(Y[,1:p])
+
+eclairs(Y[,1:(10*p)])
+
+# GEH: June 1, 2021
+# Create local LD
+# Create separate clusters
+# eclairs decomp on each clusters
+# run decorrelate on list of eclairs decomp
+
+adjacencyClustering = function(Csq, window, k){
+
+  # remove clostly sanity check in adjclust
+  assignInNamespace(x="checkCondition", value = function(x) NULL, ns='adjclust')
+
+  # Adjacency-constrained clustering
+  hcl <- adjClust(Csq, "similarity", h = window)
+
+  # number of clusters
+  cutree_chac(correct(hcl), k=k)
+}
+
+
+
+library(adjclust)
+
+# create correlation matrix
+Csq = cora(Y)^2
+window = 500
+
+if( ! is(Csq, 'sparseMatrix') ){
+  # convert to sparseMatrix with small entries dropped
+  Csq = as(Csq, "sparseMatrix")
+}
+Csq = drop0(Csq, tol=0.02)
+Csq = as(Csq, "symmetricMatrix")
+
+
+# identify clusters
+# matL and matR memory usage prevents wider windows
+clusters = adjacencyClustering(Csq, window, 32)
+
+# perform eclairs decomposition on each cluster
+eclList = lapply(seq(1, max(clusters)), function(i){
+
+  idx = which(clusters == i)
+  eclairs_corMat(Csq[idx,idx], n)
+  })
+
+dc = lapply(seq(1, max(clusters)), function(i){
+  idx = which(clusters == i)
+  decorrelate(Y[,idx,drop=FALSE], eclList[[i]])
+  })
+
+
+Y_decorr = do.call(cbind, dc)
+
+A = cora(Y[,1:1000])^2
+B = cora(Y_decorr[,1:1000])^2
+
+a = A[lower.tri(A)]
+b = B[lower.tri(B)]
+
+par(mfrow=c(1,2))
+plot(a,b, main="clusterd", xlim=c(0, 1), ylim=c(0,1))
+abline(0, 1, col="red")
+
+
+ecl = eclairs(Y)
+Y_decorr_full = decorrelate(Y, ecl)
+
+A = cora(Y[,1:1000])^2
+B = cora(Y_decorr_full[,1:1000])^2
+
+a = A[lower.tri(A)]
+b = B[lower.tri(B)]
+
+plot(a,b, main="full", xlim=c(0, 1), ylim=c(0,1))
+abline(0, 1, col="red")
+
+
+
+
+p <- ncol(mat)
+x <- rep(1:p, each = h+1)
+y <- x + rep(0:h, p)
+coord <- cbind(x, y)
+# out <- rep(0, p * (h+1))
+out = sparseVector(0, 1, p * (h+1))
+out[y <= p] <- mat[coord[y <= p, ]]
+
+out = as(2*out, "sparseMatrix")
+dim(out) = c(h+1, p)
+out = t(out)
+out[,1] = 1
+
+out2 = adjclust:::matL(Csq, h)
+
+
+
+
+
+
+rSq = sapply(1:10000, function(x) cor(rnorm(n), rnorm(n))^2 )
+
+quantile(rSq, 1-.05)
+
+p = nrow(Csq)
+n_tests = p*(p-1)/2
+fpr = 0.05
+
+quantile(rSq, 1 - fpr/n_tests)
+
+n = 500
+C = cora(matrnorm(n,p))^2
+rSq = C[lower.tri(C)]
+quantile(rSq, 1-.05)
+
+get_cutoff = function(p_cutoff = 0.05, n){
+  
+  f = function(r){
+    tstat = r*sqrt(n-2)/ sqrt(1-r^2)
+    (p_cutoff - pnorm(tstat, 1, lower.tail=FALSE))^2
+  }
+
+  fit = optimize(f, lower=0, upper=0.2)
+  fit$minimum
+}
+
+
+get_cutoff(.05, n)
+
+
+
+
 
 ```{r show.plots, fig.width=7, fig.height=7.5}
 par(mfrow=c(2,2))
@@ -97,10 +247,34 @@ n_features = 300
 i = 1:n_features
 
 corrplot(as.matrix(Sigma[i,i]), main="True correlation matrix", method="color", tl.pos='n', mar=c(0,0,1,0))
-plot(ecl)
-corrplot(getCor(ecl)[i,i], main="Estimated correlation matrix", method="color", tl.pos='n', mar=c(0,0,1,0))
+# corrplot(getCor(ecl)[i,i], main="Estimated correlation matrix", method="color", tl.pos='n', mar=c(0,0,1,0))
 corrplot(cor(Y.decorr[,i]), main="Correlation after ADT", method="color", tl.pos='n', mar=c(0,0,1,0))
+plot(ecl)
+
+ev_shrunk = with(ecl, (1-lambda)*dSq + nu*lambda)
+ymax = max(ecl$dSq)
+plot(ecl$dSq, ev_shrunk, xlim=c(0, ymax), ylim=c(0, ymax), xlab="Eigen-values (observed)", ylab="Eigen-values (shrinkages)", main="Comparison of eigen-values")
+abline(0,1, col="red")
 ```
+
+# eigs = pinnacle:::optimal_sv_shrinkage( sqrt(ecl$dSq), ecl$n, ecl$p)^2
+# plot(ecl$dSq)
+# points(eigs, col="red")
+
+# estimate_lambda_eb(n * ecl$dSq, ecl$n, ecl$p, ecl$nu)
+
+
+# estimate_lambda_eb(n * eigs, ecl$n, ecl$p, ecl$nu)
+
+
+
+# eigs = pinnacle:::optimal_sv_shrinkage( sqrt(n*ecl$dSq), ecl$n, ecl$p)^2
+# estimate_lambda_eb(eigs, ecl$n, ecl$p, ecl$nu)
+
+
+
+
+
 
 ```{r corr.subet, fig.width=5, fig.height=5}
 # Evaluate correlatilon between a subset of features
@@ -119,11 +293,12 @@ C_sample.array = C_sample[lower.tri(C_sample)]
 
 # fig1 = plotScatterDensity( abs(a),abs(b)) + xlim(0, 1) + ylim(0,1) + xlab("Sample correlation") + ylab("Correlation after transformation") + scale_x_continuous(expand=c(0, 0), limits=c(0, 1)) + scale_y_continuous(expand=c(0, 0), limits=c(0, 1))
 # plot_grid(fig1, fig2, nrow=1)
-
-plotScatterDensity( C_sample.array, C_decor.array ) + xlim(NA, 1) + ylim(-NA,1) + xlab("Sample correlation") + ylab("Correlation after ADT")  
+ 
+i = 1:10000
+plotScatterDensity( C_sample.array[i], C_decor.array[i] ) + xlim(NA, 1) + ylim(-NA,1) + xlab("Sample correlation") + ylab("Correlation after ADT")  
 ```
 
-```{r plot.density, fig.width=5, fig.height=15}
+```{r plot.density, fig.width=5, fig.height=4}
 df = rbind( data.frame(Correlation = C_sample.array, Method = "Sample correlation"),
             data.frame(Correlation = C_decor.array, Method = "Correlation after ADT"))
 
@@ -136,15 +311,45 @@ ggplot(df, aes(Correlation, fill=Method, color=Method)) + geom_freqpoly(alpha=1,
 ggplot(df, aes(Correlation, fill=Method, color=Method)) + geom_freqpoly(alpha=1, bins=200) + theme_classic() + geom_vline(xintercept=0, color="grey50", linetype="dashed") + scale_color_brewer(palette="Set1") + scale_fill_brewer(palette="Set1") + scale_y_log10(expand=c(0, 0), limits=c(1000, NA)) + theme(aspect.ratio=1, legend.position="right") 
 ```
 
-```{r eval=FALSE}
-knitr::knit_exit()
-```
-
 
 
 
 When p >> n, the estimate of $\hat\Sigma$ is poor, even with shrinkage.  In this case `eclairs + decorrelate` does reduce the correlation, but the amount varies.  However, this is not an issue because in regression, the covariance matrix is actually known.  Can I prove this?
 
+Since $\lambda \rightarrow 0$ as $n \rightarrow \infty$ regression after ADT is asymptotically consistent
+
+
+
+n_features = 500
+# X = Y[1:1,1:n_features]
+
+X = Y[1:500,]
+
+C1 = cora(X)
+C2 = cora(whiten(X))
+C3 = cora(whiten(whiten(X)))
+C4 = cora(whiten(whiten(whiten(X))))
+
+
+par(mfrow=c(1,3))
+image(C1[1:100, 1:100])
+image(C2[1:100, 1:100])
+image(C3[1:100, 1:100])
+
+
+
+C1[1:3, 1:3]
+C2[1:3, 1:3]
+C3[1:3, 1:3]
+C4[1:3, 1:3]
+
+ecl = eclairs(X)
+X2 = decorrelate(X, ecl)
+
+ecl2 = eclairs(X2, lambda=ecl$lambda, compute="corr")
+X3 = decorrelate(X2, ecl2)
+
+cora(X3[,1:3])
 
 
 
