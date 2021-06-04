@@ -201,7 +201,139 @@ dim(out) = c(h+1, p)
 out = t(out)
 out[,1] = 1
 
-out2 = adjclust:::matL(Csq, h)
+out2 = adjclust:::matL(Csq, h=5)
+
+head(out2)
+
+p = nrow(Csq)
+
+out3 = sparseMatrix(i=1, j=1, x=0, dims=c(p, h+1))
+
+for(i in seq_len(p)){
+  idx = seq(i, min(i + h, p))
+  out3[i,] = Csq[i,idx]
+}
+
+
+                    if( i == 12508 & k < 50){
+                      Rcpp::Rcout << j << ' '<< k << ' ' << 2*value << std::endl;
+                    }
+
+library(inline)
+matL <- rcpp(signature(Csq_ = "dsCMatrix", h_ = "integer", p_="integer"),
+               " 
+               arma::SpMat<double> Csq = as< arma::SpMat<double> >(Csq_);
+              
+              int p = Rcpp::as< int>(p_);
+               int h = Rcpp::as< int>(h_);
+               rma::SpMat<double> out(p, h+1);
+
+                int k;
+               double value;
+
+               for( int i=0; i<p; i++){
+                k = 0;
+                for( int j=i; j<std::min(i+h+1,p); j++){
+                  if(k == 0){
+                    out(i,k) = 1;
+                  }else{
+                    value = Csq(i,j);
+                    if( value!= 0.0){
+                        out(i,k) = 2.0*value;
+                    }
+                  }
+                  k++;
+                }
+               }
+
+               return wrap(out);
+               ", plugin = "RcppArmadillo")
+
+
+h = 3000
+
+system.time({
+out <- matL(Csq, as.integer(h), as.integer(ncol(Csq)))
+})
+
+system.time({
+out2 <- adjclust:::matL(Csq, h=h)
+})
+
+mean(abs(out-out2))
+as.numeric(object.size(out)) / as.numeric(object.size(out2))
+
+
+
+matR <- rcpp(signature(Csq_ = "dsCMatrix", h_ = "integer", p_="integer"),
+               " 
+               arma::SpMat<double> Csq = as< arma::SpMat<double> >(Csq_);
+              
+              int p = Rcpp::as< int>(p_);
+              int h = Rcpp::as<int>(h_);
+               arma::SpMat<double> out(p, h+1);
+
+              int k;
+               double value;
+
+               for( int i=0; i<p; i++){
+                k = 0;
+                for( int j=i; j>std::max(i-h-1, (int) 0); j--){
+                  Rcpp::Rcout << i << ' ' << j << ' '  << k << ' ' <<std::endl;
+                  if(k == 0){
+                    out(p-i-1,k) = 1;
+                  }else{
+                    value = Csq(i,j);
+                    if( value!= 0.0){
+                        out(p-i-1,k) = 2.0*value;
+                    }
+                  }
+                  k++;
+                }
+               }
+
+               return wrap(out);
+               ", plugin = "RcppArmadillo")
+
+
+h = 3
+Csq = Csq[1:4,1:4]
+
+out <- matR(Csq, as.integer(h), as.integer(ncol(Csq)))
+
+out2 <- adjclust:::matR(Csq, h=h)
+
+head(out)
+head(out2)
+
+tail(out)
+tail(out2)
+
+
+mean(abs(out-out2))
+
+as.numeric(object.size(out)) / as.numeric(object.size(out2))
+
+Csq[1,1:4]
+
+
+
+
+
+
+# d = abs(out-out2)
+# j = which.max(apply(d[,-1], 2, max))+1
+# i = which.max(d[,j])
+
+# out[i,j]
+# out2[i,j]
+
+
+2*Csq[i,i:(i+j)]
+
+out[i,1:50]
+out2[i,1:50]
+
 
 
 
