@@ -103,6 +103,158 @@ ecl = eclairs(Y)
 Y.decorr = decorrelate(Y, ecl)
 ```
 
+
+```{r test.2param}
+
+# standard
+Y.decorr = decorrelate(Y, ecl)
+
+# under the hood
+Y.decorr2 = mult_eclairs(Y, ecl$U, ecl$dSq, 
+        ecl$lambda, nu = ecl$nu, alpha = -1/2, transpose = FALSE)
+
+mean(abs(Y.decorr - Y.decorr2))
+
+# # more flexible function
+# # beta = lambda
+# # gamma = (1-lambda)
+# mult_eclairs_v2 = function (X, U1, dSq1, beta, gamma, nu, alpha, transpose = FALSE) {
+#     v = dSq1 * gamma + beta * nu
+#     if (transpose) {
+#         if (nrow(X) != nrow(U1)) {
+#             stop("Incompatable dimensions:\nData matrix X has ", 
+#                 nrow(X), " columns, but low rank component has ", 
+#                 nrow(U1), " rows")
+#         }
+#         X_U1 = crossprod(X, U1)
+#         part1 = 0
+#         if (beta > 0) {
+#             part1 = ((X - tcrossprod(U1, X_U1)) * ((beta * 
+#                 nu)^alpha))
+#         }
+#         result = crossprod((v^alpha) * t(U1), t(X_U1)) + part1
+#     }
+#     else {
+#         if (ncol(X) != nrow(U1)) {
+#             stop("Incompatable dimensions:\nData matrix X has ", 
+#                 ncol(X), " columns, but low rank component has ", 
+#                 nrow(U1), " rows")
+#         }
+#         X_U1 = X %*% U1
+#         part1 = 0
+#         if (beta > 0) {
+#             part1 = (X - tcrossprod(X_U1, U1)) * ((beta * nu)^alpha)
+#         }
+#         result = X_U1 %*% ((v^alpha) * t(U1)) + part1
+#     }
+#     result
+# }
+
+
+# Y.decorr3 = mult_eclairs_v2(Y, ecl$U, ecl$dSq, 
+#         beta = ecl$lambda, gamma = 1 - ecl$lambda,
+#         nu = ecl$nu, alpha = -1/2, transpose = FALSE)
+
+# mean(abs(Y.decorr - Y.decorr3))
+
+
+
+
+# two parameter posterior expected precision
+############################################
+
+# For 2 parameter posterior expectation of precision
+deltaTo2Param = function(delta, n, p){
+  list(beta = (delta -p -1)/(delta + n),
+      gamma  = n / (delta + n))
+}
+
+delta = with(ecl, decorrelate:::alphaToDelta(lambda, n, p))
+
+res = deltaTo2Param(delta, ecl$n, ecl$p)
+res
+
+
+prec_scale = with(ecl, (delta+n)/(delta+n-p-1))
+prec_scale
+
+
+Y.decorr4 = mult_eclairs_v2(Y, ecl$U, ecl$dSq, 
+        beta = res$beta, gamma = res$gamma,
+        nu = ecl$nu, alpha = -1/2, transpose = FALSE)  / sqrt(prec_scale)
+
+C_decor = decorrelate(decorrelate(Sigma, ecl)  * prec_scale, ecl, transpose=TRUE)  * prec_scale
+
+Sig.prec = mult_eclairs_v2(Sigma, ecl$U, ecl$dSq, 
+        beta = res$beta, gamma = res$gamma,
+        nu = ecl$nu, alpha = -1/2, transpose = FALSE) / sqrt(prec_scale)
+Sig.prec = mult_eclairs_v2(Sig.prec, ecl$U, ecl$dSq, 
+        beta = res$beta, gamma = res$gamma,
+        nu = ecl$nu, alpha = -1/2, transpose = TRUE) / sqrt(prec_scale)
+
+Sig.prec[1:4, 1:4]
+
+
+# Sig.prec = mult_eclairs_v2(Sigma, ecl$U, ecl$dSq, 
+#         beta = ecl$lambda, gamma = 1-ecl$lambda,
+#         nu = ecl$nu, alpha = -1/2, transpose = FALSE)
+# Sig.prec = mult_eclairs_v2(Sig.prec, ecl$U, ecl$dSq, 
+#         beta = ecl$lambda, gamma = 1-ecl$lambda,
+#         nu = ecl$nu, alpha = -1/2, transpose = TRUE)
+
+
+# standard
+Y.decorr4 = decorrelate(Y, ecl)  / sqrt(prec_scale)
+
+
+
+k = 100
+A = cova(Y[,1:k])^2
+B = cova(Y.decorr[,1:k])^2
+C = cova(Y.decorr4[,1:k])^2
+
+a = A[lower.tri(A)]
+b = B[lower.tri(B)]
+c = C[lower.tri(C)]
+
+par(mfrow=c(1,3))
+plot(a,b, main="Inverse of posterior expectation", xlim=c(0, 1), ylim=c(0,1))
+abline(0, 1, col="red")
+
+plot(a,c, main="Posterior expected precision", xlim=c(0, 1), ylim=c(0,1))
+abline(0, 1, col="red")
+
+plot(b,c, main="Cov vs prec")
+abline(0, 1, col="red")
+
+
+
+
+a = Sigma[lower.tri(Sigma)]
+b = C_decor[lower.tri(C_decor)] 
+c = Sig.prec[lower.tri(Sig.prec)] 
+
+plot(a[1:10000], b[1:10000], xlim=c(0,1), ylim=c(0, max(c)))
+plot(a[1:10000], c[1:10000], xlim=c(0,1), ylim=c(0, max(c)))
+
+
+Sig_inv = drop0(solve(Sigma), 1e-8)
+a = Sig_inv[lower.tri(Sig_inv, diag=TRUE)]
+b = C_decor[lower.tri(C_decor, diag=TRUE)] 
+c = Sig.prec[lower.tri(Sig.prec, diag=TRUE)] 
+
+plot(a[1:10000], b[1:10000])
+plot(a[1:10000], c[1:10000])
+
+
+
+
+
+```
+
+
+
+
 eclairs_corMat(Sigma, n)
 
 eclairs(Y[,1:p])
@@ -117,11 +269,8 @@ eclairs(Y[,1:(10*p)])
 
 adjacencyClustering = function(Csq, window, k){
 
-  # remove clostly sanity check in adjclust
-  assignInNamespace(x="checkCondition", value = function(x) NULL, ns='adjclust')
-
   # Adjacency-constrained clustering
-  hcl <- adjClust(Csq, "similarity", h = window)
+  hcl <- adjClustFast(Csq, "similarity", h = window)
 
   # number of clusters
   cutree_chac(correct(hcl), k=k)
@@ -129,11 +278,11 @@ adjacencyClustering = function(Csq, window, k){
 
 
 
-library(adjclust)
+library(adjClustFast)
 
 # create correlation matrix
 Csq = cora(Y)^2
-window = 500
+window = 1000
 
 if( ! is(Csq, 'sparseMatrix') ){
   # convert to sparseMatrix with small entries dropped
@@ -145,7 +294,7 @@ Csq = as(Csq, "symmetricMatrix")
 
 # identify clusters
 # matL and matR memory usage prevents wider windows
-clusters = adjacencyClustering(Csq, window, 32)
+clusters = adjacencyClustering(Csq, window, 30)
 
 # perform eclairs decomposition on each cluster
 eclList = lapply(seq(1, max(clusters)), function(i){
@@ -169,8 +318,11 @@ a = A[lower.tri(A)]
 b = B[lower.tri(B)]
 
 par(mfrow=c(1,2))
-plot(a,b, main="clusterd", xlim=c(0, 1), ylim=c(0,1))
+plot(a,b, main="clustered", xlim=c(0, 1), ylim=c(0,1))
 abline(0, 1, col="red")
+
+hist( sapply(eclList, function(x) x$lambda), xlim=c(0,1))
+
 
 
 ecl = eclairs(Y)
@@ -187,188 +339,22 @@ abline(0, 1, col="red")
 
 
 
+i = 450:550
+C = Csq[i,i]
+image(C)
+hcl <- adjClustFast(C, "similarity", h = as.integer(length(i)/2))
+plot(hcl)
 
-p <- ncol(mat)
-x <- rep(1:p, each = h+1)
-y <- x + rep(0:h, p)
-coord <- cbind(x, y)
-# out <- rep(0, p * (h+1))
-out = sparseVector(0, 1, p * (h+1))
-out[y <= p] <- mat[coord[y <= p, ]]
-
-out = as(2*out, "sparseMatrix")
-dim(out) = c(h+1, p)
-out = t(out)
-out[,1] = 1
-
-out2 = adjclust:::matL(Csq, h=5)
-
-head(out2)
-
-p = nrow(Csq)
-
-out3 = sparseMatrix(i=1, j=1, x=0, dims=c(p, h+1))
-
-for(i in seq_len(p)){
-  idx = seq(i, min(i + h, p))
-  out3[i,] = Csq[i,idx]
-}
-
-
-                    if( i == 12508 & k < 50){
-                      Rcpp::Rcout << j << ' '<< k << ' ' << 2*value << std::endl;
-                    }
-
-library(inline)
-matL <- rcpp(signature(Csq_ = "dsCMatrix", h_ = "integer", p_="integer"),
-               " 
-               arma::SpMat<double> Csq = as< arma::SpMat<double> >(Csq_);
-              
-              int p = Rcpp::as< int>(p_);
-               int h = Rcpp::as< int>(h_);
-               rma::SpMat<double> out(p, h+1);
-
-                int k;
-               double value;
-
-               for( int i=0; i<p; i++){
-                k = 0;
-                for( int j=i; j<std::min(i+h+1,p); j++){
-                  if(k == 0){
-                    out(i,k) = 1;
-                  }else{
-                    value = Csq(i,j);
-                    if( value!= 0.0){
-                        out(i,k) = 2.0*value;
-                    }
-                  }
-                  k++;
-                }
-               }
-
-               return wrap(out);
-               ", plugin = "RcppArmadillo")
-
-
-h = 3000
-
-system.time({
-out <- matL(Csq, as.integer(h), as.integer(ncol(Csq)))
-})
-
-system.time({
-out2 <- adjclust:::matL(Csq, h=h)
-})
-
-mean(abs(out-out2))
-as.numeric(object.size(out)) / as.numeric(object.size(out2))
-
-
-
-matR <- rcpp(signature(Csq_ = "dsCMatrix", h_ = "integer", p_="integer"),
-               " 
-               arma::SpMat<double> Csq = as< arma::SpMat<double> >(Csq_);
-              
-              int p = Rcpp::as< int>(p_);
-              int h = Rcpp::as<int>(h_);
-               arma::SpMat<double> out(p, h+1);
-
-              int k;
-               double value;
-
-               for( int i=0; i<p; i++){
-                k = 0;
-                for( int j=i; j>std::max(i-h-1, (int) 0); j--){
-                  Rcpp::Rcout << i << ' ' << j << ' '  << k << ' ' <<std::endl;
-                  if(k == 0){
-                    out(p-i-1,k) = 1;
-                  }else{
-                    value = Csq(i,j);
-                    if( value!= 0.0){
-                        out(p-i-1,k) = 2.0*value;
-                    }
-                  }
-                  k++;
-                }
-               }
-
-               return wrap(out);
-               ", plugin = "RcppArmadillo")
-
-
-h = 3
-Csq = Csq[1:4,1:4]
-
-out <- matR(Csq, as.integer(h), as.integer(ncol(Csq)))
-
-out2 <- adjclust:::matR(Csq, h=h)
-
-head(out)
-head(out2)
-
-tail(out)
-tail(out2)
-
-
-mean(abs(out-out2))
-
-as.numeric(object.size(out)) / as.numeric(object.size(out2))
-
-Csq[1,1:4]
+cutree_chac(hcl, h=15)
 
 
 
 
-
-
-# d = abs(out-out2)
-# j = which.max(apply(d[,-1], 2, max))+1
-# i = which.max(d[,j])
-
-# out[i,j]
-# out2[i,j]
-
-
-2*Csq[i,i:(i+j)]
-
-out[i,1:50]
-out2[i,1:50]
-
-
-
-
-
-
-
-rSq = sapply(1:10000, function(x) cor(rnorm(n), rnorm(n))^2 )
-
-quantile(rSq, 1-.05)
-
-p = nrow(Csq)
-n_tests = p*(p-1)/2
-fpr = 0.05
-
-quantile(rSq, 1 - fpr/n_tests)
-
-n = 500
-C = cora(matrnorm(n,p))^2
-rSq = C[lower.tri(C)]
-quantile(rSq, 1-.05)
-
-get_cutoff = function(p_cutoff = 0.05, n){
-  
-  f = function(r){
-    tstat = r*sqrt(n-2)/ sqrt(1-r^2)
-    (p_cutoff - pnorm(tstat, 1, lower.tail=FALSE))^2
-  }
-
-  fit = optimize(f, lower=0, upper=0.2)
-  fit$minimum
-}
-
-
-get_cutoff(.05, n)
-
+i = 1:550
+C = Csq[i,i]
+image(C)
+hcl <- adjClustFast(C, "similarity", h = as.integer(length(i)/2))
+plot(hcl)
 
 
 
