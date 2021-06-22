@@ -67,6 +67,14 @@ eclairs_corMat = function(C, n, k=n, lambda=NULL, warmStart=NULL){
 		}
 	}
 
+	# keep only positive eigen-values
+	if( any(dcmp$values <= .Machine$double.eps) ){
+		keep = which(dcmp$values >.Machine$double.eps)
+
+		dcmp$values = dcmp$values[keep]
+		dcmp$vectors = dcmp$vectors[keep,,drop=FALSE]
+	}
+
 	if( missing(lambda) | is.null(lambda) ){
 
 		# Estimate lambda by empirical Bayes, using nu as scale of target

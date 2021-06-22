@@ -34,6 +34,7 @@ deltaToAlpha = function(delta, n, p){
 	(delta-p-1)/(n+delta-p-1)
 }
 
+
 # double lpvarGamma(const double x, const int p) {
 #   double ans = (p * (p - 1) * 0.25) * log(datum::pi);
 #   for(int j = 1; j < (p + 1); ++j){
