@@ -183,6 +183,12 @@ estimate_lambda_eb = function(ev, n, p, nu){
 		# so eigen-values are already scaled by n
 		totalVar = p * n * nu
 
+		# if the emprical sum of variance is larger then the theoretical
+		# then the specified n is likely mis-specified
+		if( sum(ev) > totalVar ){
+			warning("The sample size n is likely mis-specified")
+		}
+
 		# min(n,p) so works regardless of n > p or m < p
 		idx = seq(length(ev)+1, min(n,p))
 
@@ -192,10 +198,6 @@ estimate_lambda_eb = function(ev, n, p, nu){
 	# estimate optimal lambda (i.e. alpha) value
 	getShrinkageValue(n, p, ev / nu, logdetD=2*p*log(sqrt(nu)), minimum = 1e-4)
 }
-
-
-
-
 
 
 

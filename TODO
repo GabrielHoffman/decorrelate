@@ -148,6 +148,61 @@ Alz risk variants are enriched in SP1 binding sites.
 
 
 
+DONE - June 3, 2021
+	use adjclust, but make it faster
+	I wrote rcpp code that is sparse, memory efficient
+	But it can still use a lot of memory and can be faster.
+	more of the process can be kept in rcpp: 
+		rowCumsums, and colCumsums can be run in rcpp _in place_ and with OpenMP
+		
+
+Apply decorrelate in blocks:
+		
+	# GEH: June 1, 2021
+	# Create local LD
+	# Create separate clusters
+	# eclairs decomp on each clusters
+	# run decorrelate on list of eclairs decomp
+
+
+Current:
+	Use inverse of posterior expected covariance
+	Try using posterior expected precision directly
+		modify mult_eclairs() so that alpha and beta are specified differently
+
+	But notice that prec_hat = (delta+n)/(delta+n-p-1)* Sigma_hat^{-1}
+	How to use scaling Precision vs Inverse Covariance: 
+		prec_scale = with(ecl, (delta+n)/(delta+n-p-1))
+
+
+
+
+	After applying approximately decorrelating transformation, estimate
+		heritability
+		pi1, 
+		non-centrality parameter -> heritability
+		inflation due to population structure
+		how to deam with MAF bins
+		PRS by ridge regression
+		coheritability
+		genomic annotation enrichment
+			signed (t-stat) and unsigned (chisq)
+		genomic annotation enrichment with co-heritability
+			t_1*t_2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
