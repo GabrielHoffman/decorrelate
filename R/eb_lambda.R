@@ -113,19 +113,29 @@ logML = function(delta, p, n, eigs, logdetD){
 #   return(deltaOpt);
 # }
 
-getShrinkageValue = function(n, p, eigs, logdetD, minimum = 1e-4){
+getShrinkageValue = function(n, p, eigs, logdetD, minimum = 1e-4, lambda=NULL){
 
-	# get upper and lower values of range
-	lowerVal = alphaToDelta(minimum, n, p);
-	upperVal = alphaToDelta(1-minimum, n, p);
+	# if lambda is NULL, estimate it
+	if( is.null(lambda) ){
+		# get upper and lower values of range
+		lowerVal = alphaToDelta(minimum, n, p);
+		upperVal = alphaToDelta(1-minimum, n, p);
 
-	# get optimal estiamte of delta using log-likelihood
-	res = optimize( logML, lower = lowerVal, upper=upperVal,
-		p=p, n=n, eigs=eigs, logdetD=logdetD, 
-		maximum=TRUE)
+		# get optimal estiamte of delta using log-likelihood
+		res = optimize( logML, lower = lowerVal, upper=upperVal,
+			p=p, n=n, eigs=eigs, logdetD=logdetD, 
+			maximum=TRUE)
 
-	# convert delta to alpha between 0 and 1
-	deltaToAlpha( res$maximum, n, p)
+		# convert delta to alpha between 0 and 1
+		lambda = deltaToAlpha( res$maximum, n, p)
+		value = res$objective
+	}else{
+		# compute logML
+		delta = alphaToDelta(lambda,n,p)
+		value = logML(delta, p=p, n=n, eigs=eigs, logdetD=logdetD)
+	}
+
+	list(lambda = lambda, logML = value)
 }
 
 
@@ -139,6 +149,7 @@ getShrinkageValue = function(n, p, eigs, logdetD, minimum = 1e-4){
 #' @param n number of samples
 #' @param p number of features
 #' @param nu scale of prior covariance matrix
+#' @param lambda (default: NULL) If NULL, estimate lambda from data. Else evaluate logML using specified lambda value.
 #'
 # @seealso \link{getShrinkageValue}
 #'
@@ -162,7 +173,7 @@ getShrinkageValue = function(n, p, eigs, logdetD, minimum = 1e-4){
 #'
 #' @import Rdpack
 #' @export
-estimate_lambda_eb = function(ev, n, p, nu){
+estimate_lambda_eb = function(ev, n, p, nu, lambda=NULL){
 
 	# when D = diag(nu,p),
 	# logdet(D) is 2*p*log(sqrt(nu))
@@ -178,7 +189,7 @@ estimate_lambda_eb = function(ev, n, p, nu){
 
 		# if eigen-values are truncated, include additial eigen-values
 		# so that sum(ev) equals the total variance, regardless of rank
-		# Note tthat ecails calls 
+		# Note that eclairs calls 
 		# 	estimate_lambda_eb( n*dcmp$d^2, n, p, nu)
 		# so eigen-values are already scaled by n
 		totalVar = p * n * nu
@@ -196,13 +207,8 @@ estimate_lambda_eb = function(ev, n, p, nu){
 	}
 
 	# estimate optimal lambda (i.e. alpha) value
-	getShrinkageValue(n, p, ev / nu, logdetD=2*p*log(sqrt(nu)), minimum = 1e-4)
+	getShrinkageValue(n, p, ev / nu, logdetD=2*p*log(sqrt(nu)), minimum = 1e-4, lambda=lambda)
 }
-
-
-
-
-
 
 
 

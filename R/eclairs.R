@@ -52,6 +52,7 @@ setMethod("print", 'eclairs',
 	cat("  Low rank component:", length(x$dSq), "\n")
 	cat("  lambda:            ", format(x$lambda, digits=3), "\n")
 	cat("  nu:                ", format(x$nu, digits=3), "\n")
+	cat("  logML:             ", format(x$logML, digits=1, scientific=FALSE), "\n")
 })
 
 
@@ -60,6 +61,7 @@ setMethod("print", 'eclairs',
 #' Get full covariance/correlation matrix from \link{eclairs} decomposition
 #'
 #' @param Sigma.eclairs eclairs decomposition
+#' @param lambda shrinkage parameter for the convex combination.
 #' @param ... other arguments
 #'
 #' @return p x p covariance/correlation matrix
@@ -98,18 +100,18 @@ setMethod("print", 'eclairs',
 #'
 #' @rdname getCov
 #' @export
-setGeneric("getCov", function(Sigma.eclairs,...) standardGeneric("getCov"))
+setGeneric("getCov", function(Sigma.eclairs, lambda, ...) standardGeneric("getCov"))
 
 #' @rdname getCov
 #' @export
-setGeneric("getCor", function(Sigma.eclairs,...) standardGeneric("getCor"))
+setGeneric("getCor", function(Sigma.eclairs, lambda, ...) standardGeneric("getCor"))
 
 
 
 #' @rdname getCov
 #' @export
 setMethod('getCov', c(Sigma.eclairs = "eclairs"),
-	function(Sigma.eclairs,...){
+	function(Sigma.eclairs, lambda, ...){
 
 	# if disableWarn is specified and is TRUE, set disableWarn = TRUE
 	# else FALSE
@@ -123,8 +125,12 @@ setMethod('getCov', c(Sigma.eclairs = "eclairs"),
 		warning("eclairs estimated correlation, so the correlation matrix is returned")
 	}
 
+	if( missing(lambda) ){
+		lambda = Sigma.eclairs$lambda
+	}
+
 	# A = x$U %*% diag(x$dSq *(1-x$lambda)) %*% t(x$U) + diag(x$lambda, x$p)
-	Sigma.eclairs$U %*% ((Sigma.eclairs$dSq *(1-Sigma.eclairs$lambda)) * t(Sigma.eclairs$U)) + diag(Sigma.eclairs$nu*Sigma.eclairs$lambda, Sigma.eclairs$p)
+	Sigma.eclairs$U %*% ((Sigma.eclairs$dSq *(1-lambda)) * t(Sigma.eclairs$U)) + diag(Sigma.eclairs$nu*lambda, Sigma.eclairs$p)
 })
 
 
@@ -132,9 +138,9 @@ setMethod('getCov', c(Sigma.eclairs = "eclairs"),
 #' @rdname getCov
 #' @export
 setMethod('getCor', c(Sigma.eclairs = "eclairs"), 
-	function(Sigma.eclairs,...){
+	function(Sigma.eclairs, lambda,...){
 
-	cov2cor( getCov( Sigma.eclairs, disableWarn=TRUE ) )
+	cov2cor( getCov( Sigma.eclairs, lambda = lambda, disableWarn=TRUE ) )
 })
 
 
@@ -278,7 +284,10 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 
 		# Estimate lambda by empirical Bayes, using nu as scale of target
 		# Since data is scaled to have var 1 (instead of n), multiply by n
-		lambda = estimate_lambda_eb( n*dcmp$d^2, n, p, nu)
+		res = estimate_lambda_eb( n*dcmp$d^2, n, p, nu)
+	}else{
+		# compute logML for specified lambda value
+		res = estimate_lambda_eb( n*dcmp$d^2, n, p, nu, lambda=lambda)
 	}
 
 	# Modify sign of dcmp$v and dcmp$u so principal components are consistant
@@ -295,7 +304,8 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 	result = list(	U 		= dcmp$v, 
 				dSq 		= dcmp$d^2, 
 				V 		= dcmp$u,
-				lambda 	= lambda,
+				lambda 	= res$lambda,
+				logML 	= res$logML,
 				nu 		= nu,
 				n 		= n,
 				p 		= p,
@@ -319,18 +329,18 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 #' @importFrom graphics points legend
 #' @export
 setMethod("plot", "eclairs", function(x, y, ...) {
-    
-    args = match.call(expand.dots=TRUE)
 
-    col = args$col
-    if( ! is(col, "character")){
-    	col = "deepskyblue"
-    }
+	args = match.call(expand.dots=TRUE)
 
-    main = args$main
-    if( ! is(main, "character")){
-    	main = "Eigen-values"
-    }
+	col = args$col
+	if( ! is(col, "character")){
+		col = "deepskyblue"
+	}
+
+	main = args$main
+	if( ! is(main, "character")){
+		main = "Eigen-values"
+	}
 
 	# plot observed eigen-values
 	plot(x$dSq, ylab="Eigen-values", main=main, ylim=c(0, max(x$dSq)))
@@ -340,23 +350,39 @@ setMethod("plot", "eclairs", function(x, y, ...) {
 	points(ev_shrunk, col=col, pch='+')
 
 	# add legend
-	legend("topright", legend=c("Observed", "Shrinkage estimate"), fill=c("black", col), box.lwd=0)
+	legend("topright", legend=c("Observed", "Shrinkage estimate"), fill=c("black", col),border="white", bty="n")
 
 	# get max x and y values
 	maxy = max(x$dSq)
 	maxx = length(ev_shrunk)
 
 	# add info about dataset
-	legend( 0.6*maxx, 0.8*maxy, ncol = 2,
+	legend( 0.7*maxx, 0.8*maxy, ncol = 2,
 	  legend = c(expression(lambda~':'), expression(nu~':'), expression(n~':'), expression(p~':'), 
-  				format(x$lambda, digits=3),
+					format(x$lambda, digits=3),
 	  			format(x$nu, digits=3),
 	  			format(x$n, digits=0, big.mark=','),
 	  			format(x$p, digits=0, big.mark=',')
 	  	),
-	  box.lwd=0,
+	  bty="n",
 	  text.width=0	)
+
+	# if SVD is low rank, 
+	isLowRank = length(x$dSq) < x$p
+
+	if( isLowRank ){
+		# start at last eigen-value, and end at right side of plot
+		xvals = c(maxx + .2, par("usr")[2])
+		yvals = rep(x$lambda * x$nu,2)
+
+		arrows( xvals[1], yvals[1], xvals[2], yvals[2], length=.1, col=col)
+	}
 })
+
+
+
+
+
 
 
 
