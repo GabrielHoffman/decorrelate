@@ -7,16 +7,18 @@
 \alias{getCor,eclairs-method}
 \title{Get full covariance/correlation matrix from \link{eclairs}}
 \usage{
-getCov(Sigma.eclairs, ...)
+getCov(Sigma.eclairs, lambda, ...)
 
-getCor(Sigma.eclairs, ...)
+getCor(Sigma.eclairs, lambda, ...)
 
-\S4method{getCov}{eclairs}(Sigma.eclairs, ...)
+\S4method{getCov}{eclairs}(Sigma.eclairs, lambda, ...)
 
-\S4method{getCor}{eclairs}(Sigma.eclairs, ...)
+\S4method{getCor}{eclairs}(Sigma.eclairs, lambda, ...)
 }
 \arguments{
 \item{Sigma.eclairs}{eclairs decomposition}
+
+\item{lambda}{shrinkage parameter for the convex combination.}
 
 \item{...}{other arguments}
 }

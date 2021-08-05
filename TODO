@@ -190,7 +190,12 @@ Current:
 		genomic annotation enrichment with co-heritability
 			t_1*t_2
 
-
+July 21, 2021
+	Use other methods to estimate lambda
+		since EB give too small values with small n
+	 mvIC:::shrinkcovmat.equal_lambda(t(Y))
+	 CovTools
+	 	just estimate lambda, not covariance
 
 
 

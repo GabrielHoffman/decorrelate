@@ -4,7 +4,7 @@
 \alias{estimate_lambda_eb}
 \title{Estimate shrinkage parameter by empirical Bayes}
 \usage{
-estimate_lambda_eb(ev, n, p, nu)
+estimate_lambda_eb(ev, n, p, nu, lambda = NULL)
 }
 \arguments{
 \item{ev}{array of eigen values}
@@ -14,6 +14,8 @@ estimate_lambda_eb(ev, n, p, nu)
 \item{p}{number of features}
 
 \item{nu}{scale of prior covariance matrix}
+
+\item{lambda}{(default: NULL) If NULL, estimate lambda from data. Else evaluate logML using specified lambda value.}
 }
 \value{
 value \eqn{\lambda} indicating the shrinkage between sample and prior covariance matrices.
