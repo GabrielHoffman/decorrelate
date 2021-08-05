@@ -32,6 +32,7 @@ knitr::opts_chunk$set(
   message=FALSE,
   error = FALSE,
   tidy = FALSE,
+  eval = FALSE,
   dev = c("png", "pdf"),
   cache = TRUE)
 ```
@@ -307,7 +308,7 @@ fig2 = fig2 + geom_vline(data=df_lambda, aes(xintercept=lambda, color=Method), s
 plot_grid(fig1, figB, fig2, nrow=1, align="vh", axis="tlbr")
 ```
 
-Reduce MSE by `r format(-fracLess*100, digits=4)`%
+Reduce MSE by r format(-fracLess*100, digits=4)%
 
 
 

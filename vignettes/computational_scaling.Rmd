@@ -43,6 +43,7 @@ library(knitr)
 library(kableExtra)
 
 knitr::opts_chunk$set(
+	eval = FALSE,
   echo = FALSE,
   warning=FALSE,
   message=FALSE,
@@ -138,7 +139,9 @@ fig3 = fig + scale_y_log10()
 plot_grid(fig1, fig2, fig3, nrow=1)
 ```
 
-Run time at `r max(values)` features:
+
+<!-- Run time at r max(values) features: -->
+
 ```{r time.table, cache=FALSE}
 df2 = df_melt_p[p %in% c(2000, 1000000),]
 df2$RunTime = seconds_to_period( round(df2$value, 0))
@@ -147,8 +150,11 @@ df2 %>% rename(Method = variable) %>%
 	select(Method,p, RunTime) %>% 
 	kable(caption="Compare run times") %>% kable_styling(full_width=FALSE) 
 ```
-This is a speed up of `r format(max(df2$value) / min(df2$value), big.mark=',')`
 
+<!-- 
+This is a speed up of r format(max(df2$value) / min(df2$value), big.mark=',')
+
+-->
 
 
 
