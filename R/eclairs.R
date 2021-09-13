@@ -62,6 +62,7 @@ setMethod("print", 'eclairs',
 #'
 #' @param Sigma.eclairs eclairs decomposition
 #' @param lambda shrinkage parameter for the convex combination.
+#' @param forCols (TRUE) compute covariance between columns  If FALSE, compute covariance between rows
 #' @param ... other arguments
 #'
 #' @return p x p covariance/correlation matrix
@@ -69,23 +70,14 @@ setMethod("print", 'eclairs',
 #' @details The full matrix is computationally expensive to compute and uses a lot of memory for large p.  So it is better to use \link{decorrelate} or \link{mult_eclairs} to perform projections in \eqn{O(np)} time.
 #'
 #' @examples
-#' library(Matrix)
+#'
 #' library(Rfast)
 #' set.seed(1)
 #' n = 800 # number of samples
-#' p = 8*200 # number of features
-#' 
-#' # Create correlation matrix with autocorrelation
-#' autocorr.mat <- function(p = 100, rho = 0.9) {
-#' mat <- diag(p)
-#' return(rho^abs(row(mat)-col(mat)))
-#' }
+#' p = 200 # number of features
 #' 
 #' # create correlation matrix
-#' Sigma = autocorr.mat(p/8, .9)
-#' Sigma = bdiag(Sigma, Sigma)
-#' Sigma = bdiag(Sigma, Sigma)
-#' Sigma = bdiag(Sigma, Sigma)
+#' Sigma = autocorr.mat(p, .9)
 #' 
 #' # draw data from correlation matrix Sigma
 #' Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
@@ -100,18 +92,18 @@ setMethod("print", 'eclairs',
 #'
 #' @rdname getCov
 #' @export
-setGeneric("getCov", function(Sigma.eclairs, lambda, ...) standardGeneric("getCov"))
+setGeneric("getCov", function(Sigma.eclairs, lambda, forCols=TRUE, ...) standardGeneric("getCov"))
 
 #' @rdname getCov
 #' @export
-setGeneric("getCor", function(Sigma.eclairs, lambda, ...) standardGeneric("getCor"))
+setGeneric("getCor", function(Sigma.eclairs, lambda, forCols=TRUE, ...) standardGeneric("getCor"))
 
 
 
 #' @rdname getCov
 #' @export
 setMethod('getCov', c(Sigma.eclairs = "eclairs"),
-	function(Sigma.eclairs, lambda, ...){
+	function(Sigma.eclairs, lambda, forCols=TRUE, ...){
 
 	# if disableWarn is specified and is TRUE, set disableWarn = TRUE
 	# else FALSE
@@ -129,8 +121,17 @@ setMethod('getCov', c(Sigma.eclairs = "eclairs"),
 		lambda = Sigma.eclairs$lambda
 	}
 
-	# A = x$U %*% diag(x$dSq *(1-x$lambda)) %*% t(x$U) + diag(x$lambda, x$p)
-	Sigma.eclairs$U %*% ((Sigma.eclairs$dSq *(1-lambda)) * t(Sigma.eclairs$U)) + diag(Sigma.eclairs$nu*lambda, Sigma.eclairs$p)
+
+	if( forCols ){
+		# covariance between columns
+		# A = x$U %*% diag(x$dSq *(1-x$lambda)) %*% t(x$U) + diag(x$lambda, x$p)
+		res = Sigma.eclairs$U %*% ((Sigma.eclairs$dSq *(1-lambda)) * t(Sigma.eclairs$U)) + diag(Sigma.eclairs$nu*lambda, Sigma.eclairs$p)
+	}else{
+		# covariance between rows
+		res = Sigma.eclairs$V %*% ((Sigma.eclairs$dSq *(1-lambda)) * t(Sigma.eclairs$V)) + diag(Sigma.eclairs$nu*lambda, Sigma.eclairs$n)
+	}
+
+	res
 })
 
 
@@ -138,9 +139,9 @@ setMethod('getCov', c(Sigma.eclairs = "eclairs"),
 #' @rdname getCov
 #' @export
 setMethod('getCor', c(Sigma.eclairs = "eclairs"), 
-	function(Sigma.eclairs, lambda,...){
+	function(Sigma.eclairs, lambda, forCols=TRUE,...){
 
-	cov2cor( getCov( Sigma.eclairs, lambda = lambda, disableWarn=TRUE ) )
+	cov2cor( getCov( Sigma.eclairs, lambda = lambda, forCols = forCols, disableWarn=TRUE ) )
 })
 
 
@@ -179,23 +180,13 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 #' Compute \eqn{U}, \eqn{d^2} to approximate the covariance/correlation matrix between columns of data matrix X by \eqn{U diag(d^2 (1-\lambda)) U^T + diag(\nu * \lambda)}.  When computing the covariance matrix \eqn{\nu} is the constant variance which is the mean of all feature-wise variances.  When computing the correlation matrix, \eqn{\nu = 1}.   
 #'
 #' @examples
-#' library(Matrix)
 #' library(Rfast)
 #' set.seed(1)
 #' n = 800 # number of samples
-#' p = 8*200 # number of features
-#' 
-#' # Create correlation matrix with autocorrelation
-#' autocorr.mat <- function(p = 100, rho = 0.9) {
-#' mat <- diag(p)
-#' return(rho^abs(row(mat)-col(mat)))
-#' }
+#' p = 200 # number of features
 #' 
 #' # create correlation matrix
-#' Sigma = autocorr.mat(p/8, .9)
-#' Sigma = bdiag(Sigma, Sigma)
-#' Sigma = bdiag(Sigma, Sigma)
-#' Sigma = bdiag(Sigma, Sigma)
+#' Sigma = autocorr.mat(p, .9)
 #' 
 #' # draw data from correlation matrix Sigma
 #' Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
@@ -326,7 +317,7 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 #' @param y extra argument, not used
 #' @param ... additional arguments
 #'
-#' @importFrom graphics points legend
+#' @importFrom graphics points legend arrows par
 #' @export
 setMethod("plot", "eclairs", function(x, y, ...) {
 
