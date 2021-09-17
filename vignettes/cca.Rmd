@@ -114,6 +114,7 @@ df = lapply(p.array, function(p){
   })
 df = do.call(rbind, df)
 
+```{r plot.compare.p, cache=FALSE}
 ggplot(df, aes(p, elapsed, color=Method)) + geom_line() + geom_point() + theme_classic() + ylab("Wall time (seconds)") + scale_color_brewer(palette="Set1") + theme(aspect.ratio=1)
 ```
 
@@ -132,7 +133,7 @@ df = lapply(n.array, function(n){
 
   res = c()
 
-  if( n < 9000){
+  if( n < Inf){
     tm = system.time(decorrelate::cca(X,Y))
     res = rbind(res, data.frame(Method = "decorrelate::cca", n=n, t(c(tm)), check.names=FALSE))
   }
