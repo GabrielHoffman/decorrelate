@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">decorrelate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.10</span>
       </span>
     </div>
 
@@ -97,6 +97,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/cca.html">Canonical correlation analysis</a>
+    </li>
     <li>
       <a href="../articles/computational_scaling.html">Computational scaling of eclairs data whitening</a>
     </li>
@@ -183,14 +186,19 @@
 <em>Journal of Multivariate Analysis</em>, <b>131</b>, 149--162.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='va'>ev</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>2</span>, <span class='fl'>1</span><span class='op'>)</span> <span class='co'># eigen values</span>
+    <pre class="examples"><div class='input'><span class='va'>ev</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>2</span>, <span class='fl'>1</span><span class='op'>)</span> <span class='co'># eigen values</span>
 <span class='va'>n</span> <span class='op'>=</span> <span class='fl'>12</span> <span class='co'># samples</span>
 <span class='va'>p</span> <span class='op'>=</span> <span class='fl'>3</span> <span class='co'># features</span>
 <span class='va'>nu</span> <span class='op'>=</span> <span class='fl'>2</span> <span class='co'># scale of target covariance</span>
 
 <span class='fu'>estimate_lambda_eb</span><span class='op'>(</span><span class='va'>ev</span>, <span class='va'>n</span>, <span class='va'>p</span>, <span class='va'>nu</span><span class='op'>)</span>
-
-</pre>
+</div><div class='output co'>#&gt; $lambda
+#&gt; [1] 0.03382545
+#&gt; 
+#&gt; $logML
+#&gt; [1] -30.95033
+#&gt; </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

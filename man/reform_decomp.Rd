@@ -23,23 +23,13 @@ Recompute eclairs after dropping features
 Reform the dataset from the eclairs decomposition, drop features, then recompute the eclairs decomposition.  If the original SVD/eigen was truncated, then the reconstruction of the original data will be approximate.  Note that the target shrinkage matrix is the same as in \code{Sigma.eclairs}, so \eqn{\nu} is not recomputed from the retained features.
 }
 \examples{
-library(Matrix)
 library(Rfast)
 set.seed(1)
 n = 800 # number of samples
-p = 8*200 # number of features
-
-# Create correlation matrix with autocorrelation
-autocorr.mat <- function(p = 100, rho = 0.9) {
-mat <- diag(p)
-return(rho^abs(row(mat)-col(mat)))
-}
+p = 200 # number of features
 
 # create correlation matrix
-Sigma = autocorr.mat(p/8, .9)
-Sigma = bdiag(Sigma, Sigma)
-Sigma = bdiag(Sigma, Sigma)
-Sigma = bdiag(Sigma, Sigma)
+Sigma = autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
 Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)

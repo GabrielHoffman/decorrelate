@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">decorrelate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.10</span>
       </span>
     </div>
 
@@ -96,6 +96,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/cca.html">Canonical correlation analysis</a>
+    </li>
     <li>
       <a href="../articles/computational_scaling.html">Computational scaling of eclairs data whitening</a>
     </li>
@@ -135,48 +138,87 @@
       <small>Source: <a href='https://github.com/GabrielHoffman/decorrelate/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="decorrelate-0010" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.10">
+<a href="#decorrelate-0010" class="anchor"></a>decorrelate 0.0.10</h1>
+<ul>
+<li>Sept 13, 2021</li>
+<li>add `<code><a href="../reference/fastcca.html">fastcca()</a></code>
+</li>
+</ul>
+</div>
+    <div id="decorrelate-009" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.9">
+<a href="#decorrelate-009" class="anchor"></a>decorrelate 0.0.9</h1>
+<ul>
+<li>Sept 7, 2021</li>
+<li>add <code><a href="https://rdrr.io/r/base/kappa.html">kappa()</a></code> to compute condition number</li>
+<li>add <code><a href="../reference/logDet.html">logDet()</a></code> to compute log determinant</li>
+<li>add <code><a href="../reference/cca.html">cca()</a></code> for canonical correlation analysis</li>
+<li>simplify examples</li>
+</ul>
+</div>
     <div id="decorrelate-008" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.8">
 <a href="#decorrelate-008" class="anchor"></a>decorrelate 0.0.8</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>July <span class="dv">3-12</span>, <span class="dv">2021</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>  <span class="fu">getCov</span>() and <span class="fu">getCor</span>() now have lambda argument</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>  <span class="fu">plot</span>() <span class="cf">for</span> eclairs shows arrow on right <span class="cf">for</span> zero eigen<span class="sc">-</span>values</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>  <span class="fu">estimate_lambda_eb</span>() now returns logML <span class="cf">for</span> estimated or specified lambda</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span> this is stored by <span class="fu">eclairs</span>()</span></code></pre></div>
+<ul>
+<li>July 3-12, 2021</li>
+<li>
+<code><a href="../reference/getCov.html">getCov()</a></code> and <code><a href="../reference/getCov.html">getCor()</a></code> now have lambda argument</li>
+<li>
+<code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> for eclairs shows arrow on right for zero eigen-values</li>
+<li>
+<code><a href="../reference/estimate_lambda_eb.html">estimate_lambda_eb()</a></code> now returns logML for estimated or specified lambda</li>
+<li>this is stored by <code><a href="../reference/eclairs.html">eclairs()</a></code>
+</li>
+</ul>
 </div>
     <div id="decorrelate-007" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.7">
 <a href="#decorrelate-007" class="anchor"></a>decorrelate 0.0.7</h1>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>June <span class="dv">1</span>, <span class="dv">2021</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>  add <span class="fu">whiten</span>() that combines <span class="fu">eclairs</span>() and <span class="fu">decorrelate</span>() into one <span class="cf">function</span> call</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>  add <span class="fu">eclairs_corMat</span>() to perform decomposition on correlation matrix</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>  extend <span class="fu">reform_decomp2</span>() to work with result of <span class="fu">eclairs_corMat</span>() </span></code></pre></div>
+<ul>
+<li>June 1, 2021</li>
+<li>add <code><a href="../reference/whiten.html">whiten()</a></code> that combines <code><a href="../reference/eclairs.html">eclairs()</a></code> and <code><a href="../reference/decorrelate.html">decorrelate()</a></code> into one function call</li>
+<li>add <code><a href="../reference/eclairs_corMat.html">eclairs_corMat()</a></code> to perform decomposition on correlation matrix</li>
+<li>extend <code>reform_decomp2()</code> to work with result of <code><a href="../reference/eclairs_corMat.html">eclairs_corMat()</a></code>
+</li>
+</ul>
 </div>
     <div id="decorrelate-006" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.6">
 <a href="#decorrelate-006" class="anchor"></a>decorrelate 0.0.6</h1>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>May <span class="dv">25</span>, <span class="dv">2021</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>  add <span class="fu">estimate_lambda_eb</span>() to perform empirical Bayes estimation of lambda</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span> works <span class="cf">for</span> truncated SVD by setting missing ev<span class="st">'s to the mean residual variance</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">    - this makes estimation of lambda stable for varying ranks</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">-  add plot() for eclairs</span></span></code></pre></div>
+<ul>
+<li>May 25, 2021</li>
+<li>add <code><a href="../reference/estimate_lambda_eb.html">estimate_lambda_eb()</a></code> to perform empirical Bayes estimation of lambda</li>
+<li>works for truncated SVD by setting missing ev’s to the mean residual variance</li>
+<li>this makes estimation of lambda stable for varying ranks</li>
+<li>add <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> for eclairs</li>
+</ul>
 </div>
     <div id="decorrelate-005" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.5">
 <a href="#decorrelate-005" class="anchor"></a>decorrelate 0.0.5</h1>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>  add <span class="fu">reform_decomp</span>()</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>  improve documentation</span></code></pre></div>
+<ul>
+<li>add <code><a href="../reference/reform_decomp.html">reform_decomp()</a></code>
+</li>
+<li>improve documentation</li>
+</ul>
 </div>
     <div id="decorrelate-004" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.4">
 <a href="#decorrelate-004" class="anchor"></a>decorrelate 0.0.4</h1>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>  add <span class="fu">lm_eclairs</span>() and <span class="fu">lm_each_eclairs</span>()</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>  add R<span class="sc">/</span>lm_projection.R</span></code></pre></div>
+<ul>
+<li>add <code><a href="../reference/lm_eclairs.html">lm_eclairs()</a></code> and <code><a href="../reference/lm_each_eclairs.html">lm_each_eclairs()</a></code>
+</li>
+<li>add R/lm_projection.R</li>
+</ul>
 </div>
     <div id="decorrelate-001" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.1">
 <a href="#decorrelate-001" class="anchor"></a>decorrelate 0.0.1</h1>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>  initial version</span></code></pre></div>
+<ul>
+<li>initial version</li>
+</ul>
 </div>
   </div>
 

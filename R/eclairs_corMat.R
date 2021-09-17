@@ -9,7 +9,7 @@
 #'
 #' @param C sample correlation matrix between features
 #' @param n number of samples used to estimate the sample correlation matrix
-#' @param k the rank of the low rank component.  Defaults to the sample size, \code{n}.  
+#' @param k the rank of the low rank component.  Defaults to min of sample size and feature number, \code{min(n, p)}.  
 #' @param lambda shrinkage parameter. If not specified, it is estimated from the data.
 #' @param warmStart result of previous SVD to initialize values
 #'
@@ -35,7 +35,7 @@
 #' @importFrom Matrix diag isSymmetric
 #'
 #' @export
-eclairs_corMat = function(C, n, k=n, lambda=NULL, warmStart=NULL){
+eclairs_corMat = function(C, n, k=min(n, nrow(C)), lambda=NULL, warmStart=NULL){
 
 	# check that diagonals are all equal, up to a tolerance
 	if( ! all.equal(as.numeric(diag(C)), rep(1, ncol(C))) ){
@@ -47,12 +47,15 @@ eclairs_corMat = function(C, n, k=n, lambda=NULL, warmStart=NULL){
 		stop("Matrix C is not symmetric")
 	}
 
-	if( missing(k) ){
-		n = k
+	if( missing(n) ){
+		stop("n must be specified")
 	}
 
 	p = nrow(C) # number of features
 	nu = mean(diag(C)) # scale of identity matrix
+
+	# k is the min of the number of samples and features
+	k = min(n, p)
 
 	if( k > p/3){
 		dcmp = eigen(C)
@@ -67,19 +70,25 @@ eclairs_corMat = function(C, n, k=n, lambda=NULL, warmStart=NULL){
 		}
 	}
 
+	# keep first k eigen values and vectors
+	dcmp$values = dcmp$values[seq_len(k)]
+	dcmp$vectors = dcmp$vectors[,seq_len(k),drop=FALSE]
+
 	# keep only positive eigen-values
 	if( any(dcmp$values <= .Machine$double.eps) ){
-		keep = which(dcmp$values >.Machine$double.eps)
+		keep = which(dcmp$values > .Machine$double.eps)
 
 		dcmp$values = dcmp$values[keep]
-		dcmp$vectors = dcmp$vectors[keep,,drop=FALSE]
+		dcmp$vectors = dcmp$vectors[,keep,drop=FALSE]
 	}
 
 	if( missing(lambda) | is.null(lambda) ){
 
 		# Estimate lambda by empirical Bayes, using nu as scale of target
 		# Since data is scaled to have var 1 (instead of n), multiply by n
-		lambda = estimate_lambda_eb( n*dcmp$values, n, p, nu)
+		res = estimate_lambda_eb( n*dcmp$values, n, p, nu)
+		lambda = res$lambda
+		logML = res$logML
 	}
 
 	# Modify sign of dcmp$v and dcmp$u so principal components are consistant
@@ -98,6 +107,7 @@ eclairs_corMat = function(C, n, k=n, lambda=NULL, warmStart=NULL){
 					n 		= n,
 					p 		= p,
 					k 		= k,
+					logML   = logML,
 					rownames= NULL,
 					colnames= colnames(C),
 					method 	= "eigen",

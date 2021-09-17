@@ -47,55 +47,9 @@ library(RCCA)
 
 Avoids 2d parameter search of https://www.jstatsoft.org/article/view/v023i12
 
-```{r compare}
-n = 200
-
-p.array = seq(10, 400, by=100)
-
-df = lapply(p.array, function(p){
-
-  X = matrnorm(n,p)
-  Y = matrnorm(n,p)
-
-  res1 = system.time(decorrelate::cca(X,Y))
-  res2 = system.time(rcc(X,Y, .1, .1))
-  res3 = system.time(whitening::scca(X,Y))
-  res4 = system.time(decorrelate::fastcca(X,Y))
-
-  rbind(data.frame(Method = "My cca", p = p, t(c(res1))),
-    data.frame(Method = "rcc", p = p, t(c(res2))),
-    data.frame(Method = "scca", p = p, t(c(res3))),
-    data.frame(Method = "fastcca", p = p, t(c(res4)))   )
-  })
-df = do.call(rbind, df)
-
-ggplot(df, aes(p, elapsed, color=Method)) + geom_line() + geom_point() + theme_classic()
-```
-
-```{r cca.scaling}
-p.array = seq(10, 4000, by=1000)
-
-df = lapply(p.array, function(p){
-  message("\r", p, '   ', appendLF=FALSE)
-
-  X = matrnorm(n,p)
-  Y = matrnorm(n,p)
-
-  res1 = system.time(decorrelate::cca(X,Y))
-  res2 = system.time(whitening::scca(X,Y))
-  res4 = system.time(decorrelate::fastcca(X,Y))
-
-  rbind(data.frame(Method = "My cca", p = p, t(c(res1))),
-    data.frame(Method = "scca", p = p, t(c(res2))),
-    data.frame(Method = "fastcca", p = p, t(c(res4))))
-  })
-df = do.call(rbind, df)
-
-ggplot(df, aes(p, elapsed, color=Method)) + geom_line() + geom_point() + theme_classic()
-```
-
 
 ```{r fastcca.scaling}
+n = 500
 p.array = seq(10, 10000, by=1000)
 
 df = lapply(p.array, function(p){
@@ -107,7 +61,7 @@ df = lapply(p.array, function(p){
   res1 = system.time(decorrelate::cca(X,Y))
   res4 = system.time(decorrelate::fastcca(X,Y))
 
-  rbind(data.frame(Method = "My cca", p = p, t(c(res1))),
+  rbind(data.frame(Method = "decorrelate::cca", p = p, t(c(res1)), check.names=FALSE),
     data.frame(Method = "fastcca", p = p, t(c(res4))))
   })
 df = do.call(rbind, df)
@@ -117,12 +71,10 @@ ggplot(df, aes(p, elapsed, color=Method)) + geom_line() + geom_point() + theme_c
 
 
 
-
-
 ```{r compare.all}
-n = 1000
+n = 500
 
-p.array = c(seq(10, 1000, by=75), seq(1000, 2000, by=400))
+p.array = c(seq(10, 1000, by=75), seq(1000, 10000, by=400))
 
 df = lapply(p.array, function(p){
 
@@ -135,27 +87,27 @@ df = lapply(p.array, function(p){
 
   if( p < 9000){
     tm = system.time(decorrelate::cca(X,Y))
-    res = rbind(res, data.frame(Method = "decorrelate::cca", p = p, t(c(tm))))
+    res = rbind(res, data.frame(Method = "decorrelate::cca", p = p, t(c(tm)), check.names=FALSE))
   }
 
   if( p < Inf){
     tm = system.time(RCCA(X,Y, 0.1, 0.1))
-    res = rbind(res, data.frame(Method = "RCCA::RCCA", p = p, t(c(tm))))
+    res = rbind(res, data.frame(Method = "RCCA::RCCA", p = p, t(c(tm)), check.names=FALSE))
   }
 
-  if( p < 500){
+  if( p < 1000){
     tm = system.time(rcc(X,Y, 0.1, 0.1))
-    res = rbind(res, data.frame(Method = "CCA::rcc", p = p, t(c(tm))))
+    res = rbind(res, data.frame(Method = "CCA::rcc", p = p, t(c(tm)), check.names=FALSE))
   }
 
   if( p < 3000){
     tm = system.time(whitening::scca(X,Y, verbose=FALSE))
-    res = rbind(res, data.frame(Method = "whitening::scca", p = p, t(c(tm))))
+    res = rbind(res, data.frame(Method = "whitening::scca", p = p, t(c(tm)), check.names=FALSE))
   }
 
   if( p < Inf){
     tm = system.time(decorrelate::fastcca(X,Y))
-    res = rbind(res, data.frame(Method = "decorrelate::fastcca", p = p, t(c(tm))))
+    res = rbind(res, data.frame(Method = "decorrelate::fastcca", p = p, t(c(tm)), check.names=FALSE))
   }
 
   res
@@ -167,8 +119,8 @@ ggplot(df, aes(p, elapsed, color=Method)) + geom_line() + geom_point() + theme_c
 
 
 ```{r test, eval=FALSE}
-n = 50000
-p = 100
+n = 100000
+p = 1000
 X = matrnorm(n,p)
 rownames(X) = paste0("sample_", 1:n)
 colnames(X) = paste0("feature_", 1:p)
@@ -178,14 +130,10 @@ rownames(Y) = paste0("sample_", 1:n)
 colnames(Y) = paste0("feature_", 1:p)
 
 system.time(res <- decorrelate::fastcca( X,Y, k=4))
-dim(res$x.vars)
+dim(res$x.coefs)
 
-
-X = matrnorm(n,p)
-Y = matrnorm(n,p)
-
-system.time(res <- decorrelate::cca( X,Y, k=200))
-dim(res$xcoef)
+system.time(res <- decorrelate::cca( X,Y, k=4))
+dim(res$x.coefs)
 
 
 ```
@@ -205,10 +153,11 @@ library(decorrelate)
 library(Rfast)
 library(ggplot2)
 library(Matrix)
+library(Matrix)
 
 n = 400
-p = 200
-q = 23
+p = 30
+q = 30
 
 sig.array = seq(.05, .99, length.out=50)
 
@@ -229,12 +178,14 @@ df_cca = lapply( sig.array, function(sig_within){
 
   dat = Rfast:::rmvnorm(n, rep(0, p+q), Sig, seed=1)
 
+  # correlation between samples 
+  S = bdiag(lapply(seq(1,n / 100), function(i) autocorr.mat(100, .95)))
+  dat = chol(S) %*% dat 
+
   X = scale(dat[,1:p])
   Y = scale(dat[,-c(1:p)]) 
   
-  # incl = seq(1, 0.8*n)   
-
-  incl = sample.int(n, .8*n, replace=FALSE)
+  incl = seq(1, 0.8*n)   
 
   fit.fastcca = decorrelate::fastcca(X[incl,],Y[incl,])
   X.pred = X[-incl,] %*% fit.fastcca$x.coef
@@ -261,12 +212,18 @@ df_cca = lapply( sig.array, function(sig_within){
   Y.pred = Y[-incl,] %*% fit.rcca$y.coefs
   rho.rcca = abs(cor(X.pred[,1], Y.pred[,1]))
 
+  fit.indep.cca = decorrelate::fastcca(X[incl,],Y[incl,], lambda.x=1, lambda.y=1)
+  X.pred = X[-incl,] %*% fit.indep.cca$x.coef
+  Y.pred = Y[-incl,] %*% fit.indep.cca$y.coef
+  rho.indep.cca = abs(cor(X.pred[,1], Y.pred[,1]))
+
   data.frame(sig_within = sig_within,  
     FastCCA = rho.fastcca, 
    'decorr::CCA' = rho.d.cca,
     'whitening::scca' = rho.scca,
     'CCA::rcc' = rho.rcc,
     "RCCA::RCCA" = rho.rcca,
+    "Indep CCA" = rho.indep.cca,
     check.names=FALSE)
 })
 df_cca = do.call(rbind, df_cca)
@@ -274,7 +231,7 @@ df_cca = do.call(rbind, df_cca)
 df = reshape2::melt(df_cca, id.vars = "sig_within")
 df = df[order(df$sig_within),]
 
-ggplot(df, aes(sig_within, value, color=variable)) + geom_point() + scale_color_brewer(palette="Set1") + theme_classic() + theme(aspect.ratio=1) + ylab("Correlation of prediction") + geom_smooth() + scale_x_continuous(limits=c(0, 1)) + scale_y_continuous(limits=c(0, 1))
+ggplot(df, aes(sig_within, value, color=variable)) + geom_point() + scale_color_brewer(palette="Set1") + theme_classic() + theme(aspect.ratio=1) + xlab("Method") + ylab("Correlation of prediction") + geom_smooth() + scale_x_continuous(limits=c(0, 1)) + scale_y_continuous(limits=c(0, 1))
 ```
 
 
@@ -298,6 +255,44 @@ ggplot(df, aes(sig_within, value, color=variable)) + geom_point() + scale_color_
 ```{r exit, cache=FALSE, echo=FALSE}
 knitr::knit_exit()
 ```
+
+ devtools::reload("/Users/gabrielhoffman/workspace/repos/decorrelate")
+
+
+system.time(fit.fastcca <- decorrelate::fastcca(X[incl,],Y[incl,]) )
+X.pred = X[-incl,] %*% fit.fastcca$x.coef
+Y.pred = Y[-incl,] %*% fit.fastcca$y.coef
+abs(cor(X.pred[,1], Y.pred[,1]))
+
+
+source("../R/fastccahd.R")
+system.time(fit <- fastccahd(X[incl,],Y[incl,], k.svd=29, std=FALSE))
+X.pred = X[-incl,] %*% fit$x.coef
+Y.pred = Y[-incl,] %*% fit$y.coef
+abs(cor(X.pred[,1], Y.pred[,1]))
+
+
+
+
+source("../R/fastccahd.R")
+fit <- fastccahd(X[incl,],Y[incl,], k.svd=30, std=FALSE)
+X.pred = X[-incl,] %*% fit$x.coef
+Y.pred = Y[-incl,] %*% fit$y.coef
+abs(cor(X.pred[,1], Y.pred[,1]))
+
+fit <- fastccahd(X[incl,],Y[incl,], k.svd=29, std=FALSE)
+X.pred = X[-incl,] %*% fit$x.coef
+Y.pred = Y[-incl,] %*% fit$y.coef
+abs(cor(X.pred[,1], Y.pred[,1]))
+
+
+
+
+
+
+
+
+
 
 whitening:::scca preforms better, but its not clear why
 Need to step through to see differences in code

@@ -33,23 +33,13 @@ Given covariance between features in the original data, estimate the covariance 
 When the transformation is linear, these covariance matrices are the same.
 }
 \examples{
-library(Matrix)
 library(Rfast)
 set.seed(1)
-n = 2000 # number of samples
-p = 8*6 # number of features
-
-# Create correlation matrix with autocorrelation
-autocorr.mat <- function(p = 100, rho = 0.9) {
-    mat <- diag(p)
-    return(rho^abs(row(mat)-col(mat)))
-}
+n = 800 # number of samples
+p = 200 # number of features
 
 # create correlation matrix
-Sigma = autocorr.mat(p/8, .9)
-Sigma = bdiag(Sigma, Sigma)
-Sigma = bdiag(Sigma, Sigma)
-Sigma = bdiag(Sigma, Sigma)
+Sigma = autocorr.mat(p, .9)
 
 # sample matrix from MVN with covariance Sigma
 Y = rmvnorm(n, rep(0, p), sigma=Sigma)

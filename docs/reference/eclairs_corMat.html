@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">decorrelate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.10</span>
       </span>
     </div>
 
@@ -97,6 +97,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/cca.html">Canonical correlation analysis</a>
+    </li>
     <li>
       <a href="../articles/computational_scaling.html">Computational scaling of eclairs data whitening</a>
     </li>
@@ -141,7 +144,7 @@
     <p>Estimate covariance/correlation with low rank and shrinkage from the correlation matrix</p>
     </div>
 
-    <pre class="usage"><span class='fu'>eclairs_corMat</span><span class='op'>(</span><span class='va'>C</span>, <span class='va'>n</span>, k <span class='op'>=</span> <span class='va'>n</span>, lambda <span class='op'>=</span> <span class='cn'>NULL</span>, warmStart <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>eclairs_corMat</span><span class='op'>(</span><span class='va'>C</span>, <span class='va'>n</span>, k <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>C</span><span class='op'>)</span><span class='op'>)</span>, lambda <span class='op'>=</span> <span class='cn'>NULL</span>, warmStart <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,7 +159,7 @@
     </tr>
     <tr>
       <th>k</th>
-      <td><p>the rank of the low rank component.  Defaults to the sample size, <code>n</code>.</p></td>
+      <td><p>the rank of the low rank component.  Defaults to min of sample size and feature number, <code><a href='https://rdrr.io/r/base/Extremes.html'>min(n, p)</a></code>.</p></td>
     </tr>
     <tr>
       <th>lambda</th>

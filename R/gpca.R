@@ -131,7 +131,7 @@
 # 	res.gpca$cor.est = cor.est
 # 	res.gpca$lambda = lambda
 
-# 	res.gpca
+# 	list(res.gpca, cor.est)
 # }
 
 

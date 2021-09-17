@@ -1,0 +1,145 @@
+# Sept 9, 2021
+
+#' Canonical correlation analysis 
+#' 
+#' Canonical correlation analysis that is scalable to high dimensional data.  Uses covariance shrinkage and algorithmic speed ups to be linear time in p when p > n.
+#' 
+#' @param X first matrix (n x p1)
+#' @param Y first matrix (n x p2)
+#' @param k number of canonical components to return
+#' @param lambda.x optional shrinkage parameter for estimating covariance of X. If NULL, estimate from data.
+#' @param lambda.y optional shrinkage parameter for estimating covariance of Y. If NULL, estimate from data.
+#'
+#' @details
+#' Results from standard CCA are based on the SVD of \eqn{\Sigma_{xx}^{-.5} \Sigma_{xy} \Sigma_{yy}^{-.5}}.
+#'
+#'# Avoids computation of \eqn{\Sigma_{xx}^{-.5}} by using eclairs.  Avoids cov(X,Y) by framing this as a matrix product that can be distributed. Uses low rank SVD.
+#' Other regularized CCA addes lambda to covariance like Ridge. Here it is a mixture
+#'
+#' @examples
+#' pop <- LifeCycleSavings[, 2:3]
+#' oec <- LifeCycleSavings[, -(2:3)]
+#' fastcca(pop, oec)
+#'
+#' @importFrom irlba irlba
+#' @export
+cca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x=NULL, lambda.y=NULL){
+
+	if( ! is.matrix(X) ) X = as.matrix(X)
+    if( ! is.matrix(Y) ) Y = as.matrix(Y)
+
+	n1 = nrow(X)
+	n2 = nrow(Y)
+	p1 = ncol(X)
+	p2 = ncol(Y)
+
+	if( n1 != n2 ){
+		stop("X and Y must have same number of rows")
+	}
+
+	k = min(dim(X), dim(Y), k)
+
+	if( k < 0 ){
+		stop("k must be > 1")
+	}
+
+	k = min(k, dim(X), dim(Y))
+
+	# mean center columns
+	X.center = scale(X,scale=FALSE)
+	Y.center = scale(Y,scale=FALSE)
+	n = nrow(X)
+
+	if( nrow(X) != nrow(Y) ){
+		stop("X and Y must have the same number of rows")
+	}
+
+	# Evaluate: Sig_{xx}^{-.5} Sig_{xy} Sig_{yy}^{-.5}
+	# Sig = minvsqrt(cov(X)) %*% cov(X,Y) %*% minvsqrt(cov(Y))
+	# But using faster algorithm
+
+	# eclairs decomposition
+	ecl.x = eclairs( X, lambda = lambda.x, compute="cov" )
+	ecl.y = eclairs( Y, lambda = lambda.y, compute="cov" )
+
+	# creates a matrix that is ncol(X) * ncol(Y)
+	# tmp1 = decorrelate(cov(X,Y), ecl.x, transpose=TRUE)
+
+	# evaluates the same quantity in linear time
+	# X and Y are mean centered by cov()
+	tmp1 = crossprod(Y.center, decorrelate(X.center / (n-1), ecl.x))
+
+	Sig = decorrelate( t(tmp1), ecl.y)
+
+	# SVD on 
+	if( k > min(dim(Sig)) / 3 ){
+		dcmp = svd(Sig)
+
+		if( k < min(dim(Sig)) ){
+			dcmp$d = dcmp$d[seq_len(k)]
+			dcmp$u = dcmp$u[,seq_len(k), drop=FALSE]
+			dcmp$v = dcmp$v[,seq_len(k), drop=FALSE]
+		}
+	}else{
+		dcmp = irlba(Sig, nv=k)
+	}
+
+	# set diagonals to be positive
+	dcmp$v = eachrow(dcmp$v, sign(diag(dcmp$v)), "*")
+    dcmp$u = eachrow(dcmp$u, sign(diag(dcmp$u)), "*")
+	     
+	res  = list(     
+		rho.mod = dcmp$d,
+		x.coefs = decorrelate( dcmp$u, ecl.x, transpose=TRUE),
+		y.coefs = decorrelate( dcmp$v, ecl.y, transpose=TRUE),
+		lambdas = c(x = ecl.x$lambda,y = ecl.y$lambda))
+
+	# res = list(n.comp = n.comp, 
+	# 	cors = rho.mod, 
+	# 	x.coefs = x.coefs,
+	# 	x.vars = x.vars, 
+	# 	y.coefs = y.coefs, 
+	# 	y.vars = y.vars, 
+	# 	lambdas = c(x = X.tr$lambda, y = Y.tr$lambda),
+	# 	dims = c(n1=n1, n2=n2, p1=p1, 
+
+	res
+}
+
+
+
+
+# devel code to skip cov(X,Y) calculations
+
+# C = cov(X,Y)
+
+# n = nrow(X)
+# C2 = crossprod(scale(X,scale=FALSE), scale(Y,scale=FALSE)) / (n-1)
+# C2 = crossprod(scale(X,scale=FALSE), scale(Y,scale=FALSE) / (n-1))
+
+
+
+# C[1:3, 1:3]
+# C2[1:3, 1:3]
+
+
+
+
+
+# ecl.x = eclairs( X )
+
+# tmp1 = decorrelate(cov(X,Y), ecl.x, transpose=TRUE)
+
+
+# tmp2 = t(t(scale(Y,scale=FALSE)) %*% decorrelate(scale(X,scale=FALSE) / (n-1), ecl.x, transpose=FALSE))
+
+# tmp1[1:3, 1:3]
+
+# tmp2[1:3, 1:3]
+
+
+
+
+
+
+

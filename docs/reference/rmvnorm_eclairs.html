@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">decorrelate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.10</span>
       </span>
     </div>
 
@@ -97,6 +97,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/cca.html">Canonical correlation analysis</a>
+    </li>
     <li>
       <a href="../articles/computational_scaling.html">Computational scaling of eclairs data whitening</a>
     </li>
@@ -172,24 +175,13 @@
     <p>Draw from multivariate normal and t distributions using eclairs decomposition.  If the (implied) covariance matrix is \(p \times p\), the standard approach is \(O(p^3)\). Taking advantage of the previously computed eclairs decomposition of rank \(k\), this can be done in \(O(pk^2)\).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples">
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://Matrix.R-forge.R-project.org/'>Matrix</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/RfastOfficial/Rfast'>Rfast</a></span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/RfastOfficial/Rfast'>Rfast</a></span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
-<span class='va'>n</span> <span class='op'>=</span> <span class='fl'>2000</span> <span class='co'># number of samples</span>
-<span class='va'>p</span> <span class='op'>=</span> <span class='fl'>8</span><span class='op'>*</span><span class='fl'>3</span> <span class='co'># number of features</span>
-
-<span class='co'># Create correlation matrix with autocorrelation</span>
-<span class='va'>autocorr.mat</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fl'>100</span>, <span class='va'>rho</span> <span class='op'>=</span> <span class='fl'>0.9</span><span class='op'>)</span> <span class='op'>{</span>
-    <span class='va'>mat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span>
-    <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>rho</span><span class='op'>^</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/row.html'>row</a></span><span class='op'>(</span><span class='va'>mat</span><span class='op'>)</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/col.html'>col</a></span><span class='op'>(</span><span class='va'>mat</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>}</span>
+<span class='va'>n</span> <span class='op'>=</span> <span class='fl'>800</span> <span class='co'># number of samples</span>
+<span class='va'>p</span> <span class='op'>=</span> <span class='fl'>200</span> <span class='co'># number of features</span>
 
 <span class='co'># create correlation matrix</span>
-<span class='va'>Sigma</span> <span class='op'>=</span> <span class='fu'>autocorr.mat</span><span class='op'>(</span><span class='va'>p</span><span class='op'>/</span><span class='fl'>8</span>, <span class='fl'>.9</span><span class='op'>)</span>
-<span class='va'>Sigma</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/Matrix/man/bdiag.html'>bdiag</a></span><span class='op'>(</span><span class='va'>Sigma</span>, <span class='va'>Sigma</span><span class='op'>)</span>
-<span class='va'>Sigma</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/Matrix/man/bdiag.html'>bdiag</a></span><span class='op'>(</span><span class='va'>Sigma</span>, <span class='va'>Sigma</span><span class='op'>)</span>
-<span class='va'>Sigma</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/Matrix/man/bdiag.html'>bdiag</a></span><span class='op'>(</span><span class='va'>Sigma</span>, <span class='va'>Sigma</span><span class='op'>)</span>
+<span class='va'>Sigma</span> <span class='op'>=</span> <span class='fu'><a href='autocorr.mat.html'>autocorr.mat</a></span><span class='op'>(</span><span class='va'>p</span>, <span class='fl'>.9</span><span class='op'>)</span>
 
 <span class='co'># draw data from correlation matrix Sigma</span>
 <span class='va'>Y</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/Rfast/man/rmvnorm.html'>rmvnorm</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='va'>p</span><span class='op'>)</span>, sigma<span class='op'>=</span><span class='va'>Sigma</span><span class='op'>)</span>
@@ -209,11 +201,11 @@
 
 <span class='co'># assess difference betweeen covariances from two methods</span>
 <span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>cov</a></span><span class='op'>(</span><span class='va'>X.draw1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>cov</a></span><span class='op'>(</span><span class='va'>X.draw2</span><span class='op'>)</span><span class='op'>)</span>
-
+</div><div class='output co'>#&gt; [1] -0.01944594  0.01695304</div><div class='input'>
 <span class='co'># compare covariance to the covariance matrix used to simulated the data</span>
 <span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>cov</a></span><span class='op'>(</span><span class='va'>X.draw1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fu'><a href='getCov.html'>getCov</a></span><span class='op'>(</span><span class='va'>ecl</span><span class='op'>)</span><span class='op'>)</span>
-
-</pre>
+</div><div class='output co'>#&gt; [1] -0.01312191  0.01234433</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -19,24 +19,13 @@
 #' @return matrix where rows are samples from multivariate normal or t distribution where columns have covariance specified by \code{Sigma.eclairs}
 #'
 #' @examples
-#' 
-#' library(Matrix)
 #' library(Rfast)
 #' set.seed(1)
-#' n = 2000 # number of samples
-#' p = 8*3 # number of features
-#' 
-#' # Create correlation matrix with autocorrelation
-#' autocorr.mat <- function(p = 100, rho = 0.9) {
-#'     mat <- diag(p)
-#'     return(rho^abs(row(mat)-col(mat)))
-#' }
+#' n = 800 # number of samples
+#' p = 200 # number of features
 #' 
 #' # create correlation matrix
-#' Sigma = autocorr.mat(p/8, .9)
-#' Sigma = bdiag(Sigma, Sigma)
-#' Sigma = bdiag(Sigma, Sigma)
-#' Sigma = bdiag(Sigma, Sigma)
+#' Sigma = autocorr.mat(p, .9)
 #' 
 #' # draw data from correlation matrix Sigma
 #' Y = rmvnorm(n, rep(0, p), sigma=Sigma)
@@ -101,9 +90,9 @@ rmvnorm_eclairs = function(n, mu, Sigma.eclairs, v=Inf){
 	}else{
 		# Multivariate t 
 
-	    # create multivariate t from inverse chi-square weights, X_transform and mean
-	    w <- sqrt(v/rchisq(n, v))
-	    X_values = w * X_transform + rep(mu, rep(n, p))
+		# create multivariate t from inverse chi-square weights, X_transform and mean
+		w <- sqrt(v/rchisq(n, v))
+		X_values = w * X_transform + rep(mu, rep(n, p))
 	}
 
 	# return matrix

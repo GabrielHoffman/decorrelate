@@ -2,9 +2,10 @@ pandoc: 2.14.0.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  cca: cca.html
   computational_scaling: computational_scaling.html
   decorrelate: decorrelate.html
   intuition: intuition.html
   simulation: simulation.html
-last_built: 2021-08-05T18:34Z
+last_built: 2021-09-14T14:07Z
 

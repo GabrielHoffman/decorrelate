@@ -25,24 +25,13 @@ Efficient decorrelation projection using \link{eclairs} decomposition
 ' FIX NOTATION HERE: Given a vector \eqn{x ~ N(0, \Sigma)} where \eqn{\Sigma = U diag(d_1^2) U^T + diag(\sigma^2)}, transform x so that it has an identity covariance matrix.  \eqn{\Sigma^{-0.5}x} is such a projection (see Strimmer whitening).  When \eqn{\Sigma} is \eqn{p \times p}, computing this projection naively is \eqn{O(p^3)}.  Here we take advantage of the fact that \eqn{\Sigma} is the sum of a low rank decomposition, plus a scaled identity matrix
 }
 \examples{
-
-library(Matrix)
 library(Rfast)
 set.seed(1)
 n = 800 # number of samples
-p = 8*200 # number of features
-
-# Create correlation matrix with autocorrelation
-autocorr.mat <- function(p = 100, rho = 0.9) {
- mat <- diag(p)
- return(rho^abs(row(mat)-col(mat)))
-}
+p = 200 # number of features
 
 # create correlation matrix
-Sigma = autocorr.mat(p/8, .9)
-Sigma = bdiag(Sigma, Sigma)
-Sigma = bdiag(Sigma, Sigma)
-Sigma = bdiag(Sigma, Sigma)
+Sigma = autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
 Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)

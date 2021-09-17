@@ -107,7 +107,7 @@ test_estimate_lambda = function(){
     # lambda_eclairs = estimate_lambda_eb(n*ecl$dSq, n, p, nu)
 
 	# check two estimates of lambda
-	checkEqualsNumeric( fit@alphaOpt, est, tolerance=1e-4) & checkEqualsNumeric( fit@alphaOpt, ecl$lambda, tolerance=1e-4)
+	checkEqualsNumeric( fit@alphaOpt, est$lambda, tolerance=1e-4) & checkEqualsNumeric( fit@alphaOpt, ecl$lambda, tolerance=1e-4)
 }
 
 test_large_scale = function(){

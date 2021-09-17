@@ -38,7 +38,6 @@ test_eclairs_eclairs_corMat = function(){
 
 	checkEqualsNumeric( Y.decorr, Y.decorr2)
 
-
 	# source("eclairs_reform.R")
 	# source("eclair_corMat.R")
 

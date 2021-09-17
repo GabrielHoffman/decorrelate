@@ -62,7 +62,7 @@ setMethod("print", 'eclairs',
 #'
 #' @param Sigma.eclairs eclairs decomposition
 #' @param lambda shrinkage parameter for the convex combination.
-#' @param forCols (TRUE) compute covariance between columns  If FALSE, compute covariance between rows
+# @param forCols (TRUE) compute covariance between columns  If FALSE, compute covariance between rows
 #' @param ... other arguments
 #'
 #' @return p x p covariance/correlation matrix
@@ -92,18 +92,19 @@ setMethod("print", 'eclairs',
 #'
 #' @rdname getCov
 #' @export
-setGeneric("getCov", function(Sigma.eclairs, lambda, forCols=TRUE, ...) standardGeneric("getCov"))
+setGeneric("getCov", function(Sigma.eclairs, lambda, ...) standardGeneric("getCov"))
+# , forCols=TRUE
 
 #' @rdname getCov
 #' @export
-setGeneric("getCor", function(Sigma.eclairs, lambda, forCols=TRUE, ...) standardGeneric("getCor"))
+setGeneric("getCor", function(Sigma.eclairs, lambda, ...) standardGeneric("getCor"))
 
 
 
 #' @rdname getCov
 #' @export
 setMethod('getCov', c(Sigma.eclairs = "eclairs"),
-	function(Sigma.eclairs, lambda, forCols=TRUE, ...){
+	function(Sigma.eclairs, lambda, ...){
 
 	# if disableWarn is specified and is TRUE, set disableWarn = TRUE
 	# else FALSE
@@ -122,14 +123,14 @@ setMethod('getCov', c(Sigma.eclairs = "eclairs"),
 	}
 
 
-	if( forCols ){
+	# if( forCols ){
 		# covariance between columns
 		# A = x$U %*% diag(x$dSq *(1-x$lambda)) %*% t(x$U) + diag(x$lambda, x$p)
-		res = Sigma.eclairs$U %*% ((Sigma.eclairs$dSq *(1-lambda)) * t(Sigma.eclairs$U)) + diag(Sigma.eclairs$nu*lambda, Sigma.eclairs$p)
-	}else{
-		# covariance between rows
-		res = Sigma.eclairs$V %*% ((Sigma.eclairs$dSq *(1-lambda)) * t(Sigma.eclairs$V)) + diag(Sigma.eclairs$nu*lambda, Sigma.eclairs$n)
-	}
+	res = Sigma.eclairs$U %*% ((Sigma.eclairs$dSq *(1-lambda)) * t(Sigma.eclairs$U)) + diag(Sigma.eclairs$nu*lambda, Sigma.eclairs$p)
+	# }else{
+	# 	# covariance between rows
+	# 	res = Sigma.eclairs$V %*% ((Sigma.eclairs$dSq *(1-lambda)) * t(Sigma.eclairs$V)) + diag(Sigma.eclairs$nu*lambda, Sigma.eclairs$n)
+	# }
 
 	res
 })
@@ -139,9 +140,9 @@ setMethod('getCov', c(Sigma.eclairs = "eclairs"),
 #' @rdname getCov
 #' @export
 setMethod('getCor', c(Sigma.eclairs = "eclairs"), 
-	function(Sigma.eclairs, lambda, forCols=TRUE,...){
+	function(Sigma.eclairs, lambda,...){
 
-	cov2cor( getCov( Sigma.eclairs, lambda = lambda, forCols = forCols, disableWarn=TRUE ) )
+	cov2cor( getCov( Sigma.eclairs, lambda = lambda, disableWarn=TRUE ) )
 })
 
 

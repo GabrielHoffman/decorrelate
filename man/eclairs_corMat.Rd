@@ -4,14 +4,14 @@
 \alias{eclairs_corMat}
 \title{Estimate covariance/correlation with low rank and shrinkage}
 \usage{
-eclairs_corMat(C, n, k = n, lambda = NULL, warmStart = NULL)
+eclairs_corMat(C, n, k = min(n, nrow(C)), lambda = NULL, warmStart = NULL)
 }
 \arguments{
 \item{C}{sample correlation matrix between features}
 
 \item{n}{number of samples used to estimate the sample correlation matrix}
 
-\item{k}{the rank of the low rank component.  Defaults to the sample size, \code{n}.}
+\item{k}{the rank of the low rank component.  Defaults to min of sample size and feature number, \code{min(n, p)}.}
 
 \item{lambda}{shrinkage parameter. If not specified, it is estimated from the data.}
 
