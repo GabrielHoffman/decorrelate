@@ -118,25 +118,53 @@ ggplot(df, aes(p, elapsed, color=Method)) + geom_line() + geom_point() + theme_c
 ```
 
 
-```{r test, eval=FALSE}
-n = 100000
+```{r compare.all.fixed.p}
 p = 1000
-X = matrnorm(n,p)
-rownames(X) = paste0("sample_", 1:n)
-colnames(X) = paste0("feature_", 1:p)
 
-Y = matrnorm(n,p)
-rownames(Y) = paste0("sample_", 1:n)
-colnames(Y) = paste0("feature_", 1:p)
+n.array = c(seq(10, 1000, by=75), seq(1000, 10000, by=400))
 
-system.time(res <- decorrelate::fastcca( X,Y, k=4))
-dim(res$x.coefs)
+df = lapply(n.array, function(n){
 
-system.time(res <- decorrelate::cca( X,Y, k=4))
-dim(res$x.coefs)
+  message("\r", n, "   ", appendLF=FALSE)
 
+  X = matrnorm(n,p)
+  Y = matrnorm(n,p)
 
+  res = c()
+
+  if( n < 9000){
+    tm = system.time(decorrelate::cca(X,Y))
+    res = rbind(res, data.frame(Method = "decorrelate::cca", n=n, t(c(tm)), check.names=FALSE))
+  }
+
+  if( n < Inf){
+    tm = system.time(RCCA::RCCA(X,Y, 0.1, 0.1))
+    res = rbind(res, data.frame(Method = "RCCA::RCCA", n=n, t(c(tm)), check.names=FALSE))
+  }
+
+  # if( n < 1000){
+  #   tm = system.time(CCA::rcc(X,Y, 0.1, 0.1))
+  #   res = rbind(res, data.frame(Method = "CCA::rcc", n=n, t(c(tm)), check.names=FALSE))
+  # }
+
+  if( n < 3000){
+    tm = system.time(whitening::scca(X,Y, verbose=FALSE))
+    res = rbind(res, data.frame(Method = "whitening::scca", n=n, t(c(tm)), check.names=FALSE))
+  }
+
+  if( n < Inf){
+    tm = system.time(decorrelate::fastcca(X,Y))
+    res = rbind(res, data.frame(Method = "decorrelate::fastcca", n=n, t(c(tm)), check.names=FALSE))
+  }
+
+  res
+  })
+df = do.call(rbind, df)
+
+ggplot(df, aes(n, elapsed, color=Method)) + geom_line() + geom_point() + theme_classic() + ylab("Wall time (seconds)") + scale_color_brewer(palette="Set1") + theme(aspect.ratio=1)
 ```
+
+
 
 
 ```{r test.sims}

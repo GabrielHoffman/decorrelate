@@ -1,3 +1,8 @@
+Sept 16, 2021
+	I tried to extend to partion SVD using fastcchd, but I couldn't get it to work
+
+	in fastcca() make sure that estimated correlation are correct
+
 
 Papers:
 	https://openreview.net/pdf?id=4sCyjwaVtZ9
