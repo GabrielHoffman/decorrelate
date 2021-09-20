@@ -18,6 +18,9 @@ vignette: >
 
 <!--- 
 
+cd build2/decorrelate/vignettes/
+
+
 rmarkdown::render("cca.Rmd");
 
 --->
@@ -95,12 +98,12 @@ df = lapply(p.array, function(p){
     res = rbind(res, data.frame(Method = "RCCA::RCCA", p = p, t(c(tm)), check.names=FALSE))
   }
 
-  if( p < 1000){
+  if( p < 800){
     tm = system.time(rcc(X,Y, 0.1, 0.1))
     res = rbind(res, data.frame(Method = "CCA::rcc", p = p, t(c(tm)), check.names=FALSE))
   }
 
-  if( p < 3000){
+  if( p < 5000){
     tm = system.time(whitening::scca(X,Y, verbose=FALSE))
     res = rbind(res, data.frame(Method = "whitening::scca", p = p, t(c(tm)), check.names=FALSE))
   }
@@ -148,7 +151,7 @@ df = lapply(n.array, function(n){
   #   res = rbind(res, data.frame(Method = "CCA::rcc", n=n, t(c(tm)), check.names=FALSE))
   # }
 
-  if( n < 3000){
+  if( n < Inf){
     tm = system.time(whitening::scca(X,Y, verbose=FALSE))
     res = rbind(res, data.frame(Method = "whitening::scca", n=n, t(c(tm)), check.names=FALSE))
   }
