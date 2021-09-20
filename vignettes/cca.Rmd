@@ -20,6 +20,8 @@ vignette: >
 
 cd build2/decorrelate/vignettes/
 
+system("ml git; git pull")
+
 
 rmarkdown::render("cca.Rmd");
 
@@ -39,7 +41,7 @@ knitr::opts_chunk$set(
   cache = TRUE)
 ```
 
-```{r load.packages}
+```{r load.packages, cache=FALSE}
 library(decorrelate)
 library(Rfast)
 library(ggplot2)
@@ -164,7 +166,9 @@ df = lapply(n.array, function(n){
   res
   })
 df = do.call(rbind, df)
+```
 
+```{r compare.all.fixed.p.plot, cache=FALSE}
 ggplot(df, aes(n, elapsed, color=Method)) + geom_line() + geom_point() + theme_classic() + ylab("Wall time (seconds)") + scale_color_brewer(palette="Set1") + theme(aspect.ratio=1)
 ```
 
