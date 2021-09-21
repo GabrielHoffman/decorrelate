@@ -1,3 +1,7 @@
+# decorrelate 0.0.11
+* Scale Cxy by `sqrt(1-lambda.x)*sqrt(1-lambda.y)`
+* Add Cramer's V statistic
+
 # decorrelate 0.0.10
 * Sept 13, 2021
 * add ``fastcca()` and `cca()`
