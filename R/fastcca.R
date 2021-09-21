@@ -150,7 +150,12 @@ fastcca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL
     rho = diag(cor(X.inv.tr$vars, Y.inv.tr$vars))[1:n.comp]
     names(rho) = paste("can.comp", 1:n.comp, sep = "")
 
-	idx = seq(1, min(ncol(X)-1, ncol(Y)-1, nrow(X), k)-1)
+    if(k < min( dim(X), dim(Y)) ){
+		idx = seq(1, k)
+	}else{
+		idx = seq(1, k-1)
+	}
+
 	cramer.V = sqrt(mean(rho.mod[idx]^2)) # Cramer's V-statistic for CCA
 
 	res = list(	n.comp 	= n.comp, 

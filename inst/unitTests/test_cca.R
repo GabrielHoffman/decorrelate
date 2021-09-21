@@ -174,6 +174,42 @@ test_fastcca = function(){
 }
 
 
+test_cramer_stat = function(){
+
+	n = 100
+	x = rep(0, n)
+	x[1:50] = 1
+	# x[80:100] = 2
+	y = rep(0, n)
+	y[1:10] = 1
+	# y[90:100] = 2
+
+	x = factor(x)
+	y = factor(y)
+
+	cv.test = function(x,y) {
+	  CV = sqrt(chisq.test(x, y, correct=FALSE)$statistic /
+	    (length(x) * (min(length(unique(x)),length(unique(y))) - 1)))
+	  # print.noquote("Cramér V / Phi:")
+	  return(as.numeric(CV))
+	}
+
+	V = cv.test(x,y)
+
+	d1 = model.matrix(~0+x)
+	d2 = model.matrix(~0+y)
+
+	suppressWarnings({
+	fit <- fastcca(d1, d2)
+	})
+
+	checkTrue(abs(fit$cramer.V - V) < 1e-2)
+}
+
+
+
+
+
 
 
 
