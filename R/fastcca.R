@@ -96,8 +96,8 @@ fastcca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL
 
 	k = min(dim(X), dim(Y), k)
 
-	if( k < 0 ){
-		stop("k must be > 1")
+	if( k <= 0 ){
+		stop("k must be >= 1")
 	}
 
 	# if( (p1 < n1) & (p2 < n2) ){
@@ -136,7 +136,7 @@ fastcca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL
 	x.coefs = X.inv.tr$coefs[,seq_len(n.comp),drop=FALSE]
 	rownames(x.coefs) = colnames(X)
 
-	x.vars = X.inv.tr$vars[,1:n.comp]
+	x.vars = X.inv.tr$vars[,seq_len(n.comp),drop=FALSE]
 	rownames(x.vars) = rownames(X)
 
 	Y.inv.tr = inverseTransform(Y.tr$mat, sol$beta, Y.tr$tr)
