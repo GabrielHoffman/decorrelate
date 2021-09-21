@@ -31,19 +31,19 @@ setMethod("show", 'fastcca',
 setMethod("print", 'fastcca',
       function(x){
 
-	cat("       Fast canonical correlation analysis\n\n")
+	cat("       Fast regularized canonical correlation analysis\n\n")
 
-	k = min(5, x$n.comp)
+	k = min(3, x$n.comp)
 
 	cat("  Original data rows:", x$dims['n1'],"\n")
 	cat("  Original data cols: ", x$dims['p1'], ', ',x$dims['p2'],"\n", sep='')
 	cat("  Num components:    ", x$n.comp, "\n")
-	cat("  Corrs:             ", format(x$cor[seq_len(k)], digits=3), "...\n")
+	cat("  Cor:               ", round(x$cor[seq_len(k)], digits=3), "...\n")
+	cat("  rho.mod:           ", round(x$rho.mod[seq_len(k)], digits=3), "...\n")
+	cat("  Cramer's V:        ", round(x$cramer.V, digits=3), "\n")
 	cat("  lambda.x:          ", format(x$lambdas['x'], digits=3), "\n")
 	cat("  lambda.y:          ", format(x$lambdas['y'], digits=3), "\n")
 })
-
-
 
 
 
@@ -120,6 +120,9 @@ fastcca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL
 	# get covariance as product of centered matricies
 	Cxy = crossprod(X.tr$mat, Y.tr$mat) / (n1-1) 
 
+	# scale by shrinkage parameters
+	Cxy = Cxy * sqrt(1-X.tr$lambda) * sqrt(1-Y.tr$lambda)
+
 	sol = geigen2(Cxy, Cxx, Cyy, k) # compute SVD of matrix products
 	names(sol) = c("rho", "alpha", "beta")
 	
@@ -147,9 +150,13 @@ fastcca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL
     rho = diag(cor(X.inv.tr$vars, Y.inv.tr$vars))[1:n.comp]
     names(rho) = paste("can.comp", 1:n.comp, sep = "")
 
+	idx = seq(1, min(ncol(X)-1, ncol(Y)-1, nrow(X), k)-1)
+	cramer.V = sqrt(mean(rho.mod[idx]^2)) # Cramer's V-statistic for CCA
+
 	res = list(	n.comp 	= n.comp, 
 				rho.mod = rho.mod, 
 				cor 	= rho,
+				cramer.V= cramer.V,
 				x.coefs = x.coefs,
 				x.vars 	= x.vars, 
 				y.coefs = y.coefs, 

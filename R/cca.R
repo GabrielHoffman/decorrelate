@@ -71,6 +71,9 @@ cca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x=NULL, lambda.y=NULL){
 
 	Sig = decorrelate( t(tmp1), ecl.y)
 
+	# scale by shrinkage parameters
+	Sig = Sig * sqrt(1-ecl.x$lambda) * sqrt(1-ecl.y$lambda)
+
 	# SVD on 
 	if( k > min(dim(Sig)) / 3 ){
 		dcmp = svd(Sig)
