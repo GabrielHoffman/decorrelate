@@ -1,7 +1,24 @@
+Sept 21, 2021
+	get Rsq to be estimates of the out-of-sample prediction correlattion
+		like for regression
+	how many degrees of freedom are used in coef estiamtes	
+
+	rho = sig_12 / (sig_11 * sig_22)
+
+	get effective degrees of freedom of CCA prediction
+	doi: 10.1093/biomet/asu067
+	834 Biometrical Journal 57 (2015) 5, 834–851 DOI: 10.1002/bimj.201400226
+
+	redundancy index is sum of square loadings times squared canonical correlation??
+
+
+
+
 Sept 16, 2021
 	I tried to extend to partion SVD using fastcchd, but I couldn't get it to work
 
 	in fastcca() make sure that estimated correlation are correct
+
 
 
 Papers:
