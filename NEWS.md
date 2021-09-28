@@ -1,3 +1,7 @@
+# decorrelate 0.0.12
+* `fastcca()` and `cca()` give equivalent results
+ * but canonical variates are rotated with respect to each other
+
 # decorrelate 0.0.11
 * Scale Cxy by `sqrt(1-lambda.x)*sqrt(1-lambda.y)`
 * Add Cramer's V statistic

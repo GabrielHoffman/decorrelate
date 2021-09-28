@@ -79,6 +79,10 @@ fastcca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL
 	if( ! is.matrix(X) ) X = as.matrix(X)
     if( ! is.matrix(Y) ) Y = as.matrix(Y)
 
+    if( anyNA(X) | anyNA(Y) ){
+    	stop("No NA values are allowed in data")
+    }
+
     # mean-center columns
     # X = standardise(X, scale = FALSE)
     # Y = standardise(Y, scale = FALSE)
@@ -294,6 +298,10 @@ geigen2 = function(Amat, Bmat, Cmat, k){
 		dcmp = irlba(D, nv=k)
 	}
 
+	# set diagonals to be positive
+	dcmp$v = eachrow(dcmp$v, sign(diag(dcmp$v)), "*")
+    dcmp$u = eachrow(dcmp$u, sign(diag(dcmp$u)), "*")
+	
     values <- dcmp$d
 
     if( p >=q ){

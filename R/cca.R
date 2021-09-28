@@ -43,7 +43,7 @@ cca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x=NULL, lambda.y=NULL){
 		stop("k must be > 1")
 	}
 
-	k = min(k, dim(X), dim(Y))
+	n.comp = min(ncol(X), ncol(Y), nrow(X), k)
 
 	# mean center columns
 	X.center = scale(X,scale=FALSE)
@@ -79,34 +79,52 @@ cca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x=NULL, lambda.y=NULL){
 		dcmp = svd(Sig)
 
 		if( k < min(dim(Sig)) ){
-			dcmp$d = dcmp$d[seq_len(k)]
-			dcmp$u = dcmp$u[,seq_len(k), drop=FALSE]
-			dcmp$v = dcmp$v[,seq_len(k), drop=FALSE]
+			dcmp$d = dcmp$d[seq_len(n.comp)]
+			dcmp$u = dcmp$u[,seq_len(n.comp), drop=FALSE]
+			dcmp$v = dcmp$v[,seq_len(n.comp), drop=FALSE]
 		}
 	}else{
-		dcmp = irlba(Sig, nv=k)
+		dcmp = irlba(Sig, nv=n.comp)
 	}
 
 	# set diagonals to be positive
 	dcmp$v = eachrow(dcmp$v, sign(diag(dcmp$v)), "*")
     dcmp$u = eachrow(dcmp$u, sign(diag(dcmp$u)), "*")
 	     
-	res  = list(     
-		rho.mod = dcmp$d,
-		x.coefs = decorrelate( dcmp$u, ecl.x, transpose=TRUE),
-		y.coefs = decorrelate( dcmp$v, ecl.y, transpose=TRUE),
-		lambdas = c(x = ecl.x$lambda,y = ecl.y$lambda))
+	x.coefs = decorrelate( dcmp$u, ecl.x, transpose=TRUE)
+	x.vars = X %*% x.coefs
+	rownames(x.vars) = rownames(X)
 
-	# res = list(n.comp = n.comp, 
-	# 	cors = rho.mod, 
-	# 	x.coefs = x.coefs,
-	# 	x.vars = x.vars, 
-	# 	y.coefs = y.coefs, 
-	# 	y.vars = y.vars, 
-	# 	lambdas = c(x = X.tr$lambda, y = Y.tr$lambda),
-	# 	dims = c(n1=n1, n2=n2, p1=p1, 
+	y.coefs = decorrelate( dcmp$v, ecl.y, transpose=TRUE)
+	y.vars = Y %*% y.coefs
+	rownames(y.vars) = rownames(X)
 
-	res
+    rho = diag(cor(x.vars, y.vars))[1:n.comp]
+    names(rho) = paste("can.comp", 1:n.comp, sep = "")
+
+	rho.mod = dcmp$d
+	names(rho.mod) = paste('can.comp', seq_len(n.comp), sep = '')
+
+	if(k < min( dim(X), dim(Y)) ){
+		idx = seq(1, k)
+	}else{
+		idx = seq(1, k-1)
+	}
+
+	cramer.V = sqrt(mean(rho.mod[idx]^2)) # Cramer's V-statistic for CCA
+
+	res = list(	n.comp 	= n.comp, 
+				rho.mod = rho.mod, 
+				cor 	= rho,
+				cramer.V= cramer.V,
+				x.coefs = x.coefs,
+				x.vars 	= x.vars, 
+				y.coefs = y.coefs, 
+				y.vars 	= y.vars, 
+				lambdas = c(x = ecl.x$lambda, y = ecl.y$lambda),
+				dims 	= c(n1=n1, n2=n2, p1=p1, p2=p2))
+
+	new('fastcca', res)
 }
 
 

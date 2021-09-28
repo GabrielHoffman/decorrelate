@@ -15,6 +15,7 @@ test_cca = function(){
 	res1 = decorrelate::cca(X,Y, lambda.x=0, lambda.y=0)
 	res2 = CCA::rcc(X,Y, 0,0)
 	res3 = RCCA::RCCA(X,Y, 0,0)
+	res4 = decorrelate::fastcca(X,Y, lambda.x=0, lambda.y=0)
 
 	checkEqualsNumeric(res1$rho.mod, res2$cor)
 	checkEqualsNumeric(abs(res1$x.coefs), abs(res2$xcoef))
@@ -23,6 +24,19 @@ test_cca = function(){
 	checkEqualsNumeric(res1$rho.mod, res3$cor)
 	checkEqualsNumeric(abs(res1$x.coefs), abs(res3$x.coefs))
 	checkEqualsNumeric(abs(res1$y.coefs), abs(res3$y.coefs))
+
+
+	# compare cca to fastcca
+
+	checkEqualsNumeric(res1$rho.mod, res4$rho.mod)
+	checkEqualsNumeric(res1$cor, res4$cor)
+	checkEqualsNumeric(res1$x.coefs, res4$x.coefs)
+	checkEqualsNumeric(res1$y.coefs, res4$y.coefs)
+
+	# the projects are rotated with respect to each other
+	# checkEqualsNumeric(res1$x.vars, res4$x.vars)
+	# checkEqualsNumeric(res1$y.vars, res4$y.vars)
+
 
 	# set.seed(1)
 	# n = 100 # number of samples
@@ -179,10 +193,10 @@ test_cramer_stat = function(){
 	n = 100
 	x = rep(0, n)
 	x[1:50] = 1
-	# x[80:100] = 2
+	x[80:100] = 2
 	y = rep(0, n)
 	y[1:10] = 1
-	# y[90:100] = 2
+	y[90:100] = 2
 
 	x = factor(x)
 	y = factor(y)
