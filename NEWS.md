@@ -1,3 +1,7 @@
+# decorrelate 0.0.13
+* add redundancy index as `x.ri`, `y.ri`
+
+
 # decorrelate 0.0.12
 * `fastcca()` and `cca()` give equivalent results
  * but canonical variates are rotated with respect to each other

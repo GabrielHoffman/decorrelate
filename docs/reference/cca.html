@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">decorrelate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.13</span>
       </span>
     </div>
 
@@ -173,20 +173,22 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Results from standard CCA are based on the SVD of \(Sig_{xx}^{-.5} Sig_{xy} Sig_{yy}^{-.5}\).</p>
-<p># Avoids computation of  \(Sig_{xx}^{-.5}\) by using eclairs.  Avoids cov(X,Y) by framing this as a matrix product that can be distributed. Uses low rank SVD.
+    <p>Results from standard CCA are based on the SVD of \(\Sigma_{xx}^{-.5} \Sigma_{xy} \Sigma_{yy}^{-.5}\).</p>
+<p># Avoids computation of \(\Sigma_{xx}^{-.5}\) by using eclairs.  Avoids cov(X,Y) by framing this as a matrix product that can be distributed. Uses low rank SVD.
 Other regularized CCA addes lambda to covariance like Ridge. Here it is a mixture</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>pop</span> <span class='op'>&lt;-</span> <span class='va'>LifeCycleSavings</span><span class='op'>[</span>, <span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span>
 <span class='va'>oec</span> <span class='op'>&lt;-</span> <span class='va'>LifeCycleSavings</span><span class='op'>[</span>, <span class='op'>-</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>]</span>
 <span class='fu'><a href='fastcca.html'>fastcca</a></span><span class='op'>(</span><span class='va'>pop</span>, <span class='va'>oec</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;        Fast canonical correlation analysis
+</div><div class='output co'>#&gt;        Fast regularized canonical correlation analysis
 #&gt; 
 #&gt;   Original data rows: 50 
 #&gt;   Original data cols: 2, 3
 #&gt;   Num components:     2 
-#&gt;   Corrs:              1.427 0.588 ...
+#&gt;   Cor:                -0.825 0.365 ...
+#&gt;   rho.mod:            0.821 0.338 ...
+#&gt;   Cramer's V:         0.821 
 #&gt;   lambda.x:           0.0123 
 #&gt;   lambda.y:           0.665 </div><div class='input'>
 </div></pre>

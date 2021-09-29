@@ -221,7 +221,31 @@ test_cramer_stat = function(){
 }
 
 
+test_redundancy = function(){
 
+	library(yacca)
+	library(Rfast)
+	library(RUnit)
+	library(decorrelate)
+
+	n = 100 # number of samples
+	p1 = 20 # number of features
+	p2 = 20
+
+	X = scale(matrnorm(n,p1))
+	Y = scale(matrnorm(n,p2))
+
+	fit1 = yacca::cca(X,Y)              
+	fit2 = decorrelate::cca(X,Y, lambda.x=0, lambda.y=0)
+	fit3 = decorrelate::fastcca(X,Y, lambda.x=0, lambda.y=0)
+
+	checkEqualsNumeric(abs(fit1$xcoef), abs(fit2$x.coefs))
+	checkEqualsNumeric(fit1$xvrd, fit2$x.ri)
+	checkEqualsNumeric(fit1$yvrd, fit2$y.ri)
+	checkEqualsNumeric(fit1$xvrd, fit3$x.ri)
+	checkEqualsNumeric(fit1$yvrd, fit3$y.ri)
+
+}
 
 
 

@@ -36,7 +36,7 @@ knitr::opts_chunk$set(
   message=FALSE,
   error = FALSE,
   tidy = FALSE,
-  eval = TRUE,
+  eval = FALSE,
   dev = c("png", "pdf"),
   cache = TRUE)
 ```
@@ -189,11 +189,10 @@ library(decorrelate)
 library(Rfast)
 library(ggplot2)
 library(Matrix)
-library(Matrix)
 
 n = 400
-p = 30
-q = 30
+p = 300
+q = 200
 
 sig.array = seq(.05, .99, length.out=50)
 
@@ -201,6 +200,7 @@ sig_within = .7
 
 df_cca = lapply( sig.array, function(sig_within){
 
+  sig_within = sqrt(0)
   message("\r", format(sig_within, digits=3), appendLF = FALSE)
 
   Sigma.xx = diag(1,p)
@@ -215,18 +215,26 @@ df_cca = lapply( sig.array, function(sig_within){
   dat = Rfast:::rmvnorm(n, rep(0, p+q), Sig, seed=1)
 
   # correlation between samples 
-  S = bdiag(lapply(seq(1,n / 100), function(i) autocorr.mat(100, .95)))
+  S = bdiag(lapply(seq(1,n / 100), function(i) autocorr.mat(100, .8)))
   dat = chol(S) %*% dat 
 
   X = scale(dat[,1:p])
   Y = scale(dat[,-c(1:p)]) 
   
+  fit = fastcca(X,Y)
+  fit
+
+
   incl = seq(1, 0.8*n)   
 
   fit.fastcca = decorrelate::fastcca(X[incl,],Y[incl,])
   X.pred = X[-incl,] %*% fit.fastcca$x.coef
   Y.pred = Y[-incl,] %*% fit.fastcca$y.coef
   rho.fastcca = abs(cor(X.pred[,1], Y.pred[,1]))
+  rho.fastcca
+
+
+
 
   fit.d.cca = decorrelate::cca(X[incl,],Y[incl,])
   X.pred = X[-incl,] %*% fit.d.cca$x.coefs

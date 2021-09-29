@@ -113,14 +113,28 @@ cca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x=NULL, lambda.y=NULL){
 
 	cramer.V = sqrt(mean(rho.mod[idx]^2)) # Cramer's V-statistic for CCA
 
+	# based on CRAN::yacca
+	# compute loadings
+	load.x = cor(X, x.vars)
+	load.y = cor(Y, y.vars)
+
+	# compute redundancy index
+	ri.x = rho.mod^2 * apply(load.x, 2, function(x) mean(x^2))
+	ri.y = rho.mod^2 * apply(load.y, 2, function(x) mean(x^2))
+
+	names(ri.x) = paste('can.comp', seq_len(n.comp), sep = '') 
+	names(ri.y) = paste('can.comp', seq_len(n.comp), sep = '') 
+
 	res = list(	n.comp 	= n.comp, 
 				rho.mod = rho.mod, 
 				cor 	= rho,
 				cramer.V= cramer.V,
 				x.coefs = x.coefs,
 				x.vars 	= x.vars, 
+				x.ri 	= ri.x,
 				y.coefs = y.coefs, 
 				y.vars 	= y.vars, 
+				y.ri 	= ri.y,
 				lambdas = c(x = ecl.x$lambda, y = ecl.y$lambda),
 				dims 	= c(n1=n1, n2=n2, p1=p1, p2=p2))
 
