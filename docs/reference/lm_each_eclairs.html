@@ -266,13 +266,13 @@
 <span class='va'>res</span> <span class='op'>=</span> <span class='fu'>lm_each_eclairs</span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>v1</span> <span class='op'>+</span> <span class='va'>v2</span>, <span class='va'>data</span>, <span class='va'>X</span>, <span class='va'>ecl</span> <span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;              beta         se      tstat     pvalue
-#&gt; set_1  0.02765199 0.06555547  0.4218107 0.67362550
-#&gt; set_2 -0.13033828 0.06427287 -2.0278895 0.04392511
-#&gt; set_3  0.02078863 0.06248750  0.3326846 0.73972795
-#&gt; set_4  0.04151196 0.06888132  0.6026592 0.54743205
-#&gt; set_5 -0.10062980 0.06356311 -1.5831478 0.11500000
-#&gt; set_6  0.10942982 0.06699560  1.6333882 0.10399269</div><div class='input'>
+</div><div class='output co'>#&gt;                beta         se       tstat     pvalue
+#&gt; set_1 -0.0013624976 0.05706190 -0.02387754 0.98097458
+#&gt; set_2  0.0007046913 0.06322242  0.01114622 0.99111812
+#&gt; set_3  0.0543206115 0.06033222  0.90035823 0.36903456
+#&gt; set_4 -0.1481630650 0.06488267 -2.28355390 0.02347007
+#&gt; set_5 -0.0849271226 0.07864716 -1.07984989 0.28153603
+#&gt; set_6  0.0886302522 0.06859338  1.29211081 0.19784015</div><div class='input'>
 <span class='co'># Analysis after non-linear transform</span>
 <span class='co'>#------------------------------------</span>
 
@@ -287,13 +287,13 @@
 <span class='va'>res2</span> <span class='op'>=</span> <span class='fu'>lm_each_eclairs</span><span class='op'>(</span> <span class='fu'>f</span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>v1</span> <span class='op'>+</span> <span class='va'>v2</span>, <span class='va'>data</span>, <span class='va'>X</span>, <span class='va'>ecl_transform</span> <span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;              beta         se      tstat     pvalue
-#&gt; set_1  0.02765199 0.06555547  0.4218107 0.67362550
-#&gt; set_2 -0.13033828 0.06427287 -2.0278895 0.04392511
-#&gt; set_3  0.02078863 0.06248750  0.3326846 0.73972795
-#&gt; set_4  0.04151196 0.06888132  0.6026592 0.54743205
-#&gt; set_5 -0.10062980 0.06356311 -1.5831478 0.11500000
-#&gt; set_6  0.10942982 0.06699560  1.6333882 0.10399269</div><div class='input'>
+</div><div class='output co'>#&gt;                beta         se       tstat     pvalue
+#&gt; set_1 -0.0013624976 0.05706190 -0.02387754 0.98097458
+#&gt; set_2  0.0007046913 0.06322242  0.01114622 0.99111812
+#&gt; set_3  0.0543206115 0.06033222  0.90035823 0.36903456
+#&gt; set_4 -0.1481630650 0.06488267 -2.28355390 0.02347007
+#&gt; set_5 -0.0849271226 0.07864716 -1.07984989 0.28153603
+#&gt; set_6  0.0886302522 0.06859338  1.29211081 0.19784015</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

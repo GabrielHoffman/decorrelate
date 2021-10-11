@@ -11,7 +11,7 @@ whiten(X, k = ncol(X), lambda = NULL)
 
 \item{k}{the rank of the low rank component}
 
-\item{lambda}{specify lambda and override value estimated by \code{eclairs}}
+\item{lambda}{specify lambda and override value estimated by \code{eclairs()}}
 }
 \description{
 Efficient decorrelation projection using eclairs decomposition

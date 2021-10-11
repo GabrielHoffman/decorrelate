@@ -7,7 +7,7 @@
 quadForm(Sigma.eclairs, A)
 }
 \arguments{
-\item{Sigma.eclairs}{estimate of covariance/correlation matrix from \code{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{lambda} and \eqn{nu}}
+\item{Sigma.eclairs}{estimate of covariance/correlation matrix from \code{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
 \item{A}{matrix}
 }

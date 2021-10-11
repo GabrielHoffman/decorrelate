@@ -7,7 +7,7 @@
 effVariance(Sigma.eclairs)
 }
 \arguments{
-\item{Sigma.eclairs}{estimate of covariance/correlation matrix from \code{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{lambda} and \eqn{nu}}
+\item{Sigma.eclairs}{estimate of covariance/correlation matrix from \code{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 }
 \description{
 Evaluate effective variance of the covariance/correlation matrix
@@ -36,12 +36,6 @@ Sigma.eclairs = eclairs(Y, compute="cor")
 
 # effective variance
 effVariance( Sigma.eclairs )
-
-# effective dependence
-effDependence( Sigma.eclairs )
-
-# expected value with constant correlation
-rho
 
 }
 \references{

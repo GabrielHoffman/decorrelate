@@ -9,7 +9,7 @@
 #'
 #' @param X matrix to be transformed so *columns* are independent
 #' @param k the rank of the low rank component  
-#' @param lambda specify lambda and override value estimated by \code{eclairs}
+#' @param lambda specify lambda and override value estimated by \code{eclairs()}
 #'
 #' @examples
 #'

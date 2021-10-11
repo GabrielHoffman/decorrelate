@@ -21,9 +21,9 @@ cca(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL)
 Canonical correlation analysis that is scalable to high dimensional data.  Uses covariance shrinkage and algorithmic speed ups to be linear time in p when p > n.
 }
 \details{
-Results from standard CCA are based on the SVD of \eqn{\Sigma_{xx}^{-.5} \Sigma_{xy} \Sigma_{yy}^{-.5}}.
+Results from standard CCA are based on the SVD of \eqn{\Sigma_{xx}^{-\frac{1}{2}} \Sigma_{xy} \Sigma_{yy}^{-\frac{1}{2}}}.
 
-# Avoids computation of \eqn{\Sigma_{xx}^{-.5}} by using eclairs.  Avoids cov(X,Y) by framing this as a matrix product that can be distributed. Uses low rank SVD.
+Avoids computation of \eqn{\Sigma_{xx}^{-\frac{1}{2}}} by using eclairs.  Avoids cov(X,Y) by framing this as a matrix product that can be distributed. Uses low rank SVD.
 Other regularized CCA addes lambda to covariance like Ridge. Here it is a mixture
 }
 \examples{

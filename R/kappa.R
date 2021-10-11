@@ -4,7 +4,7 @@
 #' 
 #' Compute condition number of matrix from \code{eclairs} decomposition
 #' 
-#' @param z \code{eclairs} decomposition
+#' @param z \code{eclairs()} decomposition
 #' @param lambda specify lambda to override value from \code{z}
 #' 
 #' @rdname kappa

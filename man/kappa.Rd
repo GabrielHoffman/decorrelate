@@ -7,7 +7,7 @@
 \S4method{kappa}{eclairs}(z, lambda = NULL)
 }
 \arguments{
-\item{z}{\code{eclairs} decomposition}
+\item{z}{\code{eclairs()} decomposition}
 
 \item{lambda}{specify lambda to override value from \code{z}}
 }

@@ -3,7 +3,7 @@
 #'
 #' Evaluate the log determinant of the matrix
 #'
-#' @param Sigma.eclairs estimate of covariance/correlation matrix from \code{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{lambda} and \eqn{nu}
+#' @param Sigma.eclairs estimate of covariance/correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
 #' @param alpha exponent to be applied to eigen-values
 #'
 #' @export

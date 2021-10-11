@@ -52,6 +52,14 @@ setMethod("print", 'eclairs',
 	cat("  Low rank component:", length(x$dSq), "\n")
 	cat("  lambda:            ", format(x$lambda, digits=3), "\n")
 	cat("  nu:                ", format(x$nu, digits=3), "\n")
+
+	if( x$nu == 1){		
+		rho_mle = averageCorr( x, "MLE" )
+		rho_eb = averageCorr( x, "EB" )
+		cat("  Avg corr (MLE):    ", format(rho_mle, digits=3), "\n")
+		cat("  Avg corr (EB):     ", format(rho_eb, digits=3), "\n")
+	}
+
 	cat("  logML:             ", format(x$logML, digits=1, scientific=FALSE), "\n")
 })
 

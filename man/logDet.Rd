@@ -7,7 +7,7 @@
 logDet(Sigma.eclairs, alpha = 1)
 }
 \arguments{
-\item{Sigma.eclairs}{estimate of covariance/correlation matrix from \code{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{lambda} and \eqn{nu}}
+\item{Sigma.eclairs}{estimate of covariance/correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
 \item{alpha}{exponent to be applied to eigen-values}
 }
