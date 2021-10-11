@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fast canonical correlation analysis — fastcca • decorrelate</title>
+<title>Evaluate effective variance — effVariance • decorrelate</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Fast canonical correlation analysis — fastcca" />
-<meta property="og:description" content="Fast Canonical correlation analysis that is scalable to high dimensional data.  Uses covariance shrinkage and algorithmic speed ups to be linear time in p when p &amp;gt; n." />
+<meta property="og:title" content="Evaluate effective variance — effVariance" />
+<meta property="og:description" content="Evaluate effective variance of the covariance/correlation matrix" />
 
 
 
@@ -135,67 +135,63 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fast canonical correlation analysis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/GabrielHoffman/decorrelate/blob/master/R/fastcca.R'><code>R/fastcca.R</code></a></small>
-    <div class="hidden name"><code>fastcca.Rd</code></div>
+    <h1>Evaluate effective variance</h1>
+    <small class="dont-index">Source: <a href='https://github.com/GabrielHoffman/decorrelate/blob/master/R/effective_dependency.R'><code>R/effective_dependency.R</code></a></small>
+    <div class="hidden name"><code>effVariance.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Fast Canonical correlation analysis that is scalable to high dimensional data.  Uses covariance shrinkage and algorithmic speed ups to be linear time in p when p &gt; n.</p>
+    <p>Evaluate effective variance of the covariance/correlation matrix</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fastcca</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>Y</span>, k <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>Y</span><span class='op'>)</span><span class='op'>)</span>, lambda.x <span class='op'>=</span> <span class='cn'>NULL</span>, lambda.y <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>effVariance</span><span class='op'>(</span><span class='va'>Sigma.eclairs</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>X</th>
-      <td><p>first matrix (n x p1)</p></td>
-    </tr>
-    <tr>
-      <th>Y</th>
-      <td><p>first matrix (n x p2)</p></td>
-    </tr>
-    <tr>
-      <th>k</th>
-      <td><p>number of canonical components to return</p></td>
-    </tr>
-    <tr>
-      <th>lambda.x</th>
-      <td><p>optional shrinkage parameter for estimating covariance of X. If NULL, estimate from data.</p></td>
-    </tr>
-    <tr>
-      <th>lambda.y</th>
-      <td><p>optional shrinkage parameter for estimating covariance of Y. If NULL, estimate from data.</p></td>
+      <th>Sigma.eclairs</th>
+      <td><p>estimate of covariance/correlation matrix from <code>eclairs</code> storing \(U\), \(d_1^2\), \(lambda\) and \(nu\)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Results from standard CCA are based on the SVD of \(Sig_{xx}^{-.5} Sig_{xy} Sig_{yy}^{-.5}\).</p>
-<p>Uses eclairs and EB cov regularization, uses speed up of RCCA (Tuzhilina, et al, 2020) to perform CCA on n PCs and instead of p features.  Memory usage is n*p instead of p*p.  Computation is n^2p instead of p^3 of np^2</p>
+    <p>Compute a metric of the amount of variation represented by a covariance/correlation matrix that is comparable across matrices of difference sizes. Proposed by Pena and Rodriguez (2003), the 'effective variance' is \(|C|^\frac{1}{p}\) where \(C\) is a correlation or covariance matrix between \(p\) variables. The effective variance is the mean of the log eigen-values.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Tuzhilina E, Tozzi L, Hastie T (2020).
-&#8220;Canonical Correlation Analysis in high dimensions with structured regularization.&#8221;
-<em>arXiv preprint arXiv:2011.01650</em>.
-<a href='https://arxiv.org/abs/2011.01650'>https://arxiv.org/abs/2011.01650</a>.</p>
+    <p>Pena D, Rodriguez J (2003).
+&#8220;Descriptive measures of multivariate scatter and linear dependence.&#8221;
+<em>Journal of Multivariate Analysis</em>, <b>85</b>(2), 361--374.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>pop</span> <span class='op'>&lt;-</span> <span class='va'>LifeCycleSavings</span><span class='op'>[</span>, <span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span>
-<span class='va'>oec</span> <span class='op'>&lt;-</span> <span class='va'>LifeCycleSavings</span><span class='op'>[</span>, <span class='op'>-</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>]</span>
-<span class='fu'>fastcca</span><span class='op'>(</span><span class='va'>pop</span>, <span class='va'>oec</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;        Fast regularized canonical correlation analysis
-#&gt; 
-#&gt;   Original data rows: 50 
-#&gt;   Original data cols: 2, 3
-#&gt;   Num components:     2 
-#&gt;   Cor:                -0.825 0.365 ...
-#&gt;   rho.mod:            0.821 0.338 ...
-#&gt;   Cramer's V:         0.821 
-#&gt;   lambda.x:           0.0123 
-#&gt;   lambda.y:           0.665 </div><div class='input'>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/RfastOfficial/Rfast'>Rfast</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>n</span> <span class='op'>=</span> <span class='fl'>2000</span> <span class='co'># number of samples</span>
+<span class='va'>p</span> <span class='op'>=</span> <span class='fl'>1000</span> <span class='co'># number of features</span>
+<span class='va'>rho</span> <span class='op'>=</span> <span class='fl'>.9</span>
+
+<span class='co'># create correlation matrix</span>
+<span class='va'>Sigma</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='va'>rho</span>, <span class='va'>p</span>, <span class='va'>p</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='va'>Sigma</span><span class='op'>)</span> <span class='op'>=</span> <span class='fl'>1</span>
+
+<span class='co'># draw data from correlation matrix Sigma</span>
+<span class='va'>Y</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/Rfast/man/rmvnorm.html'>rmvnorm</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='va'>p</span><span class='op'>)</span>, sigma<span class='op'>=</span><span class='va'>Sigma</span><span class='op'>*</span><span class='fl'>5.1</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>Y</span><span class='op'>)</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"sample_"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='va'>n</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>Y</span><span class='op'>)</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"gene_"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='va'>p</span><span class='op'>)</span>
+
+<span class='co'># eclairs decomposition</span>
+<span class='va'>Sigma.eclairs</span> <span class='op'>=</span> <span class='fu'><a href='eclairs.html'>eclairs</a></span><span class='op'>(</span><span class='va'>Y</span>, compute<span class='op'>=</span><span class='st'>"cor"</span><span class='op'>)</span>
+
+<span class='co'># effective variance</span>
+<span class='fu'>effVariance</span><span class='op'>(</span> <span class='va'>Sigma.eclairs</span> <span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.1161547</div><div class='input'>
+<span class='co'># effective dependence</span>
+<span class='fu'><a href='effDependence.html'>effDependence</a></span><span class='op'>(</span> <span class='va'>Sigma.eclairs</span> <span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.8838453</div><div class='input'>
+<span class='co'># expected value with constant correlation</span>
+<span class='va'>rho</span>
+</div><div class='output co'>#&gt; [1] 0.9</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

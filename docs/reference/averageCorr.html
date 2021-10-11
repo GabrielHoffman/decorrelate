@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Class eclairs — eclairs-class • decorrelate</title>
+<title>Compute average correlation of implied correlation matrix — averageCorr • decorrelate</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Class eclairs — eclairs-class" />
-<meta property="og:description" content="Class eclairs" />
+<meta property="og:title" content="Compute average correlation of implied correlation matrix — averageCorr" />
+<meta property="og:description" content="Compute average correlation of implied correlation matrix" />
 
 
 
@@ -135,34 +135,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Class eclairs</h1>
-    <small class="dont-index">Source: <a href='https://github.com/GabrielHoffman/decorrelate/blob/master/R/eclairs.R'><code>R/eclairs.R</code></a></small>
-    <div class="hidden name"><code>eclairs-class.Rd</code></div>
+    <h1>Compute average correlation of implied correlation matrix</h1>
+    <small class="dont-index">Source: <a href='https://github.com/GabrielHoffman/decorrelate/blob/master/R/averageCorr.R'><code>R/averageCorr.R</code></a></small>
+    <div class="hidden name"><code>averageCorr.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Class <code>eclairs</code></p>
+    <p>Compute average correlation of implied correlation matrix</p>
     </div>
 
+    <pre class="usage"><span class='fu'>averageCorr</span><span class='op'>(</span><span class='va'>Sigma.eclairs</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>Sigma.eclairs</th>
+      <td><p>estimate of correlation matrix from <code>eclairs</code> storing \(U\), \(d_1^2\), \(lambda\) and \(nu\)</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Object storing:</p><ul>
-<li><p>U: orthonormal matrix with k columns representing the low rank component</p></li>
-<li><p>dSq: eigen-values so that \(U diag(d^2) U^T\) is the low rank component</p></li>
-<li><p>lambda: shrinkage parameter \(\lambda\) for the scaled diagonal component</p></li>
-<li><p>nu: diagonal value, \(\nu\), of target matrix in shrinkage</p></li>
-<li><p>n: number of samples (i.e. rows) in the original data</p></li>
-<li><p>p: number of features (i.e. columns) in the original data</p></li>
-<li><p>k: rank of low rank component</p></li>
-<li><p>rownames: sample names from the original matrix</p></li>
-<li><p>colnames: features names from the original matrix</p></li>
-<li><p>method: method used for decomposition</p></li>
-<li><p>call: the function call</p></li>
-</ul>
+    <p>If correlation matrix \(C\) has all correlations set to \(rho\), and \(dSq\) is the vector of eigen-values of C, then all but the first eigen-value equals \(1-rho\).  When \(C\) is an sample correlation matrix, \(rho\) can be estimated as the mean of all but the first eigen-value.  Since each variable is scaled to have variance 1 to create the correlation matrix, the total variance is \(p\).  Therefore the mean of the remaining eigen-values is \((p - dSq[1])/p\).</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/RfastOfficial/Rfast'>Rfast</a></span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Loading required package: Rcpp</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: RcppZiggurat</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>n</span> <span class='op'>=</span> <span class='fl'>200</span> <span class='co'># number of samples</span>
+<span class='va'>p</span> <span class='op'>=</span> <span class='fl'>800</span> <span class='co'># number of features</span>
 
+<span class='co'># create correlation matrix</span>
+<span class='va'>Sigma</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fl'>.2</span>, <span class='va'>p</span>, <span class='va'>p</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='va'>Sigma</span><span class='op'>)</span> <span class='op'>=</span> <span class='fl'>1</span>
+
+<span class='co'># draw data from correlation matrix Sigma</span>
+<span class='va'>Y</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/Rfast/man/rmvnorm.html'>rmvnorm</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='va'>p</span><span class='op'>)</span>, sigma<span class='op'>=</span><span class='va'>Sigma</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>Y</span><span class='op'>)</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"sample_"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='va'>n</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>Y</span><span class='op'>)</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"gene_"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='va'>p</span><span class='op'>)</span>
+
+<span class='co'># eclairs decomposition</span>
+<span class='va'>Sigma.eclairs</span> <span class='op'>=</span> <span class='fu'><a href='eclairs.html'>eclairs</a></span><span class='op'>(</span><span class='va'>Y</span>, compute<span class='op'>=</span><span class='st'>"cor"</span><span class='op'>)</span>
+
+<span class='fu'>averageCorr</span><span class='op'>(</span> <span class='va'>Sigma.eclairs</span> <span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.2232624</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -201,15 +201,84 @@ estimate_lambda_eb = function(ev, n, p, nu, lambda=NULL){
 		}
 
 		# min(n,p) so works regardless of n > p or m < p
-		idx = seq(length(ev)+1, min(n,p))
+		# can give over-estimate of lambda for small k
+		# 	but the deviation from full k can be huge
+		# idx = seq(length(ev)+1, min(n,p))
+		# ev[idx] = (totalVar-sum(ev)) / length(idx)
 
-		ev[idx] = (totalVar-sum(ev)) / length(idx)
+		# can give under-estimate of lambda for small k
+		# but much smaller difference than above
+		len = min(n,p) - length(ev) 
+		remainingVar = totalVar-sum(ev)
+		ev = append(ev, series_start_total(min(ev), remainingVar, len))
 	}
 
 	# estimate optimal lambda (i.e. alpha) value
 	getShrinkageValue(n, p, ev / nu, logdetD=2*p*log(sqrt(nu)), minimum = 1e-4, lambda=lambda)
 }
 
+
+
+
+#' Create decreasing series of values
+#' 
+#' Create series of \eqn{n} values decreasing from \eqn{start} with a constant ratio between terms where the values sum to \eqn{totalSum}
+#' 
+#' @param start maximum value
+#' @param totalSum specify target sum of values produces
+#' @param n number of terms
+#' 
+# @examples
+# start = 10
+# totalSum = 40
+# n = 4
+# 
+# values = series_start_total(start, totalSum, n)
+# 
+series_start_total = function(start, totalSum, n){
+
+	# get alpha so that:
+	# sum(start*alpha^seq(1,n)) == totalSum
+	
+	f = function(alpha, start, n, totalSum){
+
+		(sum(start*alpha^seq(1,n)) - totalSum)^2
+	}
+
+	fit = optimize(f, c(1e-12, 1-1e-12), start=start, n=n, totalSum=totalSum, tol=1e-10)
+	alpha = fit$minimum
+
+	start*alpha^seq(1,n)
+}
+
+
+
+
+# #' Create decreasing series of values
+# #' 
+# #' Create series of \eqn{n} values decreasing from \eqn{start} to \eqn{end} with a constant ratio between terms.
+# #' 
+# #' @param start maximum value
+# #' @param end minimum value
+# #' @param n number of terms
+# #' 
+# #' @examples
+# #' start = 10
+# #' end = 1
+# #' n = 43
+# #' 
+# #' values = series(start, end, n)
+# #' 
+# series_start_end = function(start, end, n){
+
+# 	# get alpha so that start*alpha^n = end
+# 	alpha = (end/ start)^(1/n)
+
+# 	# create series
+# 	sapply( seq(0, n), function(i){
+# 		start*alpha^i
+# 		})
+# }
 
 
 

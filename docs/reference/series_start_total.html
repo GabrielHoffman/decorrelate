@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Class eclairs — eclairs-class • decorrelate</title>
+<title>Create decreasing series of values — series_start_total • decorrelate</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Class eclairs — eclairs-class" />
-<meta property="og:description" content="Class eclairs" />
+<meta property="og:title" content="Create decreasing series of values — series_start_total" />
+<meta property="og:description" content="Create series of \(n\) values decreasing from \(start\) with a constant ratio between terms where the values sum to \(totalSum\)" />
 
 
 
@@ -135,32 +135,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Class eclairs</h1>
-    <small class="dont-index">Source: <a href='https://github.com/GabrielHoffman/decorrelate/blob/master/R/eclairs.R'><code>R/eclairs.R</code></a></small>
-    <div class="hidden name"><code>eclairs-class.Rd</code></div>
+    <h1>Create decreasing series of values</h1>
+    <small class="dont-index">Source: <a href='https://github.com/GabrielHoffman/decorrelate/blob/master/R/eb_lambda.R'><code>R/eb_lambda.R</code></a></small>
+    <div class="hidden name"><code>series_start_total.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Class <code>eclairs</code></p>
+    <p>Create series of \(n\) values decreasing from \(start\) with a constant ratio between terms where the values sum to \(totalSum\)</p>
     </div>
 
+    <pre class="usage"><span class='fu'>series_start_total</span><span class='op'>(</span><span class='va'>start</span>, <span class='va'>totalSum</span>, <span class='va'>n</span><span class='op'>)</span></pre>
 
-
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Object storing:</p><ul>
-<li><p>U: orthonormal matrix with k columns representing the low rank component</p></li>
-<li><p>dSq: eigen-values so that \(U diag(d^2) U^T\) is the low rank component</p></li>
-<li><p>lambda: shrinkage parameter \(\lambda\) for the scaled diagonal component</p></li>
-<li><p>nu: diagonal value, \(\nu\), of target matrix in shrinkage</p></li>
-<li><p>n: number of samples (i.e. rows) in the original data</p></li>
-<li><p>p: number of features (i.e. columns) in the original data</p></li>
-<li><p>k: rank of low rank component</p></li>
-<li><p>rownames: sample names from the original matrix</p></li>
-<li><p>colnames: features names from the original matrix</p></li>
-<li><p>method: method used for decomposition</p></li>
-<li><p>call: the function call</p></li>
-</ul>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>start</th>
+      <td><p>maximum value</p></td>
+    </tr>
+    <tr>
+      <th>totalSum</th>
+      <td><p>specify target sum of values produces</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>number of terms</p></td>
+    </tr>
+    </table>
 
 
   </div>

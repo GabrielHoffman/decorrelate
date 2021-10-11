@@ -1,6 +1,12 @@
+
+# decorrelate 0.0.14
+* add `series_start_total()` and use it in `estimate_lambda_eb()` for partial SVD
+ * this substantially improves estimation of lambda when partial SVD is used
+* add `averageCorr()`
+
 # decorrelate 0.0.13
 * add redundancy index as `x.ri`, `y.ri`
-
+* add effective variance and effective dependency metrics
 
 # decorrelate 0.0.12
 * `fastcca()` and `cca()` give equivalent results

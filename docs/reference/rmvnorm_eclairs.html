@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">decorrelate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.14</span>
       </span>
     </div>
 
@@ -201,10 +201,10 @@
 
 <span class='co'># assess difference betweeen covariances from two methods</span>
 <span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>cov</a></span><span class='op'>(</span><span class='va'>X.draw1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>cov</a></span><span class='op'>(</span><span class='va'>X.draw2</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] -0.01944594  0.01695304</div><div class='input'>
+</div><div class='output co'>#&gt; [1] -0.01878204  0.01380256</div><div class='input'>
 <span class='co'># compare covariance to the covariance matrix used to simulated the data</span>
 <span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>cov</a></span><span class='op'>(</span><span class='va'>X.draw1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fu'><a href='getCov.html'>getCov</a></span><span class='op'>(</span><span class='va'>ecl</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] -0.01312191  0.01234433</div><div class='input'>
+</div><div class='output co'>#&gt; [1] -0.01098040  0.01102527</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
