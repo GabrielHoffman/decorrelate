@@ -124,7 +124,7 @@ library(whitening)
 # 			seq(25000, 150000, length.out=50),
 # 			seq(200000, 1000000, length.out=10))
 
-values = as.integer(sort(c(	seq(500, 2000, length.out=10))))
+values = as.integer(sort(c(	seq(100, 8000, length.out=10))))
 
 df_values = data.frame(n = 500, p = values, k = 30)
 
