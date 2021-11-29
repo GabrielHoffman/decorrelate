@@ -24,8 +24,9 @@ ml git pandoc
 
 R
 system("git pull")
-
 rmarkdown::render("computational_scaling.Rmd");
+
+
 
 system('cp /hpc/users/hoffmg01/build2/decorrelate/vignettes/computational_scaling.html ~/www/software/decorrelate/')
 
@@ -53,6 +54,49 @@ knitr::opts_chunk$set(
   cache = TRUE)
 ```
 
+```{r define.function}
+eval_runTime = function(df_values){
+	df_time = lapply( 1:now(df_values), function(i){
+
+		n = df_values$n[i]
+		p = df_values$p[i]
+
+		message("\r", p, '       ')
+
+		Y = matrnorm(n,p)
+		zstat = rnorm(p)
+
+		lambda <- 1e-1
+
+		res1 = system.time({
+			ecl <- eclairs(Y, compute="covariance", lambda=lambda)
+			Z1 <- decorrelate(Y, ecl)
+		})
+		time_decorrelate = res1[3]
+
+		if(p <= 20000){
+			res2 = system.time({
+				# C <- cov(Y) 
+				# Sigma <- C*(1-lambda) + diag(lambda*ecl$nu, p)
+				W = whiteningMatrix(cov(Y)*(1-lambda) + diag(lambda*ecl$nu, p), method="ZCA")
+				Z2 <- tcrossprod(Y, W)
+				# Z2 = whiten(Y)
+			})
+			time_naive = res2[3]
+
+			# Z1 and Z2 are identical to machine precision
+			# range(Z1 - Z2)
+
+		}else{
+			time_naive = NA
+		}
+
+		data.frame(n = n, p = p, decorrelate = time_decorrelate, naive = time_naive)
+	})
+	df_time = do.call(rbind, df_time)
+	df_time
+}
+```
 
 ```{r simulate.data}
 library(decorrelate)
@@ -62,52 +106,17 @@ library(ggplot2)
 library(cowplot)
 library(whitening)
 
-n = 100
-
 # due to parallel processing, curves are not exactly cubic and linear
 # values = c(	seq(500, 20000, length.out=50), 
 # 			seq(25000, 150000, length.out=50),
 # 			seq(200000, 1000000, length.out=10))
 
-values = c(	seq(500, 8000, length.out=10))
+values = as.integer(sort(c(	seq(500, 8000, length.out=10))))
 
-values = as.integer(sort(values))
+df_values = data.frame(n = 100, p = values)
 
-df_time = lapply( values, function(p){
+df_time = eval_runTime( df_values )
 
-	message("\r", p, '       ')
-
-	Y = matrnorm(n,p)
-	zstat = rnorm(p)
-
-	lambda <- 1e-1
-
-	res1 = system.time({
-		ecl <- eclairs(Y, compute="covariance", lambda=lambda)
-		Z1 <- decorrelate(Y, ecl)
-	})
-	time_decorrelate = res1[3]
-
-	if(p <= 20000){
-		res2 = system.time({
-			# C <- cov(Y) 
-			# Sigma <- C*(1-lambda) + diag(lambda*ecl$nu, p)
-			W = whiteningMatrix(cov(Y)*(1-lambda) + diag(lambda*ecl$nu, p), method="ZCA")
-			Z2 <- tcrossprod(Y, W)
-			# Z2 = whiten(Y)
-		})
-		time_naive = res2[3]
-
-		# Z1 and Z2 are identical to machine precision
-		# range(Z1 - Z2)
-
-	}else{
-		time_naive = NA
-	}
-
-	data.frame(p = p, decorrelate = time_decorrelate, naive = time_naive)
-})
-df_time = do.call(rbind, df_time)
 ```
 
 ```{r process.result, cache=FALSE}
