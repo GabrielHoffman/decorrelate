@@ -43,7 +43,7 @@ library(knitr)
 library(kableExtra)
 
 knitr::opts_chunk$set(
-	eval = FALSE,
+	eval = TRUE,
   echo = FALSE,
   warning=FALSE,
   message=FALSE,
@@ -134,7 +134,7 @@ fig = ggplot(df_melt, aes(p, value, color=variable)) + geom_point() + theme_bw(1
 
 fig1 = fig + xlim(0, 20000) + ylim(0, max(df_time$naive, na.rm=TRUE))
 fig2 = fig + ylim(0, max(df_time$naive, na.rm=TRUE))
-fig3 = fig + scale_y_log10()
+fig3 = fig + scale_x_log10() + scale_y_log10()
 
 plot_grid(fig1, fig2, fig3, nrow=1)
 ```
