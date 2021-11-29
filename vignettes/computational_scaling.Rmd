@@ -55,7 +55,6 @@ knitr::opts_chunk$set(
 
 
 ```{r simulate.data}
-
 library(decorrelate)
 library(Matrix)
 library(Rfast)
@@ -70,7 +69,7 @@ n = 100
 # 			seq(25000, 150000, length.out=50),
 # 			seq(200000, 1000000, length.out=10))
 
-values = c(	seq(500, 20000, length.out=10))
+values = c(	seq(500, 8000, length.out=10))
 
 values = as.integer(sort(values))
 
