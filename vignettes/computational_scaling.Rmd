@@ -66,9 +66,11 @@ library(whitening)
 n = 100
 
 # due to parallel processing, curves are not exactly cubic and linear
-values = c(	seq(500, 20000, length.out=50), 
-			seq(25000, 150000, length.out=50),
-			seq(200000, 1000000, length.out=10))
+# values = c(	seq(500, 20000, length.out=50), 
+# 			seq(25000, 150000, length.out=50),
+# 			seq(200000, 1000000, length.out=10))
+
+values = c(	seq(500, 20000, length.out=10))
 
 values = as.integer(sort(values))
 
