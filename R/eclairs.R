@@ -209,6 +209,7 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 #'
 #' @importFrom Rfast standardise colVars eachrow
 #' @importFrom PRIMME svds
+#' @importFrom irlba irlba
 #' @importFrom methods new
 #'
 #' @export
@@ -262,7 +263,8 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 	# SVD of X to get low rank estimate of Sigma
 	if( k < min(p, n)/3){
 		if( is.null(warmStart) ){
-			dcmp = svds(X, k, isreal=TRUE)
+			# dcmp = svds(X, k, isreal=TRUE)
+			dcmp = irlba(X, k) # should be faster thatn PRIMME::svds
 		}else{			
 			dcmp = svds(X, k, v0=warmStart$U, isreal=TRUE)
 		}
