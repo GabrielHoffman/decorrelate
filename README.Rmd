@@ -22,9 +22,7 @@ Data whitening is a widely used preprocessing step to remove correlation structu
 
 Here we use a probabilistic model of the observed data to apply a whitening transformation.  Our Gaussian Inverse Wishart Empirical Bayes (GIW-EB) **1)** model substantially reduces computational complexity, and **2)** regularizes the eigen-values of the sample covariance matrix to improve out-of-sample performance.
 
-
-![Whitening image](https://hoffmg01.u.hpc.mssm.edu/software/decorrelate/run.examples-1.png)
-
+![Whitening image](man/figures/README-run.examples-1.png)
 
 ## Installation
 

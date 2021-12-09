@@ -25,8 +25,7 @@ whitening transformation. Our Gaussian Inverse Wishart Empirical Bayes
 and **2)** regularizes the eigen-values of the sample covariance matrix
 to improve out-of-sample performance.
 
-![Whitening
-image](https://hoffmg01.u.hpc.mssm.edu/software/decorrelate/run.examples-1.png)
+![Whitening image](man/figures/README-run.examples-1.png)
 
 ## Installation
 
