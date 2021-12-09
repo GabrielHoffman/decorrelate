@@ -77,7 +77,7 @@
                         <h4 class="author">Developed by <a href="http://gabrielhoffman.github.io/">Gabriel Hoffman</a>
 </h4>
             
-            <h4 class="date">Run on 2021-12-09 14:35:20</h4>
+            <h4 class="date">Run on 2021-12-09 14:46:46</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/GabrielHoffman/decorrelate/blob/master/vignettes/decorrelate.Rmd"><code>vignettes/decorrelate.Rmd</code></a></small>
       <div class="hidden name"><code>decorrelate.Rmd</code></div>
@@ -94,7 +94,7 @@ rmarkdown::render("decorrelate.Rmd");
 <p>Data whitening is a widely used preprocessing step to remove correlation structure since statistical models often assume independence <a href="https://doi.org/10.1080/00031305.2016.1277159">(Kessy, et al. 2017)</a>. The typical procedures transforms the observed data by an inverse square root of the sample correlation matrix (<strong>Figure 1</strong>). For low dimension data (i.e. <span class="math inline">\(n &gt; p\)</span>), this transformation produces transformed data with an identity sample covariance matrix. This procedure assumes either that the true covariance matrix is know, or is well estimated by the sample covariance matrix. Yet the use of the sample covariance matrix for this transformation can be problematic since <strong>1)</strong> the complexity is <span class="math inline">\(\mathcal{O}(p^3)\)</span> and <strong>2)</strong> it is not applicable to the high dimensional (i.e. <span class="math inline">\(n \ll p\)</span>) case since the sample covariance matrix is no longer full rank.</p>
 <p>Here we use a probabilistic model of the observed data to apply a whitening transformation. Our Gaussian Inverse Wishart Empirical Bayes (GIW-EB) <strong>1)</strong> model substantially reduces computational complexity, and <strong>2)</strong> regularizes the eigen-values of the sample covariance matrix to improve out-of-sample performance.</p>
 <div class="figure">
-<img src="decorrelate_files/figure-html/run.examples-1.png" alt="**Figure 1: Intuition for data whitening transformation**. **A)** Original data, **B)** Data rotated along principal components, **C)** Data rotated and scaled, **D)** Data rotated, scaled and rotated back to original axes." width="960"><p class="caption">
+<img src="decorrelate_files/figure-html/run.examples-1.png" alt="**Figure 1: Intuition for data whitening transformation**. **A)** Original data, **B)** Data rotated along principal components, **C)** Data rotated and scaled, **D)** Data rotated, scaled and rotated back to original axes." width="864"><p class="caption">
 <strong>Figure 1: Intuition for data whitening transformation</strong>. <strong>A)</strong> Original data, <strong>B)</strong> Data rotated along principal components, <strong>C)</strong> Data rotated and scaled, <strong>D)</strong> Data rotated, scaled and rotated back to original axes.
 </p>
 </div>
@@ -105,8 +105,8 @@ rmarkdown::render("decorrelate.Rmd");
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/GabrielHoffman/decorrelate">decorrelate</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://mvtnorm.R-forge.R-project.org">mvtnorm</a></span><span class="op">)</span>
 
-<span class="va">n</span> <span class="op">=</span> <span class="fl">200</span>  <span class="co"># number of samples</span>
-<span class="va">p</span> <span class="op">=</span> <span class="fl">500</span>  <span class="co"># number of features</span>
+<span class="va">n</span> <span class="op">=</span> <span class="fl">500</span>  <span class="co"># number of samples</span>
+<span class="va">p</span> <span class="op">=</span> <span class="fl">200</span>  <span class="co"># number of features</span>
 
 <span class="co"># create correlation matrix</span>
 <span class="va">Sigma</span> <span class="op">=</span> <span class="fu"><a href="../reference/autocorr.mat.html">autocorr.mat</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">0.9</span><span class="op">)</span>
@@ -156,7 +156,7 @@ rmarkdown::render("decorrelate.Rmd");
 
 <span class="co"># evalute difference between whitened computed 2 ways</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">Z</span> <span class="op">-</span> <span class="va">Y_whitened</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] 1.265654e-14</code></pre>
+<pre><code>## [1] 2.153833e-14</code></pre>
 <p>The difference between function is due only to machine precision.</p>
 </div>
 <div id="explicit-covariance-or-correlation-matrix" class="section level2">
@@ -209,7 +209,7 @@ rmarkdown::render("decorrelate.Rmd");
 
 <span class="co"># examine variances of the first 5 variables</span>
 <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">Y</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></code></pre></div>
-<pre><code>## [1] 5.556913 4.105947 3.390443 7.098585 2.976348</code></pre>
+<pre><code>## [1] 5.383555 2.889871 1.044287 3.873412 1.393928</code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># transform removes covariance between columns so variance of transformed</span>
 <span class="co"># features are *approximately* equal</span>
@@ -218,7 +218,7 @@ rmarkdown::render("decorrelate.Rmd");
 
 <span class="co"># variance are *approximately* equal</span>
 <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">Z1</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></code></pre></div>
-<pre><code>## [1] 0.8290132 0.7070564 0.6121022 1.0448990 0.5490428</code></pre>
+<pre><code>## [1] 0.8936254 0.7003432 0.3485305 0.8255365 0.4277328</code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># transform removes **correlation** between columns but variables are not</span>
 <span class="co"># scaled</span>
@@ -227,7 +227,7 @@ rmarkdown::render("decorrelate.Rmd");
 
 <span class="co"># variances are not standardized</span>
 <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">Z2</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></code></pre></div>
-<pre><code>## [1] 5.493820 4.073570 3.361542 7.057250 2.948771</code></pre>
+<pre><code>## [1] 5.338501 2.876451 1.036761 3.858496 1.383403</code></pre>
 </div>
 </div>
   </div>

@@ -42,7 +42,7 @@ Data whitening is a widely used preprocessing step to remove correlation structu
 
 Here we use a probabilistic model of the observed data to apply a whitening transformation.  Our Gaussian Inverse Wishart Empirical Bayes (GIW-EB) **1)** model substantially reduces computational complexity, and **2)** regularizes the eigen-values of the sample covariance matrix to improve out-of-sample performance.
 
-```{r run.examples, fig.height=2.5, fig.width=10, fig.cap ="**Figure 1: Intuition for data whitening transformation**. **A)** Original data, **B)** Data rotated along principal components, **C)** Data rotated and scaled, **D)** Data rotated, scaled and rotated back to original axes.", echo=FALSE}
+```{r run.examples, fig.height=2.5, fig.width=9, fig.cap ="**Figure 1: Intuition for data whitening transformation**. **A)** Original data, **B)** Data rotated along principal components, **C)** Data rotated and scaled, **D)** Data rotated, scaled and rotated back to original axes.", echo=FALSE}
 library(decorrelate)
 library(mvtnorm)
 library(ggplot2)
@@ -119,8 +119,8 @@ plot_grid(fig1, fig2, fig3, fig4, ncol=4, labels="AUTO")
 library(decorrelate)
 library(mvtnorm)
 
-n = 200 # number of samples
-p = 500 # number of features
+n = 500 # number of samples
+p = 200 # number of features
 
 # create correlation matrix
 Sigma = autocorr.mat(p, .9)
