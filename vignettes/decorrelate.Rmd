@@ -174,7 +174,7 @@ max(abs(Z - Y_whitened))
 The difference between function is due only to machine precision.
 
 
-## Explicit covariance or correlation matrix
+## Explicit covariance or correlation
 The full covariance for correlation matrix implied by the `eclairs()` decomposition can be computed explicitly.  Note that computing and storing these matries is $O(p^2)$, it may not feasable for large datasets. 
 ```{r cov.cor, eval=FALSE}
 # compute correlation matrix from eclairs
