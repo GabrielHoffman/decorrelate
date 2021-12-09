@@ -157,7 +157,7 @@ image(cor(Y_whitened), axes=FALSE, main="Correlation of whitened data")
 ```
 
 # Advanced usage
-The `decorrelate` package has advanced features to examing details of the whitening transformation.
+The `decorrelate` package has advanced features to examine details of the whitening transformation.
 
 ## Directly compute whitening matrix
 While `eclairs()`, `decorrelate()`, and `whiten()` perform the probabilistic whitening transformation efficiently without directly computing the whitening matrix, `getWhiteningMatrix()` can directly compute the matrix.

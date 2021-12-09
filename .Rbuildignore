@@ -2,3 +2,4 @@
 ^docs$
 ^pkgdown$
 ^vignettes/GTEx$
+^README\.Rmd$
