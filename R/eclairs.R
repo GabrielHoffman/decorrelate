@@ -7,7 +7,7 @@
 
 #' Class eclairs
 #'
-#' Class \code{eclairs} 
+#' Class \code{eclairs}
 #'
 #' @details Object storing:
 #' \itemize{
@@ -160,7 +160,7 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 
 #' Estimate covariance/correlation with low rank and shrinkage
 #'
-#' Estimate the covariance/correlation between columns as the weighted sum of a low rank matrix and a scaled identity matrix.  The weight acts to shrink the sample correlation matrix towards the identity matrix or the sample covariance matrix towards a scaled identity matrix with constant variance.  An estimate of this form is useful because it is fast, and enables fast operations downstream.
+#' Estimate the covariance/correlation between columns as the weighted sum of a low rank matrix and a scaled identity matrix.  The weight acts to shrink the sample correlation matrix towards the identity matrix or the sample covariance matrix towards a scaled identity matrix with constant variance.  An estimate of this form is useful because it is fast, and enables fast operations downstream.  The method is based on the Gaussian Inverse Wishart Empirical Bayes (GIW-EB) model.
 #'
 #' @param X data matrix with n samples as rows and p features as columns
 #' @param k the rank of the low rank component  

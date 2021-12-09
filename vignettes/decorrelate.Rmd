@@ -131,6 +131,7 @@ rownames(Y) = paste0("sample_", 1:n)
 colnames(Y) = paste0("gene_", 1:p)
 
 # eclairs decomposition implements GIW-EB method
+# *E*stimate *c*ovariance/correlation with *l*ow *r*ank and *s*hrinkage
 ecl = eclairs(Y)
 
 # decorrelate data using eclairs decomposition
@@ -215,6 +216,16 @@ image(cor(Y_whitened), axes=FALSE, main="Correlation of whitened data")
 ```
 
 In this case, the low rank whitening produces transformed features that are approximately independent.  The approximation improves as the rank increases.
+
+
+
+## Computing condition number
+Compute the condition number (i.e. the ratio between the largest and smallest eigen-value) of the correlation/covariance matrix from the `eclairs()` decomposition.
+```{r kappa}
+kappa(ecl)
+```
+
+
 
 ## Removing correlation vs covariance
 By default `eclairs()` computes the covariance between columns, but the correlation can be computed using `compute = 'correlation'`.  

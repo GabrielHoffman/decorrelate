@@ -27,10 +27,10 @@ Y = matrnorm(n,p)*10
 
 # decorrelate with implicit whitening matrix
 # give same result as explicity whitening matrix
-ecl <- eclairs(Y, compute="covariance", lambda=0)
+ecl <- eclairs(Y, compute="covariance" )
 
 # get explicit whitening matrix
-W = getWhiteningMatrix( ecl, lambda=0 )
+W = getWhiteningMatrix( ecl )
 
 # apply explicit whitening matrix
 Z1 = tcrossprod(Y, W)
