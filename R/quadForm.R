@@ -8,7 +8,7 @@
 #' @param A matrix
 #'
 #' @details
-#' Evaluate quadratic form \eqn{A^T Sigma.eclairs^{-1} A}
+#' Evaluate quadratic form \eqn{A^T \Sigma^{-1} A}
 #'
 #' @examples
 #' library(Rfast)

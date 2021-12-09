@@ -7,6 +7,26 @@
 #' @param z \code{eclairs()} decomposition
 #' @param lambda specify lambda to override value from \code{z}
 #' 
+#' @examples
+#' library(Rfast)
+#' set.seed(1)
+#' n = 800 # number of samples
+#' p = 200 # number of features
+#' 
+#' # create correlation matrix
+#' Sigma = autocorr.mat(p, .9)
+#' 
+#' # draw data from correlation matrix Sigma
+#' Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
+#' rownames(Y) = paste0("sample_", 1:n)
+#' colnames(Y) = paste0("gene_", 1:p)
+#' 
+#' # eclairs decomposition
+#' ecl = eclairs(Y, compute="correlation")
+#' 
+#' # compute condition number
+#' kappa(ecl)
+#' 
 #' @rdname kappa
 #' @export
 setMethod('kappa', c(z = "eclairs"),

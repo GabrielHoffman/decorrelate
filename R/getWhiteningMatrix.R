@@ -22,10 +22,10 @@
 #' 
 #' # decorrelate with implicit whitening matrix
 #' # give same result as explicity whitening matrix
-#' ecl <- eclairs(Y, compute="covariance", lambda=0)
+#' ecl <- eclairs(Y, compute="covariance" )
 #' 
 #' # get explicit whitening matrix
-#' W = getWhiteningMatrix( ecl, lambda=0 )
+#' W = getWhiteningMatrix( ecl )
 #' 
 #' # apply explicit whitening matrix
 #' Z1 = tcrossprod(Y, W)
@@ -44,11 +44,47 @@ getWhiteningMatrix = function(Sigma.eclairs, lambda){
 		Sigma.eclairs$lambda = lambda
 	}
 
-	# dSq = lambda = nu = NULL # pass R CMD check
+	# only valid for n > p
+	#######################
+
+	# v = with(Sigma.eclairs, dSq*(1-lambda) + lambda*nu)
+
+	# # this corresponds to ZCA whitening
+	# # omit Sigma.eclairs$U for PCA whitening
+	# alpha = -1/2
+	# Sigma.eclairs$U %*% ((v^alpha)* t(Sigma.eclairs$U))
+
+	# general solution that applies to the low rank case
+	#####################################################
+
+	# adapted from mult_eclairs()
+
+	# pass R CMD check
+	U = dSq = lambda = nu = NULL 
+
 	v = with(Sigma.eclairs, dSq*(1-lambda) + lambda*nu)
 
-	# this corresponds to ZCA whitening
-	# omit Sigma.eclairs$U for PCA whitening
 	alpha = -1/2
-	Sigma.eclairs$U %*% ((v^alpha)* t(Sigma.eclairs$U))
+
+	# when lambda is zero, avoid computing the second part
+	part1 = 0
+	if( Sigma.eclairs$lambda > 0){
+		part1 = with(Sigma.eclairs, (diag(1,p) - tcrossprod(U,U) ) *((lambda*nu)^alpha))
+	}
+
+	W = with(Sigma.eclairs, U %*% ((v^alpha) * t(U)) + part1)
+
+	W
 }
+
+
+
+
+
+
+
+
+
+
+
+

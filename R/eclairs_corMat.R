@@ -28,6 +28,26 @@
 #'  \item{call: }{the function call}
 #' }
 #'
+#' @examples
+#' library(Rfast)
+#' set.seed(1)
+#' n = 800 # number of samples
+#' p = 200 # number of features
+#' 
+#' # create correlation matrix
+#' Sigma = autocorr.mat(p, .9)
+#' 
+#' # draw data from correlation matrix Sigma
+#' Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
+#' rownames(Y) = paste0("sample_", 1:n)
+#' colnames(Y) = paste0("gene_", 1:p)
+#' 
+#' # eclairs decomposition
+#' eclairs(Y, compute="correlation")
+#'
+#' # eclairs decomposition from correlation matrix
+#' eclairs_corMat( cor(Y), n=n)
+#'
 #' @importFrom Rfast eachrow
 #' @importFrom PRIMME eigs_sym
 #' @importFrom irlba partial_eigen

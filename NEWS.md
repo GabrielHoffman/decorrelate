@@ -1,6 +1,7 @@
 
 # decorrelate 0.0.15
 * use `irlba` for SVD instead of `PRIMME`
+* improve documentation
 
 # decorrelate 0.0.14
 * add `series_start_total()` and use it in `estimate_lambda_eb()` for partial SVD
