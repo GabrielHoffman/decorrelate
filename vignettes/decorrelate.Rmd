@@ -34,7 +34,7 @@ knitr::opts_chunk$set(
   error = FALSE,
   tidy = TRUE,
   eval = TRUE,
-  # dev = c("png", "pdf"),
+  #dev = c("png", "pdf"),
   cache = TRUE)
 ```
 
@@ -109,8 +109,8 @@ plot_data = function(Y, rotation, rank, lim){
 
 fig1 = plot_data(Y, rotation = 1, rank(value), lim) + ggtitle(TeX('$Y$'))
 fig2 = plot_data( Y, rotation = 2, rank(value), lim) + ggtitle(TeX('$YU$'))
-fig3 = plot_data( Y, rotation = 3, rank(value), lim) + ggtitle(TeX('$YU\\Lambda^{-\\frac{1}{2}}$'))
-fig4 = plot_data(Y, rotation = 4, rank(value), lim) + ggtitle(TeX('$YU\\Lambda^{-\\frac{1}{2}}U^T$'))
+fig3 = plot_data( Y, rotation = 3, rank(value), lim) + ggtitle(TeX('$YU\\Lambda^{-\\,\\frac{1}{2}}$'))
+fig4 = plot_data(Y, rotation = 4, rank(value), lim) + ggtitle(TeX('$YU\\Lambda^{-\\,\\frac{1}{2}}U^T$'))
 plot_grid(fig1, fig2, fig3, fig4, ncol=4, labels="AUTO")
 ```
 
