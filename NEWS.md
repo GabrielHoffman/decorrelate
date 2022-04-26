@@ -1,4 +1,7 @@
 
+# decorrelate 0.0.16
+* add `eclairs_sq`
+
 # decorrelate 0.0.15
 * use `irlba` for SVD instead of `PRIMME`
 * improve documentation

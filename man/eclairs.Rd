@@ -59,8 +59,13 @@ Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
 rownames(Y) = paste0("sample_", 1:n)
 colnames(Y) = paste0("gene_", 1:p)
 
-# eclairs decomposition
+# eclairs decomposition: covariance
 Sigma.eclairs = eclairs(Y, compute="covariance")
+
+Sigma.eclairs
+
+# eclairs decomposition: correlation
+Sigma.eclairs = eclairs(Y, compute="correlation")
 
 Sigma.eclairs
 

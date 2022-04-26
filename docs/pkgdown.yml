@@ -1,7 +1,7 @@
-pandoc: 2.14.2
-pkgdown: 1.6.1
+pandoc: '2.18'
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   decorrelate: decorrelate.html
-last_built: 2021-12-14T01:29Z
+last_built: 2022-04-26T18:39Z
 

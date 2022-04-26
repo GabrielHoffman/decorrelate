@@ -46,7 +46,11 @@ setMethod("show", 'eclairs',
 setMethod("print", 'eclairs',
       function(x){
           
-	cat("       Estimate covariance/correlation with low rank and shrinkage\n\n")
+      if( x$nu == 1){	    
+		cat("       Estimate correlation with low rank and shrinkage\n\n")
+	}else{	
+		cat("       Estimate covariance with low rank and shrinkage\n\n")
+	}
 
 	cat("  Original data dims:", x$n, 'x',x$p, "\n")
 	cat("  Low rank component:", length(x$dSq), "\n")
@@ -140,6 +144,9 @@ setMethod('getCov', c(Sigma.eclairs = "eclairs"),
 	# 	res = Sigma.eclairs$V %*% ((Sigma.eclairs$dSq *(1-lambda)) * t(Sigma.eclairs$V)) + diag(Sigma.eclairs$nu*lambda, Sigma.eclairs$n)
 	# }
 
+	rownames(res) = Sigma.eclairs$colnames
+	colnames(res) = Sigma.eclairs$colnames
+
 	res
 })
 
@@ -202,8 +209,13 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 #' rownames(Y) = paste0("sample_", 1:n)
 #' colnames(Y) = paste0("gene_", 1:p)
 #' 
-#' # eclairs decomposition
+#' # eclairs decomposition: covariance
 #' Sigma.eclairs = eclairs(Y, compute="covariance")
+#'
+#' Sigma.eclairs
+#'
+#' # eclairs decomposition: correlation
+#' Sigma.eclairs = eclairs(Y, compute="correlation")
 #'
 #' Sigma.eclairs
 #'
