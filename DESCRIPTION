@@ -7,6 +7,7 @@ Author: Gabriel Hoffman
 Maintainer: Gabriel Hoffman <gabriel.hoffman@mssm.edu>
 Description: Coming soon...
 License: GPL (>= 2)
+Encoding: UTF-8
 URL: gabrielhoffman.github.oi/decorrelate, https://github.com/GabrielHoffman/decorrelate
 BugReports: https://github.com/GabrielHoffman/decorrelate/issues
 Suggests:
@@ -14,6 +15,9 @@ Suggests:
     knitr,
     pander,
     beam,
+    whitening,
+    CCA,
+    yacca,
     BiocGenerics,
     mvtnorm,
     ggplot2, 
@@ -45,6 +49,6 @@ Imports:
     Rdpack,
     utils,
     stats
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 RdMacros: Rdpack
 VignetteBuilder: knitr

@@ -4,18 +4,24 @@
 \alias{averageCorr}
 \title{Compute average correlation of implied correlation matrix}
 \usage{
-averageCorr(Sigma.eclairs, method = c("MLE", "EB"))
+averageCorr(
+  Sigma.eclairs,
+  method = c("MLE", "EB"),
+  algorithm = c("closedApprox", "lossFxn")
+)
 }
 \arguments{
 \item{Sigma.eclairs}{estimate of correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
-\item{method}{compute average correlation for either that MLE correlation matrix, or the empirical Bayes (EB) correlation matrix}
+\item{method}{compute average correlation for either the MLE correlation matrix, or the empirical Bayes (EB) correlation matrix}
+
+\item{algorithm}{\code{"closedApprox"} uses a closed form approximation that works well for large \eqn{n}. \code{"lossFxn"} uses optimizes a quadratic loss function between observed eigen-values and evalues of constant correlation matrix.}
 }
 \description{
 Compute average correlation of implied correlation matrix
 }
 \details{
-Consider a correlation matrix \eqn{C} with all correlations set to \eqn{\rho}, where \eqn{d^2} is the vector of eigen-values of \eqn{C}.  Then the first eigen-value is \eqn{1-(p-1)\rho}, and the next \eqn{p-1} eigen-values are \eqn{1-\rho}.  (See \url{https://statisticaloddsandends.wordpress.com/2018/07/20/} for clear explanation.)  Now consider \eqn{C} as a sample correlation matrix, and estimate the average correlation based on the eigen-values.  In this case, all additional eigen-values are zero when \eqn{p > n}.  
+Consider a correlation matrix \eqn{C} with all correlations set to \eqn{\rho}, where \eqn{d^2} is the vector of eigen-values of \eqn{C}.  Then the first eigen-value is \eqn{1+(p-1)\rho}, and the next \eqn{p-1} eigen-values are \eqn{1-\rho}.  (See \url{https://statisticaloddsandends.wordpress.com/2018/07/20/} for clear explanation.)  Now consider \eqn{C} as a sample correlation matrix, and estimate the average correlation based on the eigen-values.  In this case, all additional eigen-values are zero when \eqn{p > n}.  
 
 Consider estimating \eqn{\rho} using each eigen-value separately. The first eigen-value gives the estimate \eqn{(d^2_1 - 1) / (p-1)}, the next \eqn{p-1} eigen-values give the estimate \eqn{1 - d^2_i}, and all remaining estimates are 0.  Finally, take the mean of these single estimates for the final estimate of \eqn{\rho}.  This gives the average correlation for the MLE correlation matrix.
 

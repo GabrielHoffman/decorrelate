@@ -1,6 +1,5 @@
-
 ---
-title: "Fast Probabilistic Whitening Transformation for Ultra-High Dimensional Data"
+title: "<span style='font-size: 34px'>Fast Probabilistic Whitening Transformation for Ultra-High Dimensional Data</style>"
 #subtitle: ''
 author: "Developed by [Gabriel Hoffman](http://gabrielhoffman.github.io/)"
 date: "Run on `r Sys.time()`"
@@ -23,6 +22,13 @@ vignette: >
 rmarkdown::render("decorrelate.Rmd");
 
 --->
+
+
+<style>
+body {
+text-align: justify}
+</style>
+
 
 
 

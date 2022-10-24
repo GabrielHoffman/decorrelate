@@ -1,132 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/404.html</loc>
   </url>
   <url>
-    <loc>/articles/cca.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/articles/cca.html</loc>
   </url>
   <url>
-    <loc>/articles/computational_scaling.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/articles/computational_scaling.html</loc>
   </url>
   <url>
-    <loc>/articles/decorrelate.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/articles/decorrelate.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/intuition.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/articles/intuition.html</loc>
   </url>
   <url>
-    <loc>/articles/simulation.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/articles/simulation.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/autocorr.mat.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/autocorr.mat.html</loc>
   </url>
   <url>
-    <loc>/reference/averageCorr.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/averageCorr.html</loc>
   </url>
   <url>
-    <loc>/reference/cca.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/cca.html</loc>
   </url>
   <url>
-    <loc>/reference/cov_transform.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/cov_transform.html</loc>
   </url>
   <url>
-    <loc>/reference/decorrelate.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/decorrelate.html</loc>
   </url>
   <url>
-    <loc>/reference/eclairs-class.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs-class.html</loc>
   </url>
   <url>
-    <loc>/reference/eclairs.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs.html</loc>
   </url>
   <url>
-    <loc>/reference/eclairs_corMat.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs_corMat.html</loc>
   </url>
   <url>
-    <loc>/reference/eclairs_sq.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs_sq.html</loc>
   </url>
   <url>
-    <loc>/reference/effDependence.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/effDependence.html</loc>
   </url>
   <url>
-    <loc>/reference/effVariance.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/effVariance.html</loc>
   </url>
   <url>
-    <loc>/reference/ergpca.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/ergpca.html</loc>
   </url>
   <url>
-    <loc>/reference/est_lambda_ev.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/est_lambda_ev.html</loc>
   </url>
   <url>
-    <loc>/reference/estimate_lambda_eb.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/estimate_lambda_eb.html</loc>
   </url>
   <url>
-    <loc>/reference/fastcca-class.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/fastcca-class.html</loc>
   </url>
   <url>
-    <loc>/reference/fastcca.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/fastcca.html</loc>
   </url>
   <url>
-    <loc>/reference/getCov.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/getCov.html</loc>
   </url>
   <url>
-    <loc>/reference/getWhiteningMatrix.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/getWhiteningMatrix.html</loc>
   </url>
   <url>
-    <loc>/reference/gpca.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/gpca.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/kappa.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/kappa.html</loc>
   </url>
   <url>
-    <loc>/reference/lm_each_eclairs.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/lm_each_eclairs.html</loc>
   </url>
   <url>
-    <loc>/reference/lm_eclairs.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/lm_eclairs.html</loc>
   </url>
   <url>
-    <loc>/reference/logDet.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/logDet.html</loc>
   </url>
   <url>
-    <loc>/reference/mult_eclairs.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/mult_eclairs.html</loc>
   </url>
   <url>
-    <loc>/reference/optimal_SVHT_coef.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/optimal_SVHT_coef.html</loc>
   </url>
   <url>
-    <loc>/reference/plot-eclairs-method.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/plot-eclairs-method.html</loc>
   </url>
   <url>
-    <loc>/reference/quadForm.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/quadForm.html</loc>
   </url>
   <url>
-    <loc>/reference/reform_decomp.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/reform_decomp.html</loc>
   </url>
   <url>
-    <loc>/reference/rmvnorm_eclairs.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/rmvnorm_eclairs.html</loc>
   </url>
   <url>
-    <loc>/reference/series_start_total.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/series_start_total.html</loc>
   </url>
   <url>
-    <loc>/reference/sv_threshold.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/sv_threshold.html</loc>
   </url>
   <url>
-    <loc>/reference/whiten.html</loc>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/whiten.html</loc>
   </url>
 </urlset>

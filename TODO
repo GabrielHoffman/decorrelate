@@ -1,3 +1,14 @@
+
+Oct 17, 2022
+	Simplify dependencies in testing
+		especially for CCA
+	consider moving fastcca to another package
+	fastcca: simplify results	
+
+
+
+
+
 Sept 21, 2021
 	get Rsq to be estimates of the out-of-sample prediction correlattion
 		like for regression

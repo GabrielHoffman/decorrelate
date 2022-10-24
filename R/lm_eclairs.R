@@ -1,7 +1,7 @@
 
 #' Fit linear model after decorrelating 
 #' 
-#' Fit linear model after applying decorrelation projection to reponse and predictors. 
+#' Fit linear model after applying decorrelation projection to response and predictors. 
 #'
 #' @param formula an object of class 'formula' (or one that can be coerced to that class): a symbolic description of the model to be fitted.
 
@@ -135,7 +135,7 @@ lm_eclairs = function (formula, data, Sigma.eclairs, subset, weights, na.action,
 
 #' Fit linear model on each feature after decorrelating 
 #' 
-#' Fit linear model on each features after applying decorrelation projection to reponse and predictors. 
+#' Fit linear model on each feature after applying decorrelation projection to response and predictors. 
 #'
 #' @param formula an object of class 'formula' (or one that can be coerced to that class): a symbolic description of the model to be fitted.
 
@@ -185,7 +185,7 @@ lm_eclairs = function (formula, data, Sigma.eclairs, subset, weights, na.action,
 #' X = matrnorm(p, 1000)
 #' colnames(X) = paste0('set_', 1:ncol(X))
 #' 
-#' # Use linear model to test each features stored as columns in X
+#' # Use linear model to test each feature stored as columns in X
 #' res = lm_each_eclairs(y ~ v1 + v2, data, X, ecl )
 #' 
 #' head(res)
@@ -199,7 +199,7 @@ lm_eclairs = function (formula, data, Sigma.eclairs, subset, weights, na.action,
 #' # evaluate covariance of transformed data
 #' ecl_transform = cov_transform(ecl, f, 100)
 #' 
-#' # Use linear model to test each features stored as columns in X
+#' # Use linear model to test each feature stored as columns in X
 #' # in data transformed by f()
 #' res2 = lm_each_eclairs( f(y) ~ v1 + v2, data, X, ecl_transform )
 #' 

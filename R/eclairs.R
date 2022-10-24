@@ -375,8 +375,8 @@ setMethod("plot", "eclairs", function(x, y, ...) {
 	  legend = c(expression(lambda~':'), expression(nu~':'), expression(n~':'), expression(p~':'), 
 					format(x$lambda, digits=3),
 	  			format(x$nu, digits=3),
-	  			format(x$n, digits=0, big.mark=','),
-	  			format(x$p, digits=0, big.mark=',')
+	  			format(x$n, big.mark=','),
+	  			format(x$p, big.mark=',')
 	  	),
 	  bty="n",
 	  text.width=0	)

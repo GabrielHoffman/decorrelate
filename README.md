@@ -2,8 +2,14 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
 <!-- badges: end -->
+<style>
+body {
+text-align: justify}
+</style>
 
-## Fast Probabilistic Whitening Transformation for Ultra-High Dimensional Data
+<br>
+
+### Fast Probabilistic Whitening Transformation for Ultra-High Dimensional Data
 
 Data whitening is a widely used preprocessing step to remove correlation
 structure since statistical models often assume independence [(Kessy, et
@@ -25,7 +31,8 @@ whitening transformation. Our Gaussian Inverse Wishart Empirical Bayes
 and **2)** regularizes the eigen-values of the sample covariance matrix
 to improve out-of-sample performance.
 
-![Whitening image](man/figures/README-run.examples-1.png)
+![**Figure 1:** Illustration of steps in whitening
+transformation](man/figures/README-run.examples-1.png)
 
 ## Installation
 

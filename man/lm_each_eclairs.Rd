@@ -60,7 +60,7 @@ lm_each_eclairs(
 data.frame with columns \code{beta}, \code{se}, \code{tsat}, \code{pvalue} storing results for regression model fit for each feature
 }
 \description{
-Fit linear model on each features after applying decorrelation projection to reponse and predictors.
+Fit linear model on each feature after applying decorrelation projection to response and predictors.
 }
 \examples{
 library(Rfast)
@@ -88,7 +88,7 @@ y = rnorm(p)
 X = matrnorm(p, 1000)
 colnames(X) = paste0('set_', 1:ncol(X))
 
-# Use linear model to test each features stored as columns in X
+# Use linear model to test each feature stored as columns in X
 res = lm_each_eclairs(y ~ v1 + v2, data, X, ecl )
 
 head(res)
@@ -102,7 +102,7 @@ f = function(x) log(x^2 + 0.001)
 # evaluate covariance of transformed data
 ecl_transform = cov_transform(ecl, f, 100)
 
-# Use linear model to test each features stored as columns in X
+# Use linear model to test each feature stored as columns in X
 # in data transformed by f()
 res2 = lm_each_eclairs( f(y) ~ v1 + v2, data, X, ecl_transform )
 

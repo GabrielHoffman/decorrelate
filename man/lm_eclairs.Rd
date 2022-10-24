@@ -57,7 +57,7 @@ lm_eclairs(
 Object of class \code{lm} returned by function \link{lm}
 }
 \description{
-Fit linear model after applying decorrelation projection to reponse and predictors.
+Fit linear model after applying decorrelation projection to response and predictors.
 }
 \details{
 This function fit a linear regression to the transformed response, and transformed design matrix.  Note that the design matrix, not just the data.frame of variables is transformed so that 1) factors are transformed and 2) the intercept term is transformed.

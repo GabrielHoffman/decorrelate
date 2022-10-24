@@ -285,7 +285,7 @@ test_lm_each_eclairs = function(){
 	# fast version using pre-project
 	res2 = lm_each_eclairs(y ~ v1 + v2, data, X[,1:10], ecl )
 
-	checkEqualsNumeric(res1, res2)
+	checkEquals(res1, res2)
 }
 
 

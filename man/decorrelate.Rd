@@ -4,7 +4,7 @@
 \alias{decorrelate}
 \title{Decorrelation projection}
 \usage{
-decorrelate(X, Sigma.eclairs, lambda, transpose = FALSE)
+decorrelate(X, Sigma.eclairs, lambda, transpose = FALSE, alpha = -1/2)
 }
 \arguments{
 \item{X}{matrix to be transformed so *columns* are independent}
@@ -14,6 +14,8 @@ decorrelate(X, Sigma.eclairs, lambda, transpose = FALSE)
 \item{lambda}{specify lambda and override value from \code{Sigma.eclairs}}
 
 \item{transpose}{logical, (default FALSE) indicating if X should be transposed first}
+
+\item{alpha}{default = -1/2.  Exponent of eigen-values}
 }
 \value{
 a matrix following the decorrelation transformation

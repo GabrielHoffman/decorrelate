@@ -108,6 +108,7 @@ mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha, transpose=FALSE){
 #' @param Sigma.eclairs estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
 #' @param lambda specify lambda and override value from \code{Sigma.eclairs}
 #' @param transpose logical, (default FALSE) indicating if X should be transposed first
+#' @param alpha default = -1/2.  Exponent of eigen-values 
 #'
 #' @details
 #'' FIX NOTATION HERE: Given a vector \eqn{x ~ N(0, \Sigma)} where \eqn{\Sigma = U diag(d_1^2) U^T + diag(\sigma^2)}, transform x so that it has an identity covariance matrix.  \eqn{\Sigma^{-0.5}x} is such a projection (see Strimmer whitening).  When \eqn{\Sigma} is \eqn{p \times p}, computing this projection naively is \eqn{O(p^3)}.  Here we take advantage of the fact that \eqn{\Sigma} is the sum of a low rank decomposition, plus a scaled identity matrix
@@ -133,7 +134,7 @@ mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha, transpose=FALSE){
 #' Y.transform = decorrelate(Y, ecl)
 #'
 #' @export
-decorrelate = function(X, Sigma.eclairs, lambda, transpose = FALSE){
+decorrelate = function(X, Sigma.eclairs, lambda, transpose = FALSE, alpha=-1/2){
 
 	stopifnot(is(Sigma.eclairs, "eclairs"))
 
@@ -157,7 +158,7 @@ decorrelate = function(X, Sigma.eclairs, lambda, transpose = FALSE){
 	}
 
 	# alpha = -1/2 gives the decorrelating projection (i.e. whitening)
-	X.decorr = mult_eclairs(X, Sigma.eclairs$U, Sigma.eclairs$dSq, lambda, nu=Sigma.eclairs$nu, alpha = -1/2, transpose=transpose)
+	X.decorr = mult_eclairs(X, Sigma.eclairs$U, Sigma.eclairs$dSq, lambda, nu=Sigma.eclairs$nu, alpha = alpha, transpose=transpose)
 
 	# if input X, is array, convert it back to array
 	if( toArray ){

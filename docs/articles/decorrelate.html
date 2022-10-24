@@ -4,82 +4,79 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fast Probabilistic Whitening Transformation for Ultra-High Dimensional Data • decorrelate</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="decorrelate">
+<title><span style="font-size: 34px">Fast Probabilistic Whitening Transformation for Ultra-High Dimensional Data • decorrelate</span></title>
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Fast Probabilistic Whitening Transformation for Ultra-High Dimensional Data">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="&lt;span style='font-size: 34px'&gt;Fast Probabilistic Whitening Transformation for Ultra-High Dimensional Data&lt;/style&gt;">
 <meta property="og:description" content="decorrelate">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">decorrelate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.16</span>
-      </span>
-    </div>
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
+    
+    <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../articles/decorrelate.html">Get started</a>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.16</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="active nav-item">
+  <a class="nav-link" href="../articles/decorrelate.html">Get started</a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="../news/index.html">Changelog</a>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/GabrielHoffman/decorrelate/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/GabrielHoffman/decorrelate/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+    
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
-      
 
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Fast Probabilistic Whitening Transformation for
-Ultra-High Dimensional Data</h1>
+
+
+<div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+      <img src="" class="logo" alt=""><h1><span style="font-size: 34px">Fast Probabilistic Whitening Transformation for Ultra-High Dimensional Data</span></h1>
                         <h4 data-toc-skip class="author">Developed by <a href="http://gabrielhoffman.github.io/" class="external-link">Gabriel Hoffman</a>
 </h4>
             
-            <h4 data-toc-skip class="date">Run on 2022-04-26
-14:39:45</h4>
+            <h4 data-toc-skip class="date">Run on 2022-10-17
+13:54:39</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/GabrielHoffman/decorrelate/blob/HEAD/vignettes/decorrelate.Rmd" class="external-link"><code>vignettes/decorrelate.Rmd</code></a></small>
-      <div class="hidden name"><code>decorrelate.Rmd</code></div>
-
+      <div class="d-none name"><code>decorrelate.Rmd</code></div>
     </div>
 
     
@@ -89,6 +86,10 @@ Ultra-High Dimensional Data</h1>
 rmarkdown::render("decorrelate.Rmd");
 
 --->
+<style>
+body {
+text-align: justify}
+</style>
 <p>Data whitening is a widely used preprocessing step to remove
 correlation structure since statistical models often assume independence
 <a href="https://doi.org/10.1080/00031305.2016.1277159" class="external-link">(Kessy, et
@@ -122,44 +123,44 @@ axes.
 <h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/GabrielHoffman/decorrelate" class="external-link">decorrelate</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://mvtnorm.R-forge.R-project.org" class="external-link">mvtnorm</a></span><span class="op">)</span>
-
-<span class="va">n</span> <span class="op">=</span> <span class="fl">500</span>  <span class="co"># number of samples</span>
-<span class="va">p</span> <span class="op">=</span> <span class="fl">200</span>  <span class="co"># number of features</span>
-
-<span class="co"># create correlation matrix</span>
-<span class="va">Sigma</span> <span class="op">=</span> <span class="fu"><a href="../reference/autocorr.mat.html">autocorr.mat</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">0.9</span><span class="op">)</span>
-
-<span class="co"># draw data from correlation matrix Sigma</span>
-<span class="va">Y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/mvtnorm/man/Mvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span> <span class="op">*</span> <span class="fl">5.1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"sample_"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"gene_"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p</span><span class="op">)</span>
-
-<span class="co"># eclairs decomposition implements GIW-EB method *E*stimate</span>
-<span class="co"># *c*ovariance/correlation with *l*ow *r*ank and *s*hrinkage</span>
-<span class="va">ecl</span> <span class="op">=</span> <span class="fu"><a href="../reference/eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span>
-
-<span class="co"># decorrelate data using eclairs decomposition</span>
-<span class="va">Y_whitened</span> <span class="op">=</span> <span class="fu"><a href="../reference/decorrelate.html">decorrelate</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">ecl</span><span class="op">)</span>
-
-<span class="co"># the same whitening can be performed with one command where the eigen-value</span>
-<span class="co"># shrinkage is performed internally</span>
-<span class="va">Y_whitened2</span> <span class="op">=</span> <span class="fu"><a href="../reference/whiten.html">whiten</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/GabrielHoffman/decorrelate" class="external-link">decorrelate</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://mvtnorm.R-forge.R-project.org" class="external-link">mvtnorm</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">n</span> <span class="op">=</span> <span class="fl">500</span>  <span class="co"># number of samples</span></span>
+<span><span class="va">p</span> <span class="op">=</span> <span class="fl">200</span>  <span class="co"># number of features</span></span>
+<span></span>
+<span><span class="co"># create correlation matrix</span></span>
+<span><span class="va">Sigma</span> <span class="op">=</span> <span class="fu"><a href="../reference/autocorr.mat.html">autocorr.mat</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">0.9</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># draw data from correlation matrix Sigma</span></span>
+<span><span class="va">Y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/mvtnorm/man/Mvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span> <span class="op">*</span> <span class="fl">5.1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"sample_"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"gene_"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># eclairs decomposition implements GIW-EB method *E*stimate</span></span>
+<span><span class="co"># *c*ovariance/correlation with *l*ow *r*ank and *s*hrinkage</span></span>
+<span><span class="va">ecl</span> <span class="op">=</span> <span class="fu"><a href="../reference/eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># decorrelate data using eclairs decomposition</span></span>
+<span><span class="va">Y_whitened</span> <span class="op">=</span> <span class="fu"><a href="../reference/decorrelate.html">decorrelate</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">ecl</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># the same whitening can be performed with one command where the eigen-value</span></span>
+<span><span class="co"># shrinkage is performed internally</span></span>
+<span><span class="va">Y_whitened2</span> <span class="op">=</span> <span class="fu"><a href="../reference/whiten.html">whiten</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span></code></pre></div>
 <p>Here plot A) the eigen-values of the covariance matrix before and
 after shrinkage. B) The correlation of the observed and C) whitened
 data.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># plot shrinkage of eigen-values</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span>
-
-<span class="co"># correlation between variables in observed data</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"Correlation of observed data"</span><span class="op">)</span>
-
-<span class="co"># decorrelate data using eclairs decomposition</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">Y_whitened</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"Correlation of whitened data"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># plot shrinkage of eigen-values</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># correlation between variables in observed data</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"Correlation of observed data"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># decorrelate data using eclairs decomposition</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">Y_whitened</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"Correlation of whitened data"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="decorrelate_files/figure-html/plots-1.png" width="864"></p>
 </div>
 <div class="section level2">
@@ -175,15 +176,15 @@ details of the whitening transformation.</p>
 efficiently without directly computing the whitening matrix,
 <code><a href="../reference/getWhiteningMatrix.html">getWhiteningMatrix()</a></code> can directly compute the matrix.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># compute whitening matrix from eclairs decomposition</span>
-<span class="va">W</span> <span class="op">=</span> <span class="fu"><a href="../reference/getWhiteningMatrix.html">getWhiteningMatrix</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span>
-
-<span class="co"># transform observed data using whitening matrix</span>
-<span class="va">Z</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/crossprod.html" class="external-link">tcrossprod</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">W</span><span class="op">)</span>
-
-<span class="co"># evalute difference between whitened computed 2 ways</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">Z</span> <span class="op">-</span> <span class="va">Y_whitened</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 2.153833e-14</span></code></pre>
+<code class="sourceCode R"><span><span class="co"># compute whitening matrix from eclairs decomposition</span></span>
+<span><span class="va">W</span> <span class="op">=</span> <span class="fu"><a href="../reference/getWhiteningMatrix.html">getWhiteningMatrix</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># transform observed data using whitening matrix</span></span>
+<span><span class="va">Z</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/crossprod.html" class="external-link">tcrossprod</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">W</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># evalute difference between whitened computed 2 ways</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">Z</span> <span class="op">-</span> <span class="va">Y_whitened</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 2.153833e-14</span></span></code></pre>
 <p>The difference between function is due only to machine precision.</p>
 </div>
 <div class="section level3">
@@ -194,11 +195,11 @@ efficiently without directly computing the whitening matrix,
 that computing and storing these matries is <span class="math inline">\(O(p^2)\)</span>, it may not feasable for large
 datasets.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># compute correlation matrix from eclairs</span>
-<span class="fu"><a href="../reference/getCov.html">getCor</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span>
-
-<span class="co"># compute covariance matrix from eclairs</span>
-<span class="fu"><a href="../reference/getCov.html">getCov</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># compute correlation matrix from eclairs</span></span>
+<span><span class="fu"><a href="../reference/getCov.html">getCor</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># compute covariance matrix from eclairs</span></span>
+<span><span class="fu"><a href="../reference/getCov.html">getCov</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="sample-from-multivariate-normal">Sample from multivariate normal<a class="anchor" aria-label="anchor" href="#sample-from-multivariate-normal"></a>
@@ -207,12 +208,12 @@ datasets.</p>
 efficiently sample from a multivariage normal distribution with
 specified covariance.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># draw from multivariate normal</span>
-<span class="va">n</span> <span class="op">=</span> <span class="fl">1000</span>
-<span class="va">mu</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># using eclairs decomposition</span>
-<span class="va">X.draw1</span> <span class="op">=</span> <span class="fu"><a href="../reference/rmvnorm_eclairs.html">rmvnorm_eclairs</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">mu</span>, <span class="va">ecl</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># draw from multivariate normal</span></span>
+<span><span class="va">n</span> <span class="op">=</span> <span class="fl">1000</span></span>
+<span><span class="va">mu</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># using eclairs decomposition</span></span>
+<span><span class="va">X.draw1</span> <span class="op">=</span> <span class="fu"><a href="../reference/rmvnorm_eclairs.html">rmvnorm_eclairs</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">mu</span>, <span class="va">ecl</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="low-rank-models">Low-rank models<a class="anchor" aria-label="anchor" href="#low-rank-models"></a>
@@ -225,11 +226,11 @@ for sufficiently large <span class="math inline">\(k\)</span>. Note that
 the low rank method trades computational efficientcy for accuracy in the
 whitening transform.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># use low rank decomposition with 50 components</span>
-<span class="va">ecl</span> <span class="op">=</span> <span class="fu"><a href="../reference/eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span>, k <span class="op">=</span> <span class="fl">60</span><span class="op">)</span>
-
-<span class="co"># decorrelate data using eclairs decomposition</span>
-<span class="va">Y_whitened</span> <span class="op">=</span> <span class="fu"><a href="../reference/decorrelate.html">decorrelate</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">ecl</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># use low rank decomposition with 50 components</span></span>
+<span><span class="va">ecl</span> <span class="op">=</span> <span class="fu"><a href="../reference/eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span>, k <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># decorrelate data using eclairs decomposition</span></span>
+<span><span class="va">Y_whitened</span> <span class="op">=</span> <span class="fu"><a href="../reference/decorrelate.html">decorrelate</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">ecl</span><span class="op">)</span></span></code></pre></div>
 <p><img src="decorrelate_files/figure-html/plots2-1.png" width="864"></p>
 <p>In this case, the low rank whitening produces transformed features
 that are approximately independent. The approximation improves as the
@@ -242,8 +243,8 @@ rank increases.</p>
 smallest eigen-value) of the correlation/covariance matrix from the
 <code><a href="../reference/eclairs.html">eclairs()</a></code> decomposition.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/kappa.html" class="external-link">kappa</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 658.3446</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/kappa.html" class="external-link">kappa</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 658.3446</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="removing-correlation-vs-covariance">Removing correlation vs covariance<a class="anchor" aria-label="anchor" href="#removing-correlation-vs-covariance"></a>
@@ -252,65 +253,56 @@ smallest eigen-value) of the correlation/covariance matrix from the
 columns, but the correlation can be computed using
 <code>compute = 'correlation'</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">clusterGeneration</span><span class="op">)</span>
-
-<span class="co"># generate covariance matrix, where the diagonals (i.e. variances) vary</span>
-<span class="va">Sigma</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/clusterGeneration/man/genPositiveDefMat.html" class="external-link">genPositiveDefMat</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">$</span><span class="va">Sigma</span>
-
-<span class="va">Y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/mvtnorm/man/Mvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span>
-
-<span class="co"># examine variances of the first 5 variables</span>
-<span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">Y</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></code></pre></div>
-<pre><code><span class="co">## [1] 5.383555 2.889871 1.044287 3.873412 1.393928</span></code></pre>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">clusterGeneration</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># generate covariance matrix, where the diagonals (i.e. variances) vary</span></span>
+<span><span class="va">Sigma</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/clusterGeneration/man/genPositiveDefMat.html" class="external-link">genPositiveDefMat</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">$</span><span class="va">Sigma</span></span>
+<span></span>
+<span><span class="va">Y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/mvtnorm/man/Mvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># examine variances of the first 5 variables</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">Y</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 5.383555 2.889871 1.044287 3.873412 1.393928</span></span></code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># transform removes covariance between columns so variance of transformed</span>
-<span class="co"># features are *approximately* equal</span>
-<span class="va">ecl_cov</span> <span class="op">=</span> <span class="fu"><a href="../reference/eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span>, compute <span class="op">=</span> <span class="st">"covariance"</span><span class="op">)</span>
-<span class="va">Z1</span> <span class="op">=</span> <span class="fu"><a href="../reference/decorrelate.html">decorrelate</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">ecl_cov</span><span class="op">)</span>
-
-<span class="co"># variance are *approximately* equal</span>
-<span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">Z1</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.8936254 0.7003432 0.3485305 0.8255365 0.4277328</span></code></pre>
+<code class="sourceCode R"><span><span class="co"># transform removes covariance between columns so variance of transformed</span></span>
+<span><span class="co"># features are *approximately* equal</span></span>
+<span><span class="va">ecl_cov</span> <span class="op">=</span> <span class="fu"><a href="../reference/eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span>, compute <span class="op">=</span> <span class="st">"covariance"</span><span class="op">)</span></span>
+<span><span class="va">Z1</span> <span class="op">=</span> <span class="fu"><a href="../reference/decorrelate.html">decorrelate</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">ecl_cov</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># variance are *approximately* equal</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">Z1</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 0.8936254 0.7003432 0.3485305 0.8255365 0.4277328</span></span></code></pre>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># transform removes **correlation** between columns but variables are not</span>
-<span class="co"># scaled</span>
-<span class="va">ecl_cor</span> <span class="op">=</span> <span class="fu"><a href="../reference/eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span>, compute <span class="op">=</span> <span class="st">"correlation"</span><span class="op">)</span>
-<span class="va">Z2</span> <span class="op">=</span> <span class="fu"><a href="../reference/decorrelate.html">decorrelate</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">ecl_cor</span><span class="op">)</span>
-
-<span class="co"># variances are not standardized</span>
-<span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">Z2</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></code></pre></div>
-<pre><code><span class="co">## [1] 5.338501 2.876451 1.036761 3.858496 1.383403</span></code></pre>
+<code class="sourceCode R"><span><span class="co"># transform removes **correlation** between columns but variables are not</span></span>
+<span><span class="co"># scaled</span></span>
+<span><span class="va">ecl_cor</span> <span class="op">=</span> <span class="fu"><a href="../reference/eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span>, compute <span class="op">=</span> <span class="st">"correlation"</span><span class="op">)</span></span>
+<span><span class="va">Z2</span> <span class="op">=</span> <span class="fu"><a href="../reference/decorrelate.html">decorrelate</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">ecl_cor</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># variances are not standardized</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">Z2</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 5.338501 2.876451 1.036761 3.858496 1.383403</span></span></code></pre>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
-
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
+    <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="http://gabrielhoffman.github.io" class="external-link">Gabriel
-Hoffman</a>.</p>
+<p>Developed by <a href="http://gabrielhoffman.github.io" class="external-link">Gabriel Hoffman</a>.</p>
 </div>
 
-<div class="pkgdown">
+<div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
-
 
   
 
