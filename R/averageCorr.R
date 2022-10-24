@@ -44,7 +44,6 @@ averageCorr = function(Sigma.eclairs, method = c("MLE", "EB"), algorithm = c("cl
     }
 
     if( algorithm == "closedApprox"){
-        message(algorithm)
         # this is approximate for small n and large p, but is very accurate
         # i.e. 2 decimal places
 
@@ -58,7 +57,6 @@ averageCorr = function(Sigma.eclairs, method = c("MLE", "EB"), algorithm = c("cl
             rho_hat = (1-Sigma.eclairs$lambda) * rho_hat
         }
     }else{
-        message(algorithm)
         # estimate rho using loss function
         p = Sigma.eclairs$p
         dSq = Sigma.eclairs$dSq
