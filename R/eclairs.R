@@ -173,6 +173,7 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 #' @param k the rank of the low rank component  
 #' @param lambda shrinkage parameter. If not specified, it is estimated from the data.
 #' @param compute compute the 'covariance' (default) or 'correlation'
+#' @param n.samples number of samples data is from.  Usually \code{nrow(X)}, but can be other values in special cases.
 # @param center center columns of X (default: TRUE) 
 # @param scale scale columns of X (default: TRUE) 
 #' @param warmStart result of previous SVD to initialize values
@@ -220,12 +221,12 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 #' Sigma.eclairs
 #'
 #' @importFrom Rfast standardise colVars eachrow
-#' @importFrom PRIMME svds
+# @importFrom PRIMME svds
 #' @importFrom irlba irlba
 #' @importFrom methods new
 #'
 #' @export
-eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), warmStart=NULL){
+eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), n.samples = nrow(X), warmStart=NULL){
 
 	stopifnot(is.matrix(X))
 	compute = match.arg(compute)
@@ -274,12 +275,12 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 
 	# SVD of X to get low rank estimate of Sigma
 	if( k < min(p, n)/3){
-		if( is.null(warmStart) ){
+		# if( is.null(warmStart) ){
 			# dcmp = svds(X, k, isreal=TRUE)
-			dcmp = irlba(X, k) # should be faster thatn PRIMME::svds
-		}else{			
-			dcmp = svds(X, k, v0=warmStart$U, isreal=TRUE)
-		}
+			dcmp = irlba(X, k) # should be faster than PRIMME::svds
+		# }else{			
+		# 	dcmp = svds(X, k, v0=warmStart$U, isreal=TRUE)
+		# }
 	}else{
 		dcmp = svd(X) 
 
@@ -298,16 +299,16 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 
 		# Estimate lambda by empirical Bayes, using nu as scale of target
 		# Since data is scaled to have var 1 (instead of n), multiply by n
-		res = estimate_lambda_eb( n*dcmp$d^2, n, p, nu)
+		res = estimate_lambda_eb( n.samples*dcmp$d^2, n.samples, p, nu)
 	}else{
 		# compute logML for specified lambda value
-		res = estimate_lambda_eb( n*dcmp$d^2, n, p, nu, lambda=lambda)
+		res = estimate_lambda_eb( n.samples*dcmp$d^2, n.samples, p, nu, lambda=lambda)
 	}
 
 	# Modify sign of dcmp$v and dcmp$u so principal components are consistant
 	# This is motivated by whitening:::makePositivDiagonal()
 	# but here adjust both U and V so reconstructed data is correct
-	values = sign(diag(dcmp$v))
+	values = sign0(diag(dcmp$v))
 	# dcmp$v = sweep(dcmp$v, 2, values, "*")
 	# dcmp$u = sweep(dcmp$u, 2, values, "*")
 
@@ -321,7 +322,7 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 				lambda 	= res$lambda,
 				logML 	= res$logML,
 				nu 		= nu,
-				n 		= n,
+				n 		= n.samples,
 				p 		= p,
 				k 		= k,
 				rownames	= rn,
@@ -332,6 +333,24 @@ eclairs = function(X, k, lambda=NULL, compute=c("covariance", "correlation"), wa
 	new("eclairs",	result)
 }
 
+
+
+# Like standard sign function, 
+# except sign(x) giving 0 is reset to give 1
+sign0 = function(x){
+
+	# use standard sign function
+	res = sign(x)
+
+	# get entries that equal 0
+	# and set them to 1
+	i = which(res == 0)
+	if( length(i) > 0 ){
+		res[i] = 1
+	}
+
+	res
+}
 
 #' Plot eclairs object
 #'

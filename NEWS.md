@@ -1,4 +1,8 @@
 
+# decorrelate 0.0.17
+* add `n.samples` argument to \code{eclairs()}
+
+
 # decorrelate 0.0.16
 * add `eclairs_sq`
 

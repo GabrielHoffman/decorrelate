@@ -40,7 +40,7 @@ knitr::opts_chunk$set(
   error = FALSE,
   tidy = TRUE,
   eval = TRUE,
-  #dev = c("png", "pdf"),
+  dev = c("png", "pdf"),
   cache = TRUE)
 ```
 
@@ -48,7 +48,7 @@ Data whitening is a widely used preprocessing step to remove correlation structu
 
 Here we use a probabilistic model of the observed data to apply a whitening transformation.  Our Gaussian Inverse Wishart Empirical Bayes (GIW-EB) **1)** model substantially reduces computational complexity, and **2)** regularizes the eigen-values of the sample covariance matrix to improve out-of-sample performance.
 
-```{r run.examples, fig.height=2.5, fig.width=9, fig.cap ="**Figure 1: Intuition for data whitening transformation**. **A)** Original data, **B)** Data rotated along principal components, **C)** Data rotated and scaled, **D)** Data rotated, scaled and rotated back to original axes.", echo=FALSE}
+```{r run.examples, fig.height=2.5, fig.width=9, fig.cap ="**Figure 1: Intuition for data whitening transformation**. Given the singular value decomposition of $Y/\\sqrt{n}$ after centering columns is $UDV^T$, the steps in the transformation are: **A)** Original data, **B)** Data rotated along principal components, **C)** Data rotated and scaled, **D)** Data rotated, scaled and rotated back to original axes.", echo=FALSE}
 library(decorrelate)
 library(mvtnorm)
 library(ggplot2)
@@ -62,7 +62,7 @@ Sigma = matrix(c(1, .9, .9, 2), ncol=2)
 Y = rmvnorm(200, c(0, 0), Sigma)
 
 dcmp = eigen(cov(Y))
-U = whitening:::makePositivDiagonal(dcmp$vectors)
+U = whitening:::makePosDiag(dcmp$vectors)
 lambda = dcmp$values
 
 lim = range(Y)
@@ -72,7 +72,7 @@ value = (Y %*% U)[,1]
 plot_data = function(Y, rotation, rank, lim){
 
   dcmp = eigen(cov(Y))
-  U = whitening:::makePositivDiagonal(dcmp$vectors)
+  U = whitening:::makePosDiag(dcmp$vectors)
   lambda = dcmp$values
 
   if( rotation == 1 ){ 
@@ -98,7 +98,7 @@ plot_data = function(Y, rotation, rank, lim){
 
   df = data.frame(X, rank=scale(rank))
 
-  H = whitening:::makePositivDiagonal(H)
+  H = whitening:::makePosDiag(H)
 
   ggplot(df, aes(X1, X2, color=rank)) + 
     geom_segment(x=0, y=-lim[2], xend=0, yend=lim[2], color="black") +
@@ -108,15 +108,15 @@ plot_data = function(Y, rotation, rank, lim){
     theme(aspect.ratio=1,legend.position="none", plot.title = element_text(hjust = 0.5)) + 
     xlim(lim) + 
     ylim(lim) + 
-    geom_segment(x=0, y=0, xend=H[1,1], yend=H[2,1], color="#38df37", arrow = arrow(length = unit(0.03, "npc")), size=1) + 
-    geom_segment(x=0, y=0, xend=H[1,2], yend=H[2,2], color="#38df37", arrow = arrow(length = unit(0.03, "npc")), size=1)
+    geom_segment(x=0, y=0, xend=H[1,1], yend=H[2,1], color="#2fbf2e", arrow = arrow(length = unit(0.03, "npc")), size=1) + 
+    geom_segment(x=0, y=0, xend=H[1,2], yend=H[2,2], color="#2fbf2e", arrow = arrow(length = unit(0.03, "npc")), size=1)
 }
 
 
 fig1 = plot_data(Y, rotation = 1, rank(value), lim) + ggtitle(TeX('$Y$'))
-fig2 = plot_data( Y, rotation = 2, rank(value), lim) + ggtitle(TeX('$YU$'))
-fig3 = plot_data( Y, rotation = 3, rank(value), lim) + ggtitle(TeX('$YU\\Lambda^{-\\,\\frac{1}{2}}$'))
-fig4 = plot_data(Y, rotation = 4, rank(value), lim) + ggtitle(TeX('$YU\\Lambda^{-\\,\\frac{1}{2}}U^T$'))
+fig2 = plot_data( Y, rotation = 2, rank(value), lim) + ggtitle(TeX('$YV$'))
+fig3 = plot_data( Y, rotation = 3, rank(value), lim) + ggtitle(TeX('$YVD^{-1}$'))
+fig4 = plot_data(Y, rotation = 4, rank(value), lim) + ggtitle(TeX('$YVD^{-1}V^T$'))
 plot_grid(fig1, fig2, fig3, fig4, ncol=4, labels="AUTO")
 ```
 
