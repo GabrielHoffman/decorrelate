@@ -49,7 +49,6 @@
 #' eclairs_corMat( cor(Y), n=n)
 #'
 #' @importFrom Rfast eachrow
-#' @importFrom PRIMME eigs_sym
 #' @importFrom irlba partial_eigen
 #' @importFrom methods new
 #' @importFrom Matrix diag isSymmetric
@@ -81,13 +80,13 @@ eclairs_corMat = function(C, n, k=min(n, nrow(C)), lambda=NULL, warmStart=NULL){
 		dcmp = eigen(C)
 	}else{
 		# partial eigen decomposition
-		if( is.null(warmStart) ){
+		# if( is.null(warmStart) ){
 			suppressWarnings({
 				dcmp <- partial_eigen(C, k)
 			})
-		}else{		
-			dcmp <- eigs_sym(C, k, isreal=TRUE, x0=warmStart$U)
-		}
+		# }else{		
+		# 	dcmp <- eigs_sym(C, k, isreal=TRUE, x0=warmStart$U)
+		# }
 	}
 
 	# keep first k eigen values and vectors

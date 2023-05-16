@@ -9,6 +9,7 @@ eclairs(
   k,
   lambda = NULL,
   compute = c("covariance", "correlation"),
+  n.samples = nrow(X),
   warmStart = NULL
 )
 }
@@ -20,6 +21,8 @@ eclairs(
 \item{lambda}{shrinkage parameter. If not specified, it is estimated from the data.}
 
 \item{compute}{compute the 'covariance' (default) or 'correlation'}
+
+\item{n.samples}{number of samples data is from.  Usually \code{nrow(X)}, but can be other values in special cases.}
 
 \item{warmStart}{result of previous SVD to initialize values}
 }

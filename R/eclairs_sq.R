@@ -60,7 +60,6 @@
 #' 
 #' @return compute the eclairs of C^2
 #' @importFrom Rfast eachrow colVars
-#' @importFrom PRIMME svds
 #' @importFrom irlba irlba
 #' @export
 eclairs_sq = function(Sigma.eclairs, rank1 = Sigma.eclairs$k, rank2=Inf, varianceFraction=1, warmStart=TRUE){
@@ -125,12 +124,12 @@ eclairs_sq = function(Sigma.eclairs, rank1 = Sigma.eclairs$k, rank2=Inf, varianc
 
 	# SVD of X to get low rank estimate of Sigma
 	if( rank2 < min(p, n)/3){
-		if( is.null(warmStart) ){
+		# if( is.null(warmStart) ){
 			# dcmp = svds(G, k, isreal=TRUE)
 			dcmp = irlba(G, rank2) # should be faster thatn PRIMME::svds
-		}else{			
-			dcmp = svds(G, rank2, u0=Sigma.eclairs$U[,seq_len(rank2)], isreal=TRUE)
-		}
+		# }else{			
+		# 	dcmp = svds(G, rank2, u0=Sigma.eclairs$U[,seq_len(rank2)], isreal=TRUE)
+		# }
 	}else{
 		dcmp = svd(G) 
 

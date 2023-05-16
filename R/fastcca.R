@@ -264,7 +264,6 @@ geigen = function(Amat, Bmat, Cmat, k){
     if (p >= q) {
 
     	if( k < min(p,q) / 3){
-            # result = svds(Dmat, k, isreal = TRUE)
 			result = irlba(Dmat, k) # should be faster thatn PRIMME::svds
         }else{
 	        result <- svd(Dmat)

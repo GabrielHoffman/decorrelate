@@ -221,7 +221,6 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 #' Sigma.eclairs
 #'
 #' @importFrom Rfast standardise colVars eachrow
-# @importFrom PRIMME svds
 #' @importFrom irlba irlba
 #' @importFrom methods new
 #'

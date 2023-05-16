@@ -43,12 +43,11 @@ Depends:
 Imports:
     Rfast,
     irlba,
-    PRIMME,
     CholWishart,
     Matrix,
     Rdpack,
     utils,
     stats
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 RdMacros: Rdpack
 VignetteBuilder: knitr
