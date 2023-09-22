@@ -35,13 +35,14 @@ text-align: justify}
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   echo = TRUE,
-  warning=FALSE,
-  message=FALSE,
+  warning = FALSE,
+  message = FALSE,
   error = FALSE,
   tidy = TRUE,
   eval = TRUE,
   dev = c("png", "pdf"),
-  cache = TRUE)
+  cache = TRUE
+)
 ```
 
 Data whitening is a widely used preprocessing step to remove correlation structure since statistical models often assume independence [(Kessy, et al. 2017)](https://doi.org/10.1080/00031305.2016.1277159).  The typical procedures transforms the observed data by an inverse square root of the sample correlation matrix (**Figure 1**).  For low dimension data (i.e. $n > p$), this transformation produces transformed data with an identity sample covariance matrix.  This procedure assumes either that the true covariance matrix is know, or is well estimated by the sample covariance matrix. Yet the use of the sample covariance matrix for this transformation can be problematic since **1)** the complexity is $\mathcal{O}(p^3)$ and **2)** it is not applicable to the high dimensional (i.e. $n \ll p$) case since the sample covariance matrix is no longer full rank.
@@ -57,67 +58,64 @@ library(colorRamps)
 library(latex2exp)
 set.seed(2)
 
-Sigma = matrix(c(1, .9, .9, 2), ncol=2)
+Sigma <- matrix(c(1, .9, .9, 2), ncol = 2)
 
-Y = rmvnorm(200, c(0, 0), Sigma)
+Y <- rmvnorm(200, c(0, 0), Sigma)
 
-dcmp = eigen(cov(Y))
-U = whitening:::makePosDiag(dcmp$vectors)
-lambda = dcmp$values
+dcmp <- eigen(cov(Y))
+U <- whitening:::makePosDiag(dcmp$vectors)
+lambda <- dcmp$values
 
-lim = range(Y)
+lim <- range(Y)
 
-value = (Y %*% U)[,1]
+value <- (Y %*% U)[, 1]
 
-plot_data = function(Y, rotation, rank, lim){
+plot_data <- function(Y, rotation, rank, lim) {
+  dcmp <- eigen(cov(Y))
+  U <- whitening:::makePosDiag(dcmp$vectors)
+  lambda <- dcmp$values
 
-  dcmp = eigen(cov(Y))
-  U = whitening:::makePosDiag(dcmp$vectors)
-  lambda = dcmp$values
+  if (rotation == 1) {
+    X <- Y
 
-  if( rotation == 1 ){ 
-    X = Y
+    H <- with(eigen(cov(Y)), vectors %*% diag(values))
+  } else if (rotation == 2) {
+    X <- Y %*% U
 
-    H = with(eigen(cov(Y)), vectors %*% diag(values))
-  }else if( rotation == 2){
-    X =  Y %*% U
+    H <- with(eigen(cov(X)), vectors %*% diag(values))
+  } else if (rotation == 3) {
+    X <- Y %*% U %*% diag(1 / sqrt(lambda))
 
-    H = with(eigen(cov(X)), vectors %*% diag(values))
-  
-  }else if( rotation == 3){
-    X = Y %*% U %*% diag(1/sqrt(lambda))
+    H <- matrix(c(1, 0, 0, 1), ncol = 2)
+  } else if (rotation == 4) {
+    X <- Y %*% U %*% diag(1 / sqrt(lambda)) %*% t(U)
 
-    H = matrix(c(1,0,0,1), ncol=2)
-
-  }else if( rotation == 4){
-
-    X = Y %*% U %*% diag(1/sqrt(lambda)) %*% t(U)
-
-    H = with(eigen(cov(Y)), vectors)
+    H <- with(eigen(cov(Y)), vectors)
   }
 
-  df = data.frame(X, rank=scale(rank))
+  df <- data.frame(X, rank = scale(rank))
 
-  H = whitening:::makePosDiag(H)
+  H <- whitening:::makePosDiag(H)
 
-  ggplot(df, aes(X1, X2, color=rank)) + 
-    geom_segment(x=0, y=-lim[2], xend=0, yend=lim[2], color="black") +
-    geom_segment(x=-lim[2], y=0, xend=lim[2], yend=0, color="black") +
-    geom_point(size=.8) + theme_void() + 
-    scale_color_gradient2(low="blue2", mid="grey60", high="red2") + 
-    theme(aspect.ratio=1,legend.position="none", plot.title = element_text(hjust = 0.5)) + 
-    xlim(lim) + 
-    ylim(lim) + 
-    geom_segment(x=0, y=0, xend=H[1,1], yend=H[2,1], color="#2fbf2e", arrow = arrow(length = unit(0.03, "npc")), size=1) + 
-    geom_segment(x=0, y=0, xend=H[1,2], yend=H[2,2], color="#2fbf2e", arrow = arrow(length = unit(0.03, "npc")), size=1)
+  ggplot(df, aes(X1, X2, color = rank)) +
+    geom_segment(x = 0, y = -lim[2], xend = 0, yend = lim[2], color = "black") +
+    geom_segment(x = -lim[2], y = 0, xend = lim[2], yend = 0, color = "black") +
+    geom_point(size = .8) +
+    theme_void() +
+    scale_color_gradient2(low = "blue2", mid = "grey60", high = "red2") +
+    theme(aspect.ratio = 1, legend.position = "none", plot.title = element_text(hjust = 0.5)) +
+    xlim(lim) +
+    ylim(lim) +
+    geom_segment(x = 0, y = 0, xend = H[1, 1], yend = H[2, 1], color = "#2fbf2e", arrow = arrow(length = unit(0.03, "npc")), size = 1) +
+    geom_segment(x = 0, y = 0, xend = H[1, 2], yend = H[2, 2], color = "#2fbf2e", arrow = arrow(length = unit(0.03, "npc")), size = 1)
 }
 
 
-fig1 = plot_data(Y, rotation = 1, rank(value), lim) + ggtitle(TeX('$Y$'))
-fig2 = plot_data( Y, rotation = 2, rank(value), lim) + ggtitle(TeX('$YV$'))
-fig3 = plot_data( Y, rotation = 3, rank(value), lim) + ggtitle(TeX('$YVD^{-1}$'))
-fig4 = plot_data(Y, rotation = 4, rank(value), lim) + ggtitle(TeX('$YVD^{-1}V^T$'))
-plot_grid(fig1, fig2, fig3, fig4, ncol=4, labels="AUTO")
+fig1 <- plot_data(Y, rotation = 1, rank(value), lim) + ggtitle(TeX("$Y$"))
+fig2 <- plot_data(Y, rotation = 2, rank(value), lim) + ggtitle(TeX("$YV$"))
+fig3 <- plot_data(Y, rotation = 3, rank(value), lim) + ggtitle(TeX("$YVD^{-1}$"))
+fig4 <- plot_data(Y, rotation = 4, rank(value), lim) + ggtitle(TeX("$YVD^{-1}V^T$"))
+plot_grid(fig1, fig2, fig3, fig4, ncol = 4, labels = "AUTO")
 ```
 
 # Basic usage
@@ -125,41 +123,41 @@ plot_grid(fig1, fig2, fig3, fig4, ncol=4, labels="AUTO")
 library(decorrelate)
 library(mvtnorm)
 
-n = 500 # number of samples
-p = 200 # number of features
+n <- 500 # number of samples
+p <- 200 # number of features
 
 # create correlation matrix
-Sigma = autocorr.mat(p, .9)
+Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
-rownames(Y) = paste0("sample_", 1:n)
-colnames(Y) = paste0("gene_", 1:p)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+rownames(Y) <- paste0("sample_", 1:n)
+colnames(Y) <- paste0("gene_", 1:p)
 
 # eclairs decomposition implements GIW-EB method
 # *E*stimate *c*ovariance/correlation with *l*ow *r*ank and *s*hrinkage
-ecl = eclairs(Y)
+ecl <- eclairs(Y)
 
 # decorrelate data using eclairs decomposition
-Y_whitened = decorrelate(Y, ecl)
+Y_whitened <- decorrelate(Y, ecl)
 
 # the same whitening can be performed with one command where
 # the eigen-value shrinkage is performed internally
-Y_whitened2 = whiten(Y)
+Y_whitened2 <- whiten(Y)
 ```
 
 Here plot A) the eigen-values of the covariance matrix before and after shrinkage. B) The correlation of the observed and C) whitened data.
 ```{r plots, fig.height=3.2, fig.width=9, cache=TRUE}
-par(mfrow=c(1,3))
+par(mfrow = c(1, 3))
 
 # plot shrinkage of eigen-values
-plot(ecl) 
+plot(ecl)
 
 # correlation between variables in observed data
-image(cor(Y), axes=FALSE, main="Correlation of observed data")
+image(cor(Y), axes = FALSE, main = "Correlation of observed data")
 
 # decorrelate data using eclairs decomposition
-image(cor(Y_whitened), axes=FALSE, main="Correlation of whitened data")
+image(cor(Y_whitened), axes = FALSE, main = "Correlation of whitened data")
 ```
 
 # Advanced usage
@@ -169,10 +167,10 @@ The `decorrelate` package has advanced features to examine details of the whiten
 While `eclairs()`, `decorrelate()`, and `whiten()` perform the probabilistic whitening transformation efficiently without directly computing the whitening matrix, `getWhiteningMatrix()` can directly compute the matrix.
 ```{r whitening}
 # compute whitening matrix from eclairs decomposition
-W = getWhiteningMatrix( ecl )
+W <- getWhiteningMatrix(ecl)
 
 # transform observed data using whitening matrix
-Z = tcrossprod(Y, W)
+Z <- tcrossprod(Y, W)
 
 # evalute difference between whitened computed 2 ways
 max(abs(Z - Y_whitened))
@@ -194,31 +192,31 @@ getCov(ecl)
 The form of the `eclairs()` decomposition can be used to efficiently sample from a multivariage normal distribution with specified covariance.
 ```{r multivariate}
 # draw from multivariate normal
-n = 1000
-mu = rep(0, ncol(Y))
+n <- 1000
+mu <- rep(0, ncol(Y))
 
 # using eclairs decomposition
-X.draw1 = rmvnorm_eclairs(n, mu, ecl)
+X.draw1 <- rmvnorm_eclairs(n, mu, ecl)
 ```
 
 ## Low-rank models
 A low rank `eclairs()` decomposition can be computed more efficiently when $k$ is small relative to $min(n,p)$.  Importantly, the emprical Bayes estimate of the shrinkage parameter $\lambda$ can still be computed accurately for sufficiently large $k$.  Note that the low rank method trades computational efficientcy for accuracy in the whitening transform.  
 ```{r example.2}
 # use low rank decomposition with 50 components
-ecl = eclairs(Y, k=60)
- 
+ecl <- eclairs(Y, k = 60)
+
 # decorrelate data using eclairs decomposition
-Y_whitened = decorrelate(Y, ecl)
+Y_whitened <- decorrelate(Y, ecl)
 ```
 
 ```{r plots2, fig.height=3.2, fig.width=9, echo=FALSE}
-par(mfrow=c(1,3))
+par(mfrow = c(1, 3))
 
 # plot shrinkage of eigen-values
-plot(ecl)  
+plot(ecl)
 
 # decorrelate data using eclairs decomposition
-image(cor(Y_whitened), axes=FALSE, main="Correlation of whitened data")
+image(cor(Y_whitened), axes = FALSE, main = "Correlation of whitened data")
 ```
 
 In this case, the low rank whitening produces transformed features that are approximately independent.  The approximation improves as the rank increases.
@@ -240,25 +238,25 @@ By default `eclairs()` computes the covariance between columns, but the correlat
 library(clusterGeneration)
 
 # generate covariance matrix, where the diagonals (i.e. variances) vary
-Sigma = genPositiveDefMat( p )$Sigma
+Sigma <- genPositiveDefMat(p)$Sigma
 
-Y = rmvnorm(n, rep(0, p), sigma=Sigma)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma)
 
 # examine variances of the first 5 variables
 apply(Y, 2, var)[1:5]
 
 # transform removes covariance between columns
 # so variance of transformed features are *approximately* equal
-ecl_cov = eclairs(Y, compute = "covariance")
-Z1 = decorrelate(Y, ecl_cov)
+ecl_cov <- eclairs(Y, compute = "covariance")
+Z1 <- decorrelate(Y, ecl_cov)
 
 # variance are *approximately* equal
 apply(Z1, 2, var)[1:5]
 
 # transform removes **correlation** between columns
 # but variables are not scaled
-ecl_cor = eclairs(Y, compute = "correlation")
-Z2 = decorrelate(Y, ecl_cor)
+ecl_cor <- eclairs(Y, compute = "correlation")
+Z2 <- decorrelate(Y, ecl_cor)
 
 # variances are not standardized
 apply(Z2, 2, var)[1:5]

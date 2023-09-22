@@ -22,22 +22,22 @@ Evaluate quadratic form \eqn{A^T \Sigma^{2*alpha} A}
 \examples{
 library(Rfast)
 set.seed(1)
-n = 800 # number of samples
-p = 200 # number of features
+n <- 800 # number of samples
+p <- 200 # number of features
 
 # create correlation matrix
-Sigma = autocorr.mat(p, .9)
+Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
 
 # eclairs decomposition
-ecl = eclairs(Y)
+ecl <- eclairs(Y)
 
 # return scalar
-quadForm( ecl, Y[1,])
+quadForm(ecl, Y[1, ])
 
 # return matrix
-quadForm( ecl, Y[1:2,])
+quadForm(ecl, Y[1:2, ])
 
 }

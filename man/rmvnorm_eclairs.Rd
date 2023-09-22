@@ -27,32 +27,32 @@ Draw from multivariate normal and t distributions using eclairs decomposition.  
 \examples{
 library(Rfast)
 set.seed(1)
-n = 800 # number of samples
-p = 200 # number of features
+n <- 800 # number of samples
+p <- 200 # number of features
 
 # create correlation matrix
-Sigma = autocorr.mat(p, .9)
+Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y = rmvnorm(n, rep(0, p), sigma=Sigma)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma)
 
 # perform eclairs decomposition
-ecl = eclairs(Y)
+ecl <- eclairs(Y)
 
 # draw from multivariate normal
-n = 100000
-mu = rep(0, ncol(Y))
+n <- 100000
+mu <- rep(0, ncol(Y))
 
 # using eclairs decomposition
-X.draw1 = rmvnorm_eclairs(n, mu, ecl)
+X.draw1 <- rmvnorm_eclairs(n, mu, ecl)
 
 # using full covariance matrix implied by eclairs model
-X.draw2 = rmvnorm(n, mu, getCov(ecl))
+X.draw2 <- rmvnorm(n, mu, getCov(ecl))
 
 # assess difference betweeen covariances from two methods
-range( cov(X.draw1) - cov(X.draw2))
+range(cov(X.draw1) - cov(X.draw2))
 
 # compare covariance to the covariance matrix used to simulated the data
-range( cov(X.draw1) - getCov(ecl))
+range(cov(X.draw1) - getCov(ecl))
 
 }

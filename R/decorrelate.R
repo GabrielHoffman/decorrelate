@@ -1,7 +1,5 @@
-# Gabriel Hoffman
-# March 4, 2021
-#
-# Linear time decorrelation projection using eclairs estimate of correlation 
+# Gabriel Hoffman March 4, 2021 Linear time decorrelation projection using
+# eclairs estimate of correlation
 
 
 #' Multiply by eclairs matrix
@@ -12,7 +10,7 @@
 #' @param U1 orthonormal matrix with k columns representing the low rank component
 #' @param dSq1 eigen values so that \eqn{U_1 diag(d_1^2) U_1^T} is the low rank component
 #' @param lambda shrinkage parameter for the convex combination.
-#' @param nu diagonal value of target matrix in shrinkage 
+#' @param nu diagonal value of target matrix in shrinkage
 #' @param alpha exponent to be evaluated
 #' @param transpose logical, (default FALSE) indicating if X should be transposed first
 
@@ -25,72 +23,70 @@
 #'
 #' @importFrom Matrix crossprod tcrossprod t
 #' @export
-mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha, transpose=FALSE){
+mult_eclairs <- function(X, U1, dSq1, lambda, nu, alpha, transpose = FALSE) {
+  v <- dSq1 * (1 - lambda) + lambda * nu
 
-	v = dSq1*(1-lambda) + lambda*nu
+  if (transpose) {
+    if (nrow(X) != nrow(U1)) {
+      stop(
+        "Incompatable dimensions:\nData matrix X has ", nrow(X), " columns, but low rank component has ",
+        nrow(U1), " rows"
+      )
+    }
 
-	if( transpose ){
+    # decorrelate rows
+    X_U1 <- crossprod(X, U1)
 
-		if( nrow(X) != nrow(U1) ){
-			stop("Incompatable dimensions:\nData matrix X has ", nrow(X), ' columns, but low rank component has ', nrow(U1), " rows")
-		}
+    # when lambda is zero, avoid computing the second part
+    part1 <- 0
+    if (lambda > 0) {
+      part1 <- ((X - tcrossprod(U1, X_U1)) * ((lambda * nu)^alpha))
+    }
 
-		# decorrelate rows
-		X_U1 = crossprod(X, U1)
+    result <- crossprod((v^alpha) * t(U1), t(X_U1)) + part1
+  } else {
+    if (ncol(X) != nrow(U1)) {
+      stop(
+        "Incompatable dimensions:\nData matrix X has ", ncol(X), " columns, but low rank component has ",
+        nrow(U1), " rows"
+      )
+    }
 
-		# when lambda is zero, avoid computing the second part
-		part1 = 0
-		if( lambda > 0){
-			part1 = ((X - tcrossprod(U1,X_U1) ) *((lambda*nu)^alpha))
-		}
+    # decorrelate columns
+    X_U1 <- X %*% U1
 
-		result = crossprod((v^alpha)* t(U1), t(X_U1)) + part1
-	}else{
+    # when lambda is zero, avoid computing the second part
+    part1 <- 0
+    if (lambda > 0) {
+      part1 <- (X - tcrossprod(X_U1, U1)) * ((lambda * nu)^alpha)
+    }
 
-		if( ncol(X) != nrow(U1) ){
-			stop("Incompatable dimensions:\nData matrix X has ", ncol(X), ' columns, but low rank component has ', nrow(U1), " rows")
-		}
-
-		# decorrelate columns
-		X_U1 = X %*% U1
-
-		# when lambda is zero, avoid computing the second part
-		part1 = 0
-		if( lambda > 0){
-			part1 = (X - tcrossprod(X_U1,U1) ) *((lambda*nu)^alpha)
-		}
-
- 		result = X_U1 %*% ((v^alpha) * t(U1)) + part1
-	}
-	result
+    result <- X_U1 %*% ((v^alpha) * t(U1)) + part1
+  }
+  result
 }
 
 # mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha, transpose=FALSE){
 
-# 	v = dSq1*(1-lambda) + lambda*nu
+# \tv = dSq1*(1-lambda) + lambda*nu
 
-# 	if( transpose ){
-# 		X = t(X)
-# 	}
+# \tif( transpose ){ \t\tX = t(X) \t}
 
-# 	if( ncol(X) != nrow(U1) ){
-# 		stop("Incompatable dimensions:\nData matrix X has ", ncol(X), ' columns, but low rank component has ', nrow(U1), " rows")
-# 	}
+# \tif( ncol(X) != nrow(U1) ){ \t\tstop('Incompatable dimensions:\nData matrix
+# X has ', ncol(X), ' columns, but low rank component has ', nrow(U1), ' rows')
+# \t}
 
-# 	X_U1 = X %*% U1
-#  	result = X_U1 %*% ((v^alpha) * t(U1)) + (X - tcrossprod(X_U1,U1) ) *((lambda*nu)^alpha)
+# \tX_U1 = X %*% U1 \tresult = X_U1 %*% ((v^alpha) * t(U1)) + (X -
+# tcrossprod(X_U1,U1) ) *((lambda*nu)^alpha)
 
-#  	if( transpose ){
-#  		result = t(result)
-#  	}
+# \tif( transpose ){ \t\tresult = t(result) \t}
 
-# 	result
-# }
+# \tresult }
 
-# I trued to make the last lime faster by avoiding transpose  
-#  by using eachrow() to scale each column.
-#  This is faster then sweep(), but the original code is faster
-# tcrossprod(X_U1, eachrow(U1, v^alpha, oper = "*")) + (X - tcrossprod(X_U1,U1) ) *(lambda^alpha)
+# I trued to make the last lime faster by avoiding transpose by using eachrow()
+# to scale each column.  This is faster then sweep(), but the original code is
+# faster tcrossprod(X_U1, eachrow(U1, v^alpha, oper = '*')) + (X -
+# tcrossprod(X_U1,U1) ) *(lambda^alpha)
 
 
 
@@ -101,14 +97,14 @@ mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha, transpose=FALSE){
 
 
 #' Decorrelation projection
-#' 
+#'
 #' Efficient decorrelation projection using \link{eclairs} decomposition
 #'
 #' @param X matrix to be transformed so *columns* are independent
 #' @param Sigma.eclairs estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
 #' @param lambda specify lambda and override value from \code{Sigma.eclairs}
 #' @param transpose logical, (default FALSE) indicating if X should be transposed first
-#' @param alpha default = -1/2.  Exponent of eigen-values 
+#' @param alpha default = -1/2.  Exponent of eigen-values
 #'
 #' @details
 #'' FIX NOTATION HERE: Given a vector \eqn{x ~ N(0, \Sigma)} where \eqn{\Sigma = U diag(d_1^2) U^T + diag(\sigma^2)}, transform x so that it has an identity covariance matrix.  \eqn{\Sigma^{-0.5}x} is such a projection (see Strimmer whitening).  When \eqn{\Sigma} is \eqn{p \times p}, computing this projection naively is \eqn{O(p^3)}.  Here we take advantage of the fact that \eqn{\Sigma} is the sum of a low rank decomposition, plus a scaled identity matrix
@@ -118,67 +114,54 @@ mult_eclairs = function(X, U1, dSq1, lambda, nu, alpha, transpose=FALSE){
 #' @examples
 #' library(Rfast)
 #' set.seed(1)
-#' n = 800 # number of samples
-#' p = 200 # number of features
-#' 
+#' n <- 800 # number of samples
+#' p <- 200 # number of features
+#'
 #' # create correlation matrix
-#' Sigma = autocorr.mat(p, .9)
-#' 
+#' Sigma <- autocorr.mat(p, .9)
+#'
 #' # draw data from correlation matrix Sigma
-#' Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
-#' 
+#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+#'
 #' # eclairs decomposition
-#' ecl = eclairs(Y)
+#' ecl <- eclairs(Y)
 #'
 #' # whitened Y
-#' Y.transform = decorrelate(Y, ecl)
+#' Y.transform <- decorrelate(Y, ecl)
 #'
 #' @export
-decorrelate = function(X, Sigma.eclairs, lambda, transpose = FALSE, alpha=-1/2){
+decorrelate <- function(X, Sigma.eclairs, lambda, transpose = FALSE, alpha = -1 / 2) {
+  stopifnot(is(Sigma.eclairs, "eclairs"))
 
-	stopifnot(is(Sigma.eclairs, "eclairs"))
+  # of not specified, use lambda from Sigma.eclairs
+  if (missing(lambda)) {
+    lambda <- Sigma.eclairs$lambda
+  }
 
-	# of not specified, use lambda from Sigma.eclairs
-	if( missing(lambda) ){
-		lambda = Sigma.eclairs$lambda
-	}
+  # check value of lambda
+  if (lambda < 0 || lambda > 1) {
+    stop("lambda must be in (0,1)")
+  }
 
-	# check value of lambda
-	if( lambda < 0 || lambda > 1){
-		stop("lambda must be in (0,1)")
-	}
+  toArray <- FALSE
 
-	toArray = FALSE
+  # handle 1D array
+  if (is.numeric(X) & !is.matrix(X)) {
+    toArray <- TRUE
+    transpose <- FALSE
+    X <- matrix(X, nrow = 1)
+  }
 
-	# handle 1D array
-	if( is.numeric(X) & ! is.matrix(X) ){
-		toArray = TRUE
-		transpose = FALSE
-		X = matrix(X, nrow=1)
-	}
+  # alpha = -1/2 gives the decorrelating projection (i.e. whitening)
+  X.decorr <- mult_eclairs(X, Sigma.eclairs$U, Sigma.eclairs$dSq, lambda,
+    nu = Sigma.eclairs$nu,
+    alpha = alpha, transpose = transpose
+  )
 
-	# alpha = -1/2 gives the decorrelating projection (i.e. whitening)
-	X.decorr = mult_eclairs(X, Sigma.eclairs$U, Sigma.eclairs$dSq, lambda, nu=Sigma.eclairs$nu, alpha = alpha, transpose=transpose)
+  # if input X, is array, convert it back to array
+  if (toArray) {
+    X.decorr <- c(X.decorr)
+  }
 
-	# if input X, is array, convert it back to array
-	if( toArray ){
-		X.decorr = c(X.decorr)
-	}
-
-	X.decorr
+  X.decorr
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

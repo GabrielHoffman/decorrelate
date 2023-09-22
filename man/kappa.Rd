@@ -17,19 +17,19 @@ Compute condition number of matrix from \code{eclairs} decomposition
 \examples{
 library(Rfast)
 set.seed(1)
-n = 800 # number of samples
-p = 200 # number of features
+n <- 800 # number of samples
+p <- 200 # number of features
 
 # create correlation matrix
-Sigma = autocorr.mat(p, .9)
+Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
-rownames(Y) = paste0("sample_", seq(n))
-colnames(Y) = paste0("gene_", seq(p))
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+rownames(Y) <- paste0("sample_", seq(n))
+colnames(Y) <- paste0("gene_", seq(p))
 
 # eclairs decomposition
-ecl = eclairs(Y, compute="correlation")
+ecl <- eclairs(Y, compute = "correlation")
 
 # compute condition number
 kappa(ecl)

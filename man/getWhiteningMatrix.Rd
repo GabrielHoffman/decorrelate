@@ -20,23 +20,23 @@ Get whitening matrix implied by \link{eclairs} decompostion
 \examples{
 library(Rfast)
 
-n = 2000
-p = 3
+n <- 2000
+p <- 3
 
-Y = matrnorm(n,p)*10
+Y <- matrnorm(n, p) * 10
 
 # decorrelate with implicit whitening matrix
 # give same result as explicity whitening matrix
-ecl <- eclairs(Y, compute="covariance" )
+ecl <- eclairs(Y, compute = "covariance")
 
 # get explicit whitening matrix
-W = getWhiteningMatrix( ecl )
+W <- getWhiteningMatrix(ecl)
 
 # apply explicit whitening matrix
-Z1 = tcrossprod(Y, W)
+Z1 <- tcrossprod(Y, W)
 
 # use implicit whitening matrix
-Z2 = decorrelate(Y, ecl)
+Z2 <- decorrelate(Y, ecl)
 
 range(Z1 - Z2)
 

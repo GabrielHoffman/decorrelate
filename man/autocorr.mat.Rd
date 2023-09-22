@@ -16,6 +16,6 @@ Create autocorrelation matrix
 }
 \examples{
 # Create 10x10 matrix with correlation between adjacent enties is 0.9
-autocorr.mat( 4, .9)
+autocorr.mat(4, .9)
 
 }

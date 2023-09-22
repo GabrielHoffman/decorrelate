@@ -65,31 +65,31 @@ Fit linear model on each feature after applying decorrelation projection to resp
 \examples{
 library(Rfast)
 set.seed(1)
-n = 800 # number of samples
-p = 200 # number of features
+n <- 800 # number of samples
+p <- 200 # number of features
 
 # create correlation matrix
-Sigma = autocorr.mat(p, .9)
+Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
 
 # eclairs decomposition
-ecl = eclairs(Y)
+ecl <- eclairs(Y)
 
 # simulate covariates
-data = data.frame(matrnorm(p,2))
-colnames(data) = paste0('v', 1:2)
+data <- data.frame(matrnorm(p, 2))
+colnames(data) <- paste0("v", 1:2)
 
 # simulate response
-y = rnorm(p)
+y <- rnorm(p)
 
 # Simulate 1000 features to test
-X = matrnorm(p, 1000)
-colnames(X) = paste0('set_', seq(ncol(X)))
+X <- matrnorm(p, 1000)
+colnames(X) <- paste0("set_", seq(ncol(X)))
 
 # Use linear model to test each feature stored as columns in X
-res = lm_each_eclairs(y ~ v1 + v2, data, X, ecl )
+res <- lm_each_eclairs(y ~ v1 + v2, data, X, ecl)
 
 head(res)
 
@@ -97,14 +97,14 @@ head(res)
 #------------------------------------
 
 # Apply function to transforme data
-f = function(x) log(x^2 + 0.001)
+f <- function(x) log(x^2 + 0.001)
 
 # evaluate covariance of transformed data
-ecl_transform = cov_transform(ecl, f, 100)
+ecl_transform <- cov_transform(ecl, f, 100)
 
 # Use linear model to test each feature stored as columns in X
 # in data transformed by f()
-res2 = lm_each_eclairs( f(y) ~ v1 + v2, data, X, ecl_transform )
+res2 <- lm_each_eclairs(f(y) ~ v1 + v2, data, X, ecl_transform)
 
 head(res)
 

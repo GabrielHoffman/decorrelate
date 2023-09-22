@@ -25,28 +25,28 @@ Reform the dataset from the eclairs decomposition, drop features, then recompute
 \examples{
 library(Rfast)
 set.seed(1)
-n = 800 # number of samples
-p = 200 # number of features
+n <- 800 # number of samples
+p <- 200 # number of features
 
 # create correlation matrix
-Sigma = autocorr.mat(p, .9)
+Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
-rownames(Y) = paste0("sample_", seq(n))
-colnames(Y) = paste0("gene_", seq(p))
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+rownames(Y) <- paste0("sample_", seq(n))
+colnames(Y) <- paste0("gene_", seq(p))
 
 # Correlation
 #------------
 
 # eclairs decomposition
-Sigma.eclairs = eclairs(Y, compute="correlation")
+Sigma.eclairs <- eclairs(Y, compute = "correlation")
 
 # features to drop
-drop = paste0("gene_",1:100)
+drop <- paste0("gene_", 1:100)
 
 # Compute SVD on subset of eclairs decomposition
-ecl1 = reform_decomp( Sigma.eclairs, drop=drop)
+ecl1 <- reform_decomp(Sigma.eclairs, drop = drop)
 
 ecl1
 

@@ -102,74 +102,74 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: Rcpp</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: RcppZiggurat</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">n</span> <span class="op">=</span> <span class="fl">800</span> <span class="co"># number of samples</span></span></span>
-<span class="r-in"><span><span class="va">p</span> <span class="op">=</span> <span class="fl">200</span> <span class="co"># number of features</span></span></span>
+<span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">800</span> <span class="co"># number of samples</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">200</span> <span class="co"># number of features</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># create correlation matrix</span></span></span>
-<span class="r-in"><span><span class="va">Sigma</span> <span class="op">=</span> <span class="fu"><a href="autocorr.mat.html">autocorr.mat</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">.9</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="autocorr.mat.html">autocorr.mat</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">.9</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># sample matrix from MVN with covariance Sigma</span></span></span>
-<span class="r-in"><span><span class="va">Y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma<span class="op">=</span><span class="va">Sigma</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># perform eclairs decomposition</span></span></span>
-<span class="r-in"><span><span class="va">ecl</span> <span class="op">=</span> <span class="fu"><a href="eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ecl</span> <span class="op">&lt;-</span> <span class="fu"><a href="eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Parametric boostrap to estimate covariance</span></span></span>
 <span class="r-in"><span><span class="co"># after transformation</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># transformation function</span></span></span>
-<span class="r-in"><span><span class="va">f</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="fl">1e-3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="fl">1e-3</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># number of bootstrap samples</span></span></span>
-<span class="r-in"><span><span class="va">n_boot</span> <span class="op">=</span> <span class="fl">50000</span></span></span>
+<span class="r-in"><span><span class="va">n_boot</span> <span class="op">&lt;-</span> <span class="fl">50000</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Evaluate eclairs decomposition on boostrap samples</span></span></span>
-<span class="r-in"><span><span class="va">ecl2</span> <span class="op">=</span> <span class="fu">cov_transform</span><span class="op">(</span> <span class="va">ecl</span>, f<span class="op">=</span><span class="va">f</span>, <span class="va">n_boot</span>, lambda <span class="op">=</span> <span class="fl">1e-4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ecl2</span> <span class="op">&lt;-</span> <span class="fu">cov_transform</span><span class="op">(</span><span class="va">ecl</span>, f <span class="op">=</span> <span class="va">f</span>, <span class="va">n_boot</span>, lambda <span class="op">=</span> <span class="fl">1e-4</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Get full covariance matrix from eclairs decomposition</span></span></span>
-<span class="r-in"><span><span class="va">C1</span> <span class="op">=</span> <span class="fu"><a href="getCov.html">getCov</a></span><span class="op">(</span><span class="va">ecl2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">C1</span> <span class="op">&lt;-</span> <span class="fu"><a href="getCov.html">getCov</a></span><span class="op">(</span><span class="va">ecl2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Parametric boostrap samples directly from full covariance matrix </span></span></span>
-<span class="r-in"><span><span class="va">X</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n_boot</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, <span class="fu"><a href="getCov.html">getCov</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Parametric boostrap samples directly from full covariance matrix</span></span></span>
+<span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n_boot</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, <span class="fu"><a href="getCov.html">getCov</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get covariance of transformed data</span></span></span>
-<span class="r-in"><span><span class="va">C2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">C2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Evaluate differences</span></span></span>
 <span class="r-in"><span><span class="co"># small differences are due to Monte Carlo error from boostrap sampling</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">C1</span><span class="op">-</span><span class="va">C2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">C1</span> <span class="op">-</span> <span class="va">C2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.1190848  0.1128373</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot entries from two covariance estimates</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>pty<span class="op">=</span><span class="st">"s"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">C1</span>, <span class="va">C2</span>, main<span class="op">=</span><span class="st">"Concordance between covariances"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, col<span class="op">=</span><span class="st">'red'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>pty <span class="op">=</span> <span class="st">"s"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">C1</span>, <span class="va">C2</span>, main <span class="op">=</span> <span class="st">"Concordance between covariances"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="cov_transform-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span> </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Save above but compute eclairs for correlation matrix</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Evaluate eclairs decomposition on boostrap samples</span></span></span>
-<span class="r-in"><span><span class="va">ecl2</span> <span class="op">=</span> <span class="fu">cov_transform</span><span class="op">(</span> <span class="va">ecl</span>, f<span class="op">=</span><span class="va">f</span>, <span class="va">n_boot</span>, compute<span class="op">=</span><span class="st">"correlation"</span>, lambda <span class="op">=</span> <span class="fl">1e-4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ecl2</span> <span class="op">&lt;-</span> <span class="fu">cov_transform</span><span class="op">(</span><span class="va">ecl</span>, f <span class="op">=</span> <span class="va">f</span>, <span class="va">n_boot</span>, compute <span class="op">=</span> <span class="st">"correlation"</span>, lambda <span class="op">=</span> <span class="fl">1e-4</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Get full covariance matrix from eclairs decomposition</span></span></span>
-<span class="r-in"><span><span class="va">C1</span> <span class="op">=</span> <span class="fu"><a href="getCov.html">getCor</a></span><span class="op">(</span><span class="va">ecl2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">C1</span> <span class="op">&lt;-</span> <span class="fu"><a href="getCov.html">getCor</a></span><span class="op">(</span><span class="va">ecl2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Parametric boostrap samples directly from full covariance matrix </span></span></span>
-<span class="r-in"><span><span class="va">X</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n_boot</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, <span class="fu"><a href="getCov.html">getCov</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Parametric boostrap samples directly from full covariance matrix</span></span></span>
+<span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n_boot</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, <span class="fu"><a href="getCov.html">getCov</a></span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get correlation of transformed data</span></span></span>
-<span class="r-in"><span><span class="va">C2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">C2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Evaluate differences</span></span></span>
 <span class="r-in"><span><span class="co"># small differences are due to Monte Carlo error from boostrap sampling</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">C1</span><span class="op">-</span><span class="va">C2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">C1</span> <span class="op">-</span> <span class="va">C2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.02578170  0.02425485</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot entries from two correlation estimates</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>pty<span class="op">=</span><span class="st">"s"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">C1</span>, <span class="va">C2</span>, main<span class="op">=</span><span class="st">"Correlation between covariances"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, col<span class="op">=</span><span class="st">'red'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>pty <span class="op">=</span> <span class="st">"s"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">C1</span>, <span class="va">C2</span>, main <span class="op">=</span> <span class="st">"Correlation between covariances"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="cov_transform-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

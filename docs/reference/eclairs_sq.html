@@ -58,8 +58,7 @@
 <span>  <span class="va">Sigma.eclairs</span>,</span>
 <span>  rank1 <span class="op">=</span> <span class="va">Sigma.eclairs</span><span class="op">$</span><span class="va">k</span>,</span>
 <span>  rank2 <span class="op">=</span> <span class="cn">Inf</span>,</span>
-<span>  varianceFraction <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  warmStart <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  varianceFraction <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -91,7 +90,7 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Consider a data matrix X_N x P of P features and N samples where N &lt;&lt; P. Let the columns of X be scaled so that C_P x P = XX^T.  C is often too big to compute directly since it is O(P^2) and O(P^3) to invert.  But we can compute the SVD of X in O(PN^2).
 The goal is to compute the SVD of the matrix C^2, given only the SVD of C in less than O(P^2 time).  Here we compute this SVD of C^2 in O(PN^4) time, which is tractible for small N.
-Moreover, if we use an SVD X = UDV^T with of rank R, we can approximate the SVD of C^2 in O(PR^4) using only D and V  
+Moreover, if we use an SVD X = UDV^T with of rank R, we can approximate the SVD of C^2 in O(PR^4) using only D and V
 In practice, this can be reduced to O(P (choose(R,2) + R)^2)</p>
     </div>
 
@@ -100,23 +99,23 @@ In practice, this can be reduced to O(P (choose(R,2) + R)^2)</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Compute correlations directly and using eclairs decomp</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">n</span> <span class="op">=</span> <span class="fl">600</span> <span class="co"># number of samples</span></span></span>
-<span class="r-in"><span><span class="va">p</span> <span class="op">=</span> <span class="fl">100</span> <span class="co"># number of features</span></span></span>
+<span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">600</span> <span class="co"># number of samples</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">100</span> <span class="co"># number of features</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># create correlation matrix</span></span></span>
-<span class="r-in"><span><span class="va">Sigma</span> <span class="op">=</span> <span class="fu"><a href="autocorr.mat.html">autocorr.mat</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">.9</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="autocorr.mat.html">autocorr.mat</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">.9</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># draw data from correlation matrix Sigma</span></span></span>
-<span class="r-in"><span><span class="va">Y</span> <span class="op">=</span> <span class="fu">Rfast</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma<span class="op">=</span><span class="va">Sigma</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"sample_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"gene_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu">Rfast</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"sample_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"gene_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># correlation computed directly</span></span></span>
-<span class="r-in"><span><span class="va">C</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># correlation from eclairs decomposition</span></span></span>
-<span class="r-in"><span><span class="va">ecl</span> <span class="op">=</span> <span class="fu"><a href="eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span>, compute<span class="op">=</span><span class="st">"cor"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">C.eclairs</span> <span class="op">=</span> <span class="fu"><a href="getCov.html">getCor</a></span><span class="op">(</span><span class="va">ecl</span>, lambda<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ecl</span> <span class="op">&lt;-</span> <span class="fu"><a href="eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span>, compute <span class="op">=</span> <span class="st">"cor"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">C.eclairs</span> <span class="op">&lt;-</span> <span class="fu"><a href="getCov.html">getCor</a></span><span class="op">(</span><span class="va">ecl</span>, lambda <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">C</span>, <span class="va">C.eclairs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
@@ -125,11 +124,11 @@ In practice, this can be reduced to O(P (choose(R,2) + R)^2)</p>
 <span class="r-in"><span><span class="co">#-------------------</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># exact quadratic way</span></span></span>
-<span class="r-in"><span><span class="va">C</span> <span class="op">=</span> <span class="fl">2</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span> </span></span>
+<span class="r-in"><span><span class="va">C</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># faster low rank</span></span></span>
-<span class="r-in"><span><span class="va">ecl2</span> <span class="op">=</span> <span class="fu">eclairs_sq</span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">C.eclairs</span> <span class="op">=</span> <span class="fl">2</span><span class="op">*</span><span class="fu"><a href="getCov.html">getCor</a></span><span class="op">(</span><span class="va">ecl2</span>, lambda<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ecl2</span> <span class="op">&lt;-</span> <span class="fu">eclairs_sq</span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">C.eclairs</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="getCov.html">getCor</a></span><span class="op">(</span><span class="va">ecl2</span>, lambda <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">C.eclairs</span>, <span class="va">C</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>

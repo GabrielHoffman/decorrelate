@@ -40,33 +40,33 @@ Summarize correlation matrix as a scalar scalar value, given its SVD and shrinka
 \examples{
 library(Rfast)
 set.seed(1)
-n = 200 # number of samples
-p = 800 # number of features
+n <- 200 # number of samples
+p <- 800 # number of features
 
 # create correlation matrix
-Sigma = matrix(.2, p, p)
-diag(Sigma) = 1
+Sigma <- matrix(.2, p, p)
+diag(Sigma) <- 1
 
 # draw data from correlation matrix Sigma
-Y = rmvnorm(n, rep(0, p), sigma=Sigma)
-rownames(Y) = paste0("sample_", seq(n))
-colnames(Y) = paste0("gene_", seq(p))
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma)
+rownames(Y) <- paste0("sample_", seq(n))
+colnames(Y) <- paste0("gene_", seq(p))
 
 # eclairs decomposition
-Sigma.eclairs = eclairs(Y, compute="cor")
+Sigma.eclairs <- eclairs(Y, compute = "cor")
 
 # Average correlation value
-averageCorr( Sigma.eclairs)
+averageCorr(Sigma.eclairs)
 
 # Average squared correlation value
-averageCorrSq( Sigma.eclairs )
+averageCorrSq(Sigma.eclairs)
 
 # Sum elements in inverse correlation matrix
 # Gives the effective number of independent features
-sumInverseCorr( Sigma.eclairs )
+sumInverseCorr(Sigma.eclairs)
 
 # Effective variance
-effVariance( Sigma.eclairs )
+effVariance(Sigma.eclairs)
 
 }
 \references{

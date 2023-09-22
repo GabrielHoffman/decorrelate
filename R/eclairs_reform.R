@@ -1,108 +1,107 @@
-# Gabriel Hoffman
-# April 12, 2021
-#
-# Recompute eclairs after reforming original data, and droppping features
+# Gabriel Hoffman April 12, 2021 Recompute eclairs after reforming original
+# data, and droppping features
 
 #' Recompute eclairs after dropping features
 #'
 #' Recompute eclairs after dropping features
 #'
 #' @param Sigma.eclairs covariance/correlation matrix as an \link{eclairs} object
-#' @param k the rank of the low rank component  
-#' @param drop array of variable names to drop. 
+#' @param k the rank of the low rank component
+#' @param drop array of variable names to drop.
 #'
-#' @details Reform the dataset from the eclairs decomposition, drop features, then recompute the eclairs decomposition.  If the original SVD/eigen was truncated, then the reconstruction of the original data will be approximate.  Note that the target shrinkage matrix is the same as in \code{Sigma.eclairs}, so \eqn{\nu} is not recomputed from the retained features. 
+#' @details Reform the dataset from the eclairs decomposition, drop features, then recompute the eclairs decomposition.  If the original SVD/eigen was truncated, then the reconstruction of the original data will be approximate.  Note that the target shrinkage matrix is the same as in \code{Sigma.eclairs}, so \eqn{\nu} is not recomputed from the retained features.
 #'
 #' @return \link{eclairs} decomposition for a subset of features
 #'
 #' @examples
 #' library(Rfast)
 #' set.seed(1)
-#' n = 800 # number of samples
-#' p = 200 # number of features
-#' 
+#' n <- 800 # number of samples
+#' p <- 200 # number of features
+#'
 #' # create correlation matrix
-#' Sigma = autocorr.mat(p, .9)
-#' 
+#' Sigma <- autocorr.mat(p, .9)
+#'
 #' # draw data from correlation matrix Sigma
-#' Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
-#' rownames(Y) = paste0("sample_", seq(n))
-#' colnames(Y) = paste0("gene_", seq(p))
-#' 
+#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+#' rownames(Y) <- paste0("sample_", seq(n))
+#' colnames(Y) <- paste0("gene_", seq(p))
+#'
 #' # Correlation
 #' #------------
-#' 
+#'
 #' # eclairs decomposition
-#' Sigma.eclairs = eclairs(Y, compute="correlation")
-#' 
+#' Sigma.eclairs <- eclairs(Y, compute = "correlation")
+#'
 #' # features to drop
-#' drop = paste0("gene_",1:100)
-#' 
+#' drop <- paste0("gene_", 1:100)
+#'
 #' # Compute SVD on subset of eclairs decomposition
-#' ecl1 = reform_decomp( Sigma.eclairs, drop=drop)
-#' 
+#' ecl1 <- reform_decomp(Sigma.eclairs, drop = drop)
+#'
 #' ecl1
-#' 
+#'
 #' @importFrom utils head
 #' @export
-reform_decomp = function(Sigma.eclairs, k = Sigma.eclairs$k, drop=NULL){
+reform_decomp <- function(Sigma.eclairs, k = Sigma.eclairs$k, drop = NULL) {
+  stopifnot(is(Sigma.eclairs, "eclairs"))
 
-	stopifnot(is(Sigma.eclairs, "eclairs"))
+  if (is.null(drop) | length(drop) == 0) {
+    warning("No variables are dropped.  Returning original eclairs")
+    return(Sigma.eclairs)
+  }
 
-	if( is.null(drop) | length(drop) == 0){
-		warning("No variables are dropped.  Returning original eclairs")
-		return(Sigma.eclairs)
-	}
+  if (!(Sigma.eclairs$method %in% c("svd", "eigen"))) {
+    stop("method must be 'svd' or 'eigen'")
+  }
 
-	if( !(Sigma.eclairs$method %in% c("svd", "eigen")) ){
-		stop("method must be 'svd' or 'eigen'")
-	}
+  # check if there are entries in drop that are not in Sigma.eclairs
+  problematic <- which(!(drop %in% Sigma.eclairs$colnames))
 
-	# check if there are entries in drop that are not in Sigma.eclairs
-	problematic = which(!(drop %in% Sigma.eclairs$colnames))
+  # if yes, throw warning
+  if (length(problematic) > 0) {
+    warning(length(problematic), " entries in drop are not in Sigma.eclairs.\nThe first few entries not found are: ",
+      paste0("'", paste(head(drop[problematic], 3), collapse = "', '"), "'"),
+      immediate. = TRUE
+    )
+  }
 
-	# if yes, throw warning
-	if( length(problematic) > 0){
-		warning(length(problematic), ' entries in drop are not in Sigma.eclairs.\nThe first few entries not found are: ', paste0("'", paste(head(drop[problematic], 3), collapse="', '"), "'"), immediate.=TRUE)
-	}
+  # keep features that are not in drop
+  keep <- which(!Sigma.eclairs$colnames %in% drop)
 
-	# keep features that are not in drop
-	keep = which(!Sigma.eclairs$colnames %in% drop)
+  V <- dSq <- U <- NULL # pass R CMD BiocCheck
 
-	V = dSq = U = NULL # pass R CMD BiocCheck
+  n <- Sigma.eclairs$n
+  p <- length(keep)
 
-	n = Sigma.eclairs$n
-	p = length(keep)
+  # k cannot exceed n or p
+  k <- min(c(k, p, n))
 
-	# k cannot exceed n or p
-	k = min(c(k, p, n))
+  # reconstruct original dataset from SVD
+  if (Sigma.eclairs$method == "svd") {
+    X_reconstruct <- with(Sigma.eclairs, V %*% (sqrt(dSq) * t(U)))
 
-	# reconstruct original dataset from SVD
-	if( Sigma.eclairs$method == "svd" ){
+    ecl <- eclairs(X_reconstruct[, keep, drop = FALSE],
+      k = k, lambda = Sigma.eclairs$lambda,
+      warmStart = list(U = Sigma.eclairs$U[keep, seq_len(k), drop = FALSE])
+    )
+  } else {
+    # if( Sigma.eclairs$method == 'eigen' ) Reconstruct original dataset
+    # from eigen decomposition
 
-		X_reconstruct = with(Sigma.eclairs, V %*% (sqrt(dSq) * t(U)))
+    C_reconstruct <- with(Sigma.eclairs, U %*% (dSq * t(U)))
 
-		ecl = eclairs( 	X_reconstruct[, keep,drop=FALSE], 
-						k = k, 
-						lambda = Sigma.eclairs$lambda,
-						warmStart = list(U = Sigma.eclairs$U[keep,seq_len(k),drop=FALSE]))
+    ecl <- eclairs_corMat(C_reconstruct[keep, keep, drop = FALSE],
+      n = n, k = k,
+      lambda = Sigma.eclairs$lambda, warmStart = list(U = Sigma.eclairs$U[keep,
+        seq_len(k),
+        drop = FALSE
+      ])
+    )
+  }
 
-	}else{
-		# if( Sigma.eclairs$method == "eigen" )
-		# Reconstruct original dataset from eigen decomposition
+  ecl$nu <- Sigma.eclairs$nu
+  ecl$call <- match.call()
 
-		C_reconstruct = with(Sigma.eclairs, U %*% (dSq * t(U)))
-
-		ecl = eclairs_corMat( 	C_reconstruct[keep, keep,drop=FALSE],
-						n = n, 
-						k = k, 
-						lambda = Sigma.eclairs$lambda,
-						warmStart = list(U = Sigma.eclairs$U[keep,seq_len(k),drop=FALSE]))
-	}
-
-	ecl$nu 	= Sigma.eclairs$nu
-	ecl$call = match.call()
-
-	ecl
+  ecl
 }
-

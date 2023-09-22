@@ -35,70 +35,70 @@ When the transformation is linear, these covariance matrices are the same.
 \examples{
 library(Rfast)
 set.seed(1)
-n = 800 # number of samples
-p = 200 # number of features
+n <- 800 # number of samples
+p <- 200 # number of features
 
 # create correlation matrix
-Sigma = autocorr.mat(p, .9)
+Sigma <- autocorr.mat(p, .9)
 
 # sample matrix from MVN with covariance Sigma
-Y = rmvnorm(n, rep(0, p), sigma=Sigma)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma)
 
 # perform eclairs decomposition
-ecl = eclairs(Y)
+ecl <- eclairs(Y)
 
 # Parametric boostrap to estimate covariance
 # after transformation
 
 # transformation function
-f = function(x) log(x^2 + 1e-3)
+f <- function(x) log(x^2 + 1e-3)
 
 # number of bootstrap samples
-n_boot = 50000
+n_boot <- 50000
 
 # Evaluate eclairs decomposition on boostrap samples
-ecl2 = cov_transform( ecl, f=f, n_boot, lambda = 1e-4)
+ecl2 <- cov_transform(ecl, f = f, n_boot, lambda = 1e-4)
 
 # Get full covariance matrix from eclairs decomposition
-C1 = getCov(ecl2)
+C1 <- getCov(ecl2)
 
-# Parametric boostrap samples directly from full covariance matrix 
-X = rmvnorm(n_boot, rep(0, p), getCov(ecl))
+# Parametric boostrap samples directly from full covariance matrix
+X <- rmvnorm(n_boot, rep(0, p), getCov(ecl))
 
 # get covariance of transformed data
-C2 = cov(f(X))
+C2 <- cov(f(X))
 
 # Evaluate differences
 # small differences are due to Monte Carlo error from boostrap sampling
-range(C1-C2)
+range(C1 - C2)
 
 # Plot entries from two covariance estimates
-par(pty="s")
-plot(C1, C2, main="Concordance between covariances")
-abline(0, 1, col='red')
+par(pty = "s")
+plot(C1, C2, main = "Concordance between covariances")
+abline(0, 1, col = "red")
 
- 
+
 # Save above but compute eclairs for correlation matrix
 
 # Evaluate eclairs decomposition on boostrap samples
-ecl2 = cov_transform( ecl, f=f, n_boot, compute="correlation", lambda = 1e-4)
+ecl2 <- cov_transform(ecl, f = f, n_boot, compute = "correlation", lambda = 1e-4)
 
 # Get full covariance matrix from eclairs decomposition
-C1 = getCor(ecl2)
+C1 <- getCor(ecl2)
 
-# Parametric boostrap samples directly from full covariance matrix 
-X = rmvnorm(n_boot, rep(0, p), getCov(ecl))
+# Parametric boostrap samples directly from full covariance matrix
+X <- rmvnorm(n_boot, rep(0, p), getCov(ecl))
 
 # get correlation of transformed data
-C2 = cor(f(X))
+C2 <- cor(f(X))
 
 # Evaluate differences
 # small differences are due to Monte Carlo error from boostrap sampling
-range(C1-C2)
+range(C1 - C2)
 
 # Plot entries from two correlation estimates
-par(pty="s")
-plot(C1, C2, main="Correlation between covariances")
-abline(0, 1, col='red')
+par(pty = "s")
+plot(C1, C2, main = "Correlation between covariances")
+abline(0, 1, col = "red")
 
 }
