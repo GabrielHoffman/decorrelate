@@ -1,4 +1,10 @@
 
+# decorrelate 0.0.18
+* Sept 18, 2023
+* add `averageCorr()`, `averageCorrSq()` and `sumInverseCorr()`
+ * add tests for these functions
+* add `alpha` parameter to `quadForm()`
+
 # decorrelate 0.0.17
 * add `n.samples` argument to \code{eclairs()}
 

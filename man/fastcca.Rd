@@ -23,7 +23,7 @@ Fast Canonical correlation analysis that is scalable to high dimensional data.  
 \details{
 Results from standard CCA are based on the SVD of \eqn{\Sigma_{xx}^{-\frac{1}{2}} \Sigma_{xy} \Sigma_{yy}^{-\frac{1}{2}}}.
 
-Uses \code{eclairs()} and empirical Bayes covariance regularization, and applies speed up of RCCA (Tuzhilina, et al, 2020) to perform CCA on n PCs and instead of p features.  Memory usage is \eqn{\mathcal{O}(np)} instead of \eqn{\mathcal{O}(p^2)}.  Computation is \eqn{\mathcal{O}(n^2p)} instead of \eqn{\mathcal{O}(p^3)} or \eqn{\mathcal{O}(np^2)}
+Uses \code{eclairs()} and empirical Bayes covariance regularization, and applies speed up of RCCA \insertCite{tuzhilina2020canonical;textual}{decorrelate} to perform CCA on n PCs and instead of p features.  Memory usage is \eqn{\mathcal{O}(np)} instead of \eqn{\mathcal{O}(p^2)}.  Computation is \eqn{\mathcal{O}(n^2p)} instead of \eqn{\mathcal{O}(p^3)} or \eqn{\mathcal{O}(np^2)}
 }
 \examples{
 pop <- LifeCycleSavings[, 2:3]
@@ -32,7 +32,5 @@ fastcca(pop, oec)
 
 }
 \references{
-{
-  \insertRef{tuzhilina2020canonical}{decorrelate}
-}
+\insertAllCited{}
 }

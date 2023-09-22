@@ -61,12 +61,10 @@ setMethod("print", 'fastcca',
 #' @details
 #' Results from standard CCA are based on the SVD of \eqn{\Sigma_{xx}^{-\frac{1}{2}} \Sigma_{xy} \Sigma_{yy}^{-\frac{1}{2}}}.
 #'
-#' Uses \code{eclairs()} and empirical Bayes covariance regularization, and applies speed up of RCCA (Tuzhilina, et al, 2020) to perform CCA on n PCs and instead of p features.  Memory usage is \eqn{\mathcal{O}(np)} instead of \eqn{\mathcal{O}(p^2)}.  Computation is \eqn{\mathcal{O}(n^2p)} instead of \eqn{\mathcal{O}(p^3)} or \eqn{\mathcal{O}(np^2)}
+#' Uses \code{eclairs()} and empirical Bayes covariance regularization, and applies speed up of RCCA \insertCite{tuzhilina2020canonical;textual}{decorrelate} to perform CCA on n PCs and instead of p features.  Memory usage is \eqn{\mathcal{O}(np)} instead of \eqn{\mathcal{O}(p^2)}.  Computation is \eqn{\mathcal{O}(n^2p)} instead of \eqn{\mathcal{O}(p^3)} or \eqn{\mathcal{O}(np^2)}
 #Computation is n^2p instead of p^3 of np^2
 #'
-#' @references{
-#'   \insertRef{tuzhilina2020canonical}{decorrelate}
-#' }
+#' @references \insertAllCited{}
 #' 
 #' @examples
 #' pop <- LifeCycleSavings[, 2:3]
@@ -152,8 +150,8 @@ fastcca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL
 	y.vars = Y.inv.tr$vars[,seq_len(n.comp),drop=FALSE]
 	rownames(y.vars) = rownames(Y)
 
-    rho = diag(cor(X.inv.tr$vars, Y.inv.tr$vars))[1:n.comp]
-    names(rho) = paste("can.comp", 1:n.comp, sep = "")
+    rho = diag(cor(X.inv.tr$vars, Y.inv.tr$vars))[seq(n.comp)]
+    names(rho) = paste("can.comp", seq(n.comp), sep = "")
 
     if(k < min( dim(X), dim(Y)) ){
 		idx = seq(1, k)
@@ -333,80 +331,4 @@ geigen2 = function(Amat, Bmat, Cmat, k){
     return(geigenlist)
 }
 
-
-
-# setMethod("t", 'eclairs',
-# function(x){
-# 	ecl.t = x
-
-# 	ecl.t$U = x$V
-# 	ecl.t$V = x$U
-
-# 	ecl.t$n = x$p
-# 	ecl.t$p = x$n
-
-# 	ecl.t$rownames = x$colnames
-# 	ecl.t$colnames = x$rownames
-
-# 	ecl.t
-# })
-
-
-
-# }else{
-
-# 		# full decomposition
-# 		S = t(solve(chol(X.tr$cor))) %*% cov(X.tr$mat,Y.tr$mat) %*% solve(chol(Y.tr$cor))
-# 		S[1:3, 1:3]
-
-
-# 		# n = nrow(X.tr$mat)
-# 		# C = t(solve(chol(X.tr$cor))) %*%(crossprod(X.tr$mat,Y.tr$mat)/(n-1)) %*% solve(chol(Y.tr$cor))
-# 		# C[1:4, 1:4]
-
-# 		# a = X.tr$mat %*% solve(chol(X.tr$cor))
-# 		# b = Y.tr$mat %*% solve(chol(Y.tr$cor))
-
-# 		# S = crossprod(a,b) / (n-1)
-
-# 		# dcmp = svd(S)
-# 		# dcmp$d[1:4]
-
-# 		# S[1:3, 1:3]
-
-# 		# This will allow low rank approximation using irlba instead of SVD.
-
-# 		n = nrow(X.tr$mat)
-# 		X1 = decorrelate(X.tr$mat, t(X.tr$Sigma.eclairs), transpose=TRUE)
-# 		Y1 = decorrelate(Y.tr$mat, t(Y.tr$Sigma.eclairs), transpose=TRUE)
-
-# 		S = crossprod(X1,Y1)  / (n-1)
-# 		S[1:3, 1:3]
-
-# 		dcmp = svd(S)
-# 		dcmp$d[1:4]
-
-# 		k_svd = 20
-
-# 		values <- dcmp$d
-# 	    Lmat <- decorrelate(dcmp$u[,seq_len(k_svd)], t(X.tr$Sigma.eclairs), transpose=TRUE)
-# 	    Mmat <- decorrelate(dcmp$v[,seq_len(k_svd)], t(Y.tr$Sigma.eclairs), transpose=TRUE)
-
-# 	    sol = list(values = dcmp$d, Lmat = Lmat, Mmat = Mmat)
-# 	    names(sol) = c("rho", "alpha", "beta")
-# 	 }
-
-
-    # sol$alpha[1:3, 1:3]
-    # Lmat[1:3, 1:3]
-
-    # sol$beta[1:3, 1:3]
-    # Mmat[1:3, 1:3]
-
-    # diag(can(sol$Lmat, Lmat)$cor)
-    # diag(cor(sol$Mmat, Mmat))
-
-
-    # A = solve(chol(X.tr$cor)) %*% dcmp$u
-    # A[1:3, 1:3]
 

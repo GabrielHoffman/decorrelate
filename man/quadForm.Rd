@@ -4,18 +4,20 @@
 \alias{quadForm}
 \title{Evaluate quadratic form}
 \usage{
-quadForm(Sigma.eclairs, A)
+quadForm(Sigma.eclairs, A, alpha = -1/2)
 }
 \arguments{
 \item{Sigma.eclairs}{estimate of covariance/correlation matrix from \code{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
 \item{A}{matrix}
+
+\item{alpha}{default = -1/2.  Exponent of eigen-values}
 }
 \description{
 Evaluate quadratic form
 }
 \details{
-Evaluate quadratic form \eqn{A^T \Sigma^{-1} A}
+Evaluate quadratic form \eqn{A^T \Sigma^{2*alpha} A}
 }
 \examples{
 library(Rfast)

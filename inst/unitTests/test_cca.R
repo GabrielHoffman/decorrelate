@@ -176,7 +176,7 @@ test_fastcca = function(){
 
 	res = fastcca(X, Y, lambda.x=0, lambda.y=0)
 
-	res2 = cca(X, Y, lambda.x=0, lambda.y=0)
+	res2 = decorrelate::cca(X, Y, lambda.x=0, lambda.y=0)
 
 	checkEqualsNumeric(res$rho.mod, res2$rho.mod)
 

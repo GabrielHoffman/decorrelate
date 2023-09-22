@@ -34,8 +34,8 @@
 #' 
 #' # draw data from correlation matrix Sigma
 #' Y = Rfast::rmvnorm(n, rep(0, p), sigma=Sigma)
-#' rownames(Y) = paste0("sample_", 1:n)
-#' colnames(Y) = paste0("gene_", 1:p)
+#' rownames(Y) = paste0("sample_", seq(n))
+#' colnames(Y) = paste0("gene_", seq(p))
 #' 
 #' # correlation computed directly
 #' C = cor(Y)
@@ -174,75 +174,6 @@ eclairs_sq = function(Sigma.eclairs, rank1 = Sigma.eclairs$k, rank2=Inf, varianc
 	new("eclairs",	ecl)
 }
 
-
-
-
-
-# #' eclairs decomposition for cov/cor of transformed data
-# #' 
-# #' Estimate eclairs for cor/cov between transformed variables, given the SVD of the correlation matrix between original variables.  Uses parametric bootstrap
-# #'
-# #' @param decomp spectralDecomp 
-# #' @param mu mean of each feature
-# #' @param fxn function specifying transformation of original variables
-# #' @param n_boot number of parametric bootstrap samples
-# #' @param maxRank rank of SVD used to summarize correlation
-# #' @param seed seed for parametric bootstrap sampling
-# #'
-# #' @return spectralDecomp object
-# #'
-# #' @importFrom Rfast matrnorm
-# #' @importFrom RcppZiggurat zsetseed
-# #' @importFrom irlba irlba
-# #'
-# eclairs_fxn = function( ecl, mu, fxn = identity, n_boot = 1000, maxRank=Inf, seed=1 ){
-
-# 	if( ! is(decomp, 'spectralDecomp') ){
-# 		stop("decomp must be of class spectralDecomp")
-# 	}
-# 	if( missing(mu) ){
-# 		mu = 0
-# 	}
-
-# 	# Use SVD of covariance matrix to create multivariate normal samples
-# 	A = sweep(decomp@vectors, 2, decomp@evalues^.5, FUN='*')
-
-# 	p = nrow(decomp@vectors)
-
-# 	# set seed for matrnorm
-# 	zsetseed(seed)
-
-# 	memUsage = p * n_boot * 8 / 2^20
-
-# 	if( memUsage > 3000){
-# 		message("Parametric bootstrap using at least ", 	
-# 			format(memUsage, digits=0), " Mb memory")
-# 	}
-
-# 	# Draw parametric bootstrap samples from this covariance matrix
-# 	Y_boot = decomp@vectors %*% crossprod(A, matrnorm(p, n_boot)) + mu
-
-# 	# Compute covariance between features using transform
-# 	# return SVD of the correlation matrix
-# 	n = ncol(Y_boot)
-# 	Y_std = scale(t(fxn(Y_boot))) / sqrt(n - 1)
-# 	# Y_std = t(fxn(Y_boot))
-
-# 	if( maxRank > min(p, n_boot)/2 ){
-# 		dcmp2 <- svd( Y_std, nu=0 )
-# 	}else{
-# 		dcmp2 <- irlba( Y_std, nu=0, nv=maxRank)
-# 	}
-
-# 	dcmpReturn = new("spectralDecomp", 	
-# 							vectors 		= dcmp2$v, 
-# 							evalues 		= dcmp2$d^2, 
-# 						    n_samples 		= ncol(Y_boot), 
-# 						    n_features 		= nrow(Y_boot), 
-# 						    varianceRetained = sum(dcmp2$d^2) / p)
-
-# 	setDecompRank( dcmpReturn, maxRank)
-# }
 
 
 

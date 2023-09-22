@@ -267,6 +267,13 @@ apply(Z2, 2, var)[1:5]
 
 
 
+# Session Info
+<details>
+```{r session, echo=FALSE}
+sessionInfo()
+```
+</details>
+
 
 
 

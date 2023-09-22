@@ -45,8 +45,8 @@ Sigma = autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
 Y = Rfast::rmvnorm(n, rep(0, p), sigma=Sigma)
-rownames(Y) = paste0("sample_", 1:n)
-colnames(Y) = paste0("gene_", 1:p)
+rownames(Y) = paste0("sample_", seq(n))
+colnames(Y) = paste0("gene_", seq(p))
 
 # correlation computed directly
 C = cor(Y)

@@ -1,10 +1,14 @@
 Package: decorrelate
 Type: Package
 Title: Decorrelation projection scalable to high dimensional data using estimated correlation with low rank and shrinkage
-Version: 0.0.17
-Date: 2023-05-12
-Author: Gabriel Hoffman
-Maintainer: Gabriel Hoffman <gabriel.hoffman@mssm.edu>
+Version: 0.0.18
+Date: 2023-09-19
+Authors@R: 
+  c(person(given = "Gabriel",
+           family = "Hoffman",
+           role = c("aut", "cre"),
+           email = "gabriel.hoffman@mssm.edu",
+           comment = c(ORCID = "0000-0002-0957-0224")))
 Description: Coming soon...
 License: GPL (>= 2)
 Encoding: UTF-8
@@ -43,6 +47,7 @@ Depends:
 Imports:
     Rfast,
     irlba,
+    graphics,
     CholWishart,
     Matrix,
     Rdpack,

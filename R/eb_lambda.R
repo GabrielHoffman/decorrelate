@@ -8,18 +8,6 @@
 
 
 
-
-
-
-# cholD = chol(D);
-# logdetD = 2*sum(log(cholD.diag()));
-# logdetD = 2*sum(log(diag(chol(D))))
-
-# # Optimal shrinkage
-# deltaOpt = getDeltaOpt(n, p, eigs, logdetD);
-# alphaOpt = deltaToAlpha(deltaOpt, n, p);   
-
-
 # double alphaToDelta(double alpha, int n, int p){
 #   return (alpha*n+(1-alpha)*p+(1-alpha))/(1-alpha);
 # }
@@ -33,42 +21,6 @@ alphaToDelta = function(alpha, n, p){
 deltaToAlpha = function(delta, n, p){
 	(delta-p-1)/(n+delta-p-1)
 }
-
-
-# double lpvarGamma(const double x, const int p) {
-#   double ans = (p * (p - 1) * 0.25) * log(datum::pi);
-#   for(int j = 1; j < (p + 1); ++j){
-#     ans += std::lgamma(x - ((j - 1.0) * 0.5));
-#   }
-#   return ans;
-# }
-# CholWishart::lmvgamma
-
-# lpvarGamma = function(x,p){
-#   ans = (p * (p - 1) * 0.25) * log(pi);
-#   for(j in 1:(p) ){
-#     ans = ans + lgamma(x - ((j - 1.0) * 0.5));
-#   }
-#   ans
-# }
-
-# lpvarGamma(4, 2)
-# CholWishart::lmvgamma(4, 2)
-
-
-
-# double logML(const double delta, const int p, const int n, colvec eigs, const double logdetD){
-#   double out = -0.5*n*p*std::log(datum::pi);
-#   out += lpvarGamma((delta+n)*0.5, p);
-#   out -= lpvarGamma(delta*0.5, p);
-#   out += 0.5*delta*p*std::log(delta-p-1);
-#   out -= 0.5*(delta+n)*sum(arma::log((delta-p-1)+eigs));
-#   if(logdetD!=0){
-#     out -= 0.5*n*logdetD;
-#   }
-#   return(out);
-# }
-
 
 # Integrated log-likelihood for empirical Bayes
 # eigs stores non-zero eigen-values of p total eigen values
@@ -96,22 +48,6 @@ logML = function(delta, p, n, eigs, logdetD){
 	out
 }
 
-
-# logML(6.010101, p, n, eigs, logdetD)
-
-
-
-# double getDeltaOpt(const int n, const int p, colvec eigs, const double logdetD){
-#   const double lowerVal = alphaToDelta(0.001, n, p);
-#   const double upperVal = alphaToDelta(0.999, n, p);
-#   const auto obj = [p, n, eigs, logdetD](double x) { return -logML(x, p, n, eigs, logdetD); };
-#   boost::uintmax_t it = 1000;
-#   const auto result = brent_find_minima(obj, lowerVal, upperVal, 1000, it);
-#   //std::pair<double, double> result = brent_find_minima(obj, lowerVal, upperVal, 1000, it);
-#   auto deltaOpt = 0.0, valOpt = 0.0;
-#   std::tie(deltaOpt, valOpt) = result;
-#   return(deltaOpt);
-# }
 
 getShrinkageValue = function(n, p, eigs, logdetD, minimum = 1e-4, lambda=NULL){
 
@@ -153,7 +89,7 @@ getShrinkageValue = function(n, p, eigs, logdetD, minimum = 1e-4, lambda=NULL){
 #'
 # @seealso \link{getShrinkageValue}
 #'
-#' @details Estimate shrinkage parameter for covariance matrix estimation using empirical Bayes method (Hannart and Naveau, 2014; Leday and Richardson, 2019).  The shrinage estimate of the covariance matrix is \eqn{(1-\lambda)\hat\Sigma + \lambda \nu I}, where \eqn{\hat\Sigma} is the sample covariance matrix, given a value of \eqn{lambda}.  A large value of \eqn{\lambda} indicates more weight on the prior.
+#' @details Estimate shrinkage parameter for covariance matrix estimation using empirical Bayes method \insertCite{leday2019fast,hannart2014estimating}{decorrelate}.  The shrinage estimate of the covariance matrix is \eqn{(1-\lambda)\hat\Sigma + \lambda \nu I}, where \eqn{\hat\Sigma} is the sample covariance matrix, given a value of \eqn{\lambda}.  A large value of \eqn{\lambda} indicates more weight on the prior.
 #'
 #' @return value \eqn{\lambda} indicating the shrinkage between sample and prior covariance matrices.
 #'
@@ -165,11 +101,7 @@ getShrinkageValue = function(n, p, eigs, logdetD, minimum = 1e-4, lambda=NULL){
 #' 
 #' estimate_lambda_eb(ev, n, p, nu)
 #' 
-#' @references{
-#'   \insertRef{leday2019fast}{decorrelate}
-#'
-#'   \insertRef{hannart2014estimating}{decorrelate}
-#' }
+#' @references \insertAllCited{}
 #'
 #' @import Rdpack
 #' @export
@@ -250,37 +182,6 @@ series_start_total = function(start, totalSum, n){
 
 	start*alpha^seq(1,n)
 }
-
-
-
-
-# #' Create decreasing series of values
-# #' 
-# #' Create series of \eqn{n} values decreasing from \eqn{start} to \eqn{end} with a constant ratio between terms.
-# #' 
-# #' @param start maximum value
-# #' @param end minimum value
-# #' @param n number of terms
-# #' 
-# #' @examples
-# #' start = 10
-# #' end = 1
-# #' n = 43
-# #' 
-# #' values = series(start, end, n)
-# #' 
-# series_start_end = function(start, end, n){
-
-# 	# get alpha so that start*alpha^n = end
-# 	alpha = (end/ start)^(1/n)
-
-# 	# create series
-# 	sapply( seq(0, n), function(i){
-# 		start*alpha^i
-# 		})
-# }
-
-
 
 
 

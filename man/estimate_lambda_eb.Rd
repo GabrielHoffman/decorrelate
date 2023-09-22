@@ -24,7 +24,7 @@ value \eqn{\lambda} indicating the shrinkage between sample and prior covariance
 Estimate shrinkage parameter by empirical Bayes
 }
 \details{
-Estimate shrinkage parameter for covariance matrix estimation using empirical Bayes method (Hannart and Naveau, 2014; Leday and Richardson, 2019).  The shrinage estimate of the covariance matrix is \eqn{(1-\lambda)\hat\Sigma + \lambda \nu I}, where \eqn{\hat\Sigma} is the sample covariance matrix, given a value of \eqn{lambda}.  A large value of \eqn{\lambda} indicates more weight on the prior.
+Estimate shrinkage parameter for covariance matrix estimation using empirical Bayes method \insertCite{leday2019fast,hannart2014estimating}{decorrelate}.  The shrinage estimate of the covariance matrix is \eqn{(1-\lambda)\hat\Sigma + \lambda \nu I}, where \eqn{\hat\Sigma} is the sample covariance matrix, given a value of \eqn{\lambda}.  A large value of \eqn{\lambda} indicates more weight on the prior.
 }
 \examples{
 ev = c(10, 2, 1) # eigen values
@@ -36,9 +36,5 @@ estimate_lambda_eb(ev, n, p, nu)
 
 }
 \references{
-{
-  \insertRef{leday2019fast}{decorrelate}
-
-  \insertRef{hannart2014estimating}{decorrelate}
-}
+\insertAllCited{}
 }

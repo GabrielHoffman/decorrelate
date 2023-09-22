@@ -26,8 +26,8 @@
 #' 
 #' # draw data from correlation matrix Sigma
 #' Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
-#' rownames(Y) = paste0("sample_", 1:n)
-#' colnames(Y) = paste0("gene_", 1:p)
+#' rownames(Y) = paste0("sample_", seq(n))
+#' colnames(Y) = paste0("gene_", seq(p))
 #' 
 #' # Correlation
 #' #------------
@@ -105,82 +105,4 @@ reform_decomp = function(Sigma.eclairs, k = Sigma.eclairs$k, drop=NULL){
 
 	ecl
 }
-
-
-# reform_decomp = function(Sigma.eclairs, k = Sigma.eclairs$k, drop=NULL){
-
-# 	stopifnot(is(Sigma.eclairs, "eclairs"))
-
-# 	if( is.null(drop) | length(drop) == 0){
-# 		warning("No variables are dropped.  Returning original eclairs")
-# 		return(Sigma.eclairs)
-# 	}
-
-# 	# check if there are entries in drop that are not in Sigma.eclairs
-# 	problematic = which(!(drop %in% Sigma.eclairs$colnames))
-
-# 	# if yes, throw warning
-# 	if( length(problematic) > 0){
-# 		warning(length(problematic), ' entries in drop are not in Sigma.eclairs.\nThe first few entries not found are: ', paste0("'", paste(head(drop[problematic], 3), collapse="', '"), "'"), immediate.=TRUE)
-# 	}
-
-# 	# keep features that are not in drop
-# 	keep = which(!Sigma.eclairs$colnames %in% drop)
-
-# 	V = dSq = U = NULL # pass R CMD BiocCheck
-
-# 	n = Sigma.eclairs$n
-# 	p = length(keep)
-
-# 	# k cannot exceed n or p
-# 	k = min(c(k, p, n))
-
-# 	# reconstruct original dataset from SVD
-# 	if( Sigma.eclairs$method == "svd" ){
-
-# 		X_reconstruct = with(Sigma.eclairs, V %*% (sqrt(dSq) * t(U)))
-
-# 		# ecl = eclairs( X_reconstruct, k, warmStart = Sigma.eclairs)
-# 		# ecl$call = match.call()
-
-# 		if( k < min(p, n)/3){
-
-# 			# perform iterative SVD on subset of reconstructed matrix
-# 			dcmp = svds(X_reconstruct[, keep,drop=FALSE], 
-# 						NSvals = k, 
-# 						# u0=Sigma.eclairs$V[,seq_len(k)], 
-# 						v0=Sigma.eclairs$U[keep,seq_len(k),drop=FALSE], 
-# 						isreal=TRUE)
-# 		}else{
-# 			dcmp = svd(X_reconstruct[, keep]) 
-# 			dcmp$u = dcmp$u[,seq_len(k), drop=FALSE]
-# 			dcmp$v = dcmp$v[,seq_len(k), drop=FALSE]
-# 			dcmp$d = dcmp$d[seq_len(k)]
-# 		}
-
-# 		# Modify sign of dcmp$v and dcmp$u so principal components are consistant
-# 		# This is motivated by whitening:::makePositivDiagonal()
-# 		# but here adjust both U and V so reconstructed data is correct
-# 		values = sign(diag(dcmp$v))
-# 		dcmp$v = sweep(dcmp$v, 2, values, "*")
-# 		dcmp$u = sweep(dcmp$u, 2, values, "*")
-# 	}else{
-# 	}
-
-# 	# return result as eclairs decomposition
-# 	result = list(	U 		= dcmp$v, 
-# 					dSq 	= dcmp$d^2, 
-# 					V 		= dcmp$u,
-# 					lambda 	= Sigma.eclairs$lambda,
-# 					nu 		= Sigma.eclairs$nu, # should this be recomputed?
-# 					n 		= Sigma.eclairs$n,
-# 					p 		= p,
-# 					k 		= k,
-# 					rownames= Sigma.eclairs$rownames,
-# 					colnames= Sigma.eclairs$colnames[keep],
-# 					method 	= "svd",
-# 					call 	= match.call())
-
-# 	new("eclairs",	result)
-# }
 

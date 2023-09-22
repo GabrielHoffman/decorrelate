@@ -183,7 +183,7 @@ lm_eclairs = function (formula, data, Sigma.eclairs, subset, weights, na.action,
 #' 
 #' # Simulate 1000 features to test
 #' X = matrnorm(p, 1000)
-#' colnames(X) = paste0('set_', 1:ncol(X))
+#' colnames(X) = paste0('set_', seq(ncol(X)))
 #' 
 #' # Use linear model to test each feature stored as columns in X
 #' res = lm_each_eclairs(y ~ v1 + v2, data, X, ecl )

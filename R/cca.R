@@ -99,8 +99,8 @@ cca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x=NULL, lambda.y=NULL){
 	y.vars = Y %*% y.coefs
 	rownames(y.vars) = rownames(X)
 
-    rho = diag(cor(x.vars, y.vars))[1:n.comp]
-    names(rho) = paste("can.comp", 1:n.comp, sep = "")
+    rho = diag(cor(x.vars, y.vars))[seq(n.comp)]
+    names(rho) = paste("can.comp", seq(n.comp), sep = "")
 
 	rho.mod = dcmp$d
 	names(rho.mod) = paste('can.comp', seq_len(n.comp), sep = '')
@@ -111,7 +111,8 @@ cca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x=NULL, lambda.y=NULL){
 		idx = seq(1, k-1)
 	}
 
-	cramer.V = sqrt(mean(rho.mod[idx]^2)) # Cramer's V-statistic for CCA
+	# Cramer's V-statistic for CCA
+	cramer.V = sqrt(mean(rho.mod[idx]^2)) 
 
 	# based on CRAN::yacca
 	# compute loadings
@@ -140,41 +141,6 @@ cca = function(X, Y, k=min(dim(X), dim(Y)), lambda.x=NULL, lambda.y=NULL){
 
 	new('fastcca', res)
 }
-
-
-
-
-# devel code to skip cov(X,Y) calculations
-
-# C = cov(X,Y)
-
-# n = nrow(X)
-# C2 = crossprod(scale(X,scale=FALSE), scale(Y,scale=FALSE)) / (n-1)
-# C2 = crossprod(scale(X,scale=FALSE), scale(Y,scale=FALSE) / (n-1))
-
-
-
-# C[1:3, 1:3]
-# C2[1:3, 1:3]
-
-
-
-
-
-# ecl.x = eclairs( X )
-
-# tmp1 = decorrelate(cov(X,Y), ecl.x, transpose=TRUE)
-
-
-# tmp2 = t(t(scale(Y,scale=FALSE)) %*% decorrelate(scale(X,scale=FALSE) / (n-1), ecl.x, transpose=FALSE))
-
-# tmp1[1:3, 1:3]
-
-# tmp2[1:3, 1:3]
-
-
-
-
 
 
 

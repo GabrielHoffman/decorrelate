@@ -146,8 +146,8 @@ marcenko_pastur_integral <- function(x, beta) {
   if (x < lobnd | x > hibnd) stop("X is out of bounds")
   dens <- function(t) sqrt((hibnd - t) * (t - lobnd)) / (2 * pi * beta * t)
   Int <- stats::integrate(dens, lobnd, x)
-  print(cat("\r", paste("x=", x, " beta=", beta,
-                        " I=", round(Int$value, 5), sep = "")))
+  # print(cat("\r", paste("x=", x, " beta=", beta,
+  #                       " I=", round(Int$value, 5), sep = "")))
   return(Int$value)
 }
 

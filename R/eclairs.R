@@ -93,8 +93,8 @@ setMethod("print", 'eclairs',
 #' 
 #' # draw data from correlation matrix Sigma
 #' Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
-#' rownames(Y) = paste0("sample_", 1:n)
-#' colnames(Y) = paste0("gene_", 1:p)
+#' rownames(Y) = paste0("sample_", seq(n))
+#' colnames(Y) = paste0("gene_", seq(p))
 #' 
 #' # eclairs decomposition
 #' Sigma.eclairs = eclairs(Y)
@@ -207,8 +207,8 @@ setMethod('getCor', c(Sigma.eclairs = "eclairs"),
 #' 
 #' # draw data from correlation matrix Sigma
 #' Y = rmvnorm(n, rep(0, p), sigma=Sigma*5.1)
-#' rownames(Y) = paste0("sample_", 1:n)
-#' colnames(Y) = paste0("gene_", 1:p)
+#' rownames(Y) = paste0("sample_",seq(n))
+#' colnames(Y) = paste0("gene_", seq(p))
 #' 
 #' # eclairs decomposition: covariance
 #' Sigma.eclairs = eclairs(Y, compute="covariance")

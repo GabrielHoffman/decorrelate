@@ -1,1 +1,11 @@
+
+library(RUnit)
+library(Rfast)
+library(Matrix)
+library(cowplot)
+library(decorrelate)
+library(ggplot2)
+library(whitening)
+library(yacca)
+
 BiocGenerics:::testPackage("decorrelate")
