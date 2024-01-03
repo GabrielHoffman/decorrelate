@@ -22,12 +22,15 @@
 setClass("fastcca", contains = "list")
 
 
-setMethod("show", "fastcca", function(object) {
-  print(object)
+setMethod("print", "fastcca", function(x) {
+  show(x)
 })
 
 
-setMethod("print", "fastcca", function(x) {
+setMethod("show", "fastcca", function(object) {
+
+  x = object
+  
   cat("       Fast regularized canonical correlation analysis\n\n")
 
   k <- min(3, x$n.comp)

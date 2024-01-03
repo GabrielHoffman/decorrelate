@@ -1,3 +1,15 @@
+Add Maholanobis  from decorrelate_analysis/mahalanobis.Rmd
+
+
+Nov 4, 2023
+	reproduce standard CCA with lambda = 0
+	covariance: factor out variances to only shrink correlation
+
+
+Oct 6, 2023
+	Fast way to drop a small number of features?
+		For z-score imputation
+
 
 Sept 19, 2023
 	PNAS, American Statistician, JASA, JSS?

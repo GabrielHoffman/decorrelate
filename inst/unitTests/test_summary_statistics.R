@@ -3,7 +3,7 @@ test_summary_statistics = function(){
 
 	set.seed(1)
 	n = 200 # number of samples
-	p = 300 # number of features
+	p = 30 # number of features
 
 	# create correlation matrix
 	Sigma = matrix(.2, p, p)

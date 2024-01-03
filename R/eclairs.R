@@ -29,32 +29,33 @@ setClass("eclairs", contains = "list")
 # elements in list U =\t'matrix', dSq = 'array', lambda \t= 'numeric', n \t=
 # 'numeric', p \t= 'numeric', k \t= 'numeric'))
 
-setMethod("show", "eclairs", function(object) {
-  print(object)
+#' @importFrom methods show
+setMethod("print", "eclairs", function(x) {
+  show(x)
 })
 
 
-setMethod("print", "eclairs", function(x) {
-  if (x$nu == 1) {
+setMethod("show", "eclairs", function(object) {
+  if (object$nu == 1) {
     cat("       Estimate correlation with low rank and shrinkage\n\n")
   } else {
     cat("       Estimate covariance with low rank and shrinkage\n\n")
   }
 
-  cat("  Original data dims:", x$n, "x", x$p, "\n")
-  cat("  Low rank component:", length(x$dSq), "\n")
-  cat("  lambda:            ", format(x$lambda, digits = 3), "\n")
-  cat("  nu:                ", format(x$nu, digits = 3), "\n")
+  cat("  Original data dims:", object$n, "x", object$p, "\n")
+  cat("  Low rank component:", length(object$dSq), "\n")
+  cat("  lambda:            ", format(object$lambda, digits = 3), "\n")
+  cat("  nu:                ", format(object$nu, digits = 3), "\n")
 
-  if (x$nu == 1) {
-    rho_mle <- averageCorr(x, "MLE")
-    rho_eb <- averageCorr(x, "EB")
+  if (object$nu == 1) {
+    rho_mle <- averageCorr(object, "MLE")
+    rho_eb <- averageCorr(object, "EB")
     cat("  Avg corr (MLE):    ", format(rho_mle, digits = 3), "\n")
     cat("  Avg corr (EB):     ", format(rho_eb, digits = 3), "\n")
   }
 
   cat(
-    "  logML:             ", format(x$logML, digits = 1, scientific = FALSE),
+    "  logML:             ", format(object$logML, digits = 1, scientific = FALSE),
     "\n"
   )
 })

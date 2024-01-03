@@ -1,4 +1,8 @@
 
+# decorrelate 0.0.19
+* Jan 02, 2024
+* add `mahalanobisDistance()`
+
 # decorrelate 0.0.18
 * Sept 18, 2023
 * add `averageCorr()`, `averageCorrSq()` and `sumInverseCorr()`

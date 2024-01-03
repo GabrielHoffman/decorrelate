@@ -17,7 +17,7 @@ quadForm(Sigma.eclairs, A, alpha = -1/2)
 Evaluate quadratic form
 }
 \details{
-Evaluate quadratic form \eqn{A^T \Sigma^{2*alpha} A}
+Evaluate quadratic form \eqn{A^T \Sigma^{2*\alpha} A}
 }
 \examples{
 library(Rfast)

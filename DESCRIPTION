@@ -1,8 +1,8 @@
 Package: decorrelate
 Type: Package
 Title: Decorrelation projection scalable to high dimensional data using estimated correlation with low rank and shrinkage
-Version: 0.0.18
-Date: 2023-09-19
+Version: 0.0.19
+Date: 2024-01-02
 Authors@R: 
   c(person(given = "Gabriel",
            family = "Hoffman",
@@ -10,7 +10,7 @@ Authors@R:
            email = "gabriel.hoffman@mssm.edu",
            comment = c(ORCID = "0000-0002-0957-0224")))
 Description: Coming soon...
-License: GPL (>= 2)
+License: Artistic-2.0
 Encoding: UTF-8
 URL: gabrielhoffman.github.oi/decorrelate, https://github.com/GabrielHoffman/decorrelate
 BugReports: https://github.com/GabrielHoffman/decorrelate/issues
@@ -27,6 +27,7 @@ Suggests:
     ggplot2, 
     cowplot,
     colorRamps,
+    RUnit,
     latex2exp,
     rmarkdown,
 biocViews: RNASeq,

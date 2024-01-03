@@ -7,7 +7,7 @@
 #' @param alpha default = -1/2.  Exponent of eigen-values
 #'
 #' @details
-#' Evaluate quadratic form \eqn{A^T \Sigma^{2*alpha} A}
+#' Evaluate quadratic form \eqn{A^T \Sigma^{2*\alpha} A}
 #'
 #' @examples
 #' library(Rfast)
