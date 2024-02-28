@@ -11,12 +11,15 @@
 
 \item{lambda}{specify lambda to override value from \code{z}}
 }
+\value{
+condition number of the correlation matrix.  If \code{z} is a covariance matrix, kappa is only computed for the correlation component
+}
 \description{
 Compute condition number of matrix from \code{eclairs} decomposition
 }
 \examples{
 library(Rfast)
-set.seed(1)
+
 n <- 800 # number of samples
 p <- 200 # number of features
 
@@ -24,7 +27,7 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 rownames(Y) <- paste0("sample_", seq(n))
 colnames(Y) <- paste0("gene_", seq(p))
 

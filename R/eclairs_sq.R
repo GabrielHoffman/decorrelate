@@ -8,7 +8,7 @@
 #'
 #' Given the eclairs decomp of C, compute the eclairs decomp of C^2
 #'
-#' @param Sigma.eclairs estimate of correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
+#' @param ecl estimate of correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
 
 #' @param rank1 use the first 'rank' singular vectors from the SVD.  Using increasing rank1 will increase the accuracy of the estimation.  But note that the computationaly complexity is O(P choose(rank, 2)), where P is the number of features in the dataset
 #' @param rank2 rank of \code{eclairs()} decomposition returned
@@ -22,7 +22,6 @@
 #' @examples
 #' # Compute correlations directly and using eclairs decomp
 #'
-#' set.seed(1)
 #' n <- 600 # number of samples
 #' p <- 100 # number of features
 #'
@@ -30,7 +29,7 @@
 #' Sigma <- autocorr.mat(p, .9)
 #'
 #' # draw data from correlation matrix Sigma
-#' Y <- Rfast::rmvnorm(n, rep(0, p), sigma = Sigma)
+#' Y <- Rfast::rmvnorm(n, rep(0, p), sigma = Sigma, seed = 1)
 #' rownames(Y) <- paste0("sample_", seq(n))
 #' colnames(Y) <- paste0("gene_", seq(p))
 #'
@@ -60,13 +59,13 @@
 #' @importFrom irlba irlba
 #' @export
 eclairs_sq <- function(
-    Sigma.eclairs, rank1 = Sigma.eclairs$k, rank2 = Inf, varianceFraction = 1) {
-  if (!is(Sigma.eclairs, "eclairs")) {
+    ecl, rank1 = ecl$k, rank2 = Inf, varianceFraction = 1) {
+  if (!is(ecl, "eclairs")) {
     stop("ecl must be of class eclairs")
   }
 
-  d <- sqrt(Sigma.eclairs$dSq)
-  V <- Sigma.eclairs$U
+  d <- sqrt(ecl$dSq)
+  V <- ecl$U
 
   rank1 <- min(rank1, ncol(V))
 
@@ -111,8 +110,8 @@ eclairs_sq <- function(
 
   # SVD of G
 
-  n <- Sigma.eclairs$n
-  p <- Sigma.eclairs$p
+  n <- ecl$n
+  p <- ecl$p
   nu <- 1
 
   # SVD of X to get low rank estimate of Sigma
@@ -120,7 +119,7 @@ eclairs_sq <- function(
     # if( is.null(warmStart) ){ dcmp = svds(G, k, isreal=TRUE)
     dcmp <- irlba(G, rank2) # should be faster thatn PRIMME::svds
     # }else{\t\t\t \tdcmp = svds(G, rank2,
-    # u0=Sigma.eclairs$U[,seq_len(rank2)], isreal=TRUE) }
+    # u0=ecl$U[,seq_len(rank2)], isreal=TRUE) }
   } else {
     dcmp <- svd(G)
 
@@ -149,8 +148,8 @@ eclairs_sq <- function(
 
   ecl <- list(
     U = dcmp$u, dSq = dcmp$d^2, V = dcmp$v, lambda = res$lambda, logML = res$logML,
-    nu = nu, n = n, p = p, k = length(dcmp$d), rownames = Sigma.eclairs$rownames,
-    colnames = Sigma.eclairs$colnames, method = "svd", call = match.call()
+    nu = nu, n = n, p = p, k = length(dcmp$d), rownames = ecl$rownames,
+    colnames = ecl$colnames, method = "svd", call = match.call()
   )
 
   new("eclairs", ecl)

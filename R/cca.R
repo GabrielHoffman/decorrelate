@@ -10,11 +10,12 @@
 #' @param lambda.x optional shrinkage parameter for estimating covariance of X. If NULL, estimate from data.
 #' @param lambda.y optional shrinkage parameter for estimating covariance of Y. If NULL, estimate from data.
 #'
+#' @return statistics summarizing CCA
 #' @details
 #' Results from standard CCA are based on the SVD of \eqn{\Sigma_{xx}^{-\frac{1}{2}} \Sigma_{xy} \Sigma_{yy}^{-\frac{1}{2}}}.
 #'
 #' Avoids computation of \eqn{\Sigma_{xx}^{-\frac{1}{2}}} by using eclairs.  Avoids cov(X,Y) by framing this as a matrix product that can be distributed. Uses low rank SVD.
-#' Other regularized CCA addes lambda to covariance like Ridge. Here it is a mixture
+#' Other regularized CCA adds lambda to covariance like Ridge. Here it is a mixture
 #'
 #' @examples
 #' pop <- LifeCycleSavings[, 2:3]

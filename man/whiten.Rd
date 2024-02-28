@@ -13,13 +13,15 @@ whiten(X, k = ncol(X), lambda = NULL)
 
 \item{lambda}{specify lambda and override value estimated by \code{eclairs()}}
 }
+\value{
+data rotated and scaled according to the regularized sample covariance of the input data
+}
 \description{
 Efficient decorrelation projection using eclairs decomposition
 }
 \examples{
-
 library(Rfast)
-set.seed(1)
+
 n <- 800 # number of samples
 p <- 200 # number of features
 
@@ -27,7 +29,7 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 
 # eclairs decomposition
 ecl <- eclairs(Y)

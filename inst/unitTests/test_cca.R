@@ -12,6 +12,9 @@ test_cca = function(){
 	X = rmvnorm(n, rep(0, p1), autocorr.mat(p1, .9))
 	Y = rmvnorm(n, rep(0, p2), autocorr.mat(p2, .9))
 
+	X = scale(X)
+	Y = scale(Y)
+
 	res1 = decorrelate::cca(X,Y, lambda.x=0, lambda.y=0)
 	res2 = CCA::rcc(X,Y, 0,0)
 	res3 = RCCA::RCCA(X,Y, 0,0)

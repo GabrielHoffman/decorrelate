@@ -21,10 +21,10 @@ Singular value thresholding evaluates the optimal number of singular values to r
 }
 \examples{
 # simulate data
-set.seed(1)
+
 n <- 500
 p <- 5000
-Y <- Rfast::matrnorm(n, p)
+Y <- Rfast::matrnorm(n, p, seed = 1)
 
 # SVD
 dcmp <- svd(Y)

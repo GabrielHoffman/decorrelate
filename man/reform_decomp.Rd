@@ -4,10 +4,10 @@
 \alias{reform_decomp}
 \title{Recompute eclairs after dropping features}
 \usage{
-reform_decomp(Sigma.eclairs, k = Sigma.eclairs$k, drop = NULL)
+reform_decomp(ecl, k = ecl$k, drop = NULL)
 }
 \arguments{
-\item{Sigma.eclairs}{covariance/correlation matrix as an \link{eclairs} object}
+\item{ecl}{covariance/correlation matrix as an \link{eclairs} object}
 
 \item{k}{the rank of the low rank component}
 
@@ -20,11 +20,11 @@ reform_decomp(Sigma.eclairs, k = Sigma.eclairs$k, drop = NULL)
 Recompute eclairs after dropping features
 }
 \details{
-Reform the dataset from the eclairs decomposition, drop features, then recompute the eclairs decomposition.  If the original SVD/eigen was truncated, then the reconstruction of the original data will be approximate.  Note that the target shrinkage matrix is the same as in \code{Sigma.eclairs}, so \eqn{\nu} is not recomputed from the retained features.
+Reform the dataset from the eclairs decomposition, drop features, then recompute the eclairs decomposition.  If the original SVD/eigen was truncated, then the reconstruction of the original data will be approximate.  Note that the target shrinkage matrix is the same as in \code{ecl}, so \eqn{\nu} is not recomputed from the retained features.
 }
 \examples{
 library(Rfast)
-set.seed(1)
+
 n <- 800 # number of samples
 p <- 200 # number of features
 
@@ -32,7 +32,7 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 rownames(Y) <- paste0("sample_", seq(n))
 colnames(Y) <- paste0("gene_", seq(p))
 

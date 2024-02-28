@@ -30,6 +30,28 @@ test_logDet = function(){
 }
 
 
+test_tr = function(){
+
+	library(Rfast)
+	set.seed(1)
+	n = 800 
+	p = 12
+
+	# create correlation matrix
+	Sigma = autocorr.mat(p, .9)
+
+	# draw data from correlation matrix Sigma
+	Y = rmvnorm(n, rep(0, p), sigma=Sigma)
+
+	# eclairs decomposition
+	Sigma.eclairs = eclairs( Y, compute="corr" )
+
+	a = tr(Sigma.eclairs)
+	b = sum(eigen(getCor(Sigma.eclairs))$values)
+	checkEqualsNumeric(a,b)
+}
+
+
 
 
 test_kappa = function(){
@@ -46,10 +68,10 @@ test_kappa = function(){
 	Y = rmvnorm(n, rep(0, p), sigma=Sigma)
 
 	# eclairs decomposition
-	Sigma.eclairs = eclairs( Y )
+	Sigma.eclairs = eclairs( Y, compute="corr" )
 
 	a = kappa(Sigma.eclairs)
-	b = kappa(getCov(Sigma.eclairs), exact=TRUE)
+	b = kappa(getCor(Sigma.eclairs), exact=TRUE)
 	checkEqualsNumeric(a,b)
 }
 
@@ -72,7 +94,7 @@ test_quadForm = function(){
 	Sigma = autocorr.mat(p, .9)
 
 	# draw data from correlation matrix Sigma
-	Y = rmvnorm(n, rep(0, p), sigma=Sigma)
+	Y = rmvnorm(n, rep(0, p), sigma=Sigma*4.5)
 
 	# eclairs decomposition
 	Sigma.eclairs = eclairs( Y )

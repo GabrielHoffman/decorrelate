@@ -11,6 +11,7 @@
 #'  \item{U: }{orthonormal matrix with k columns representing the low rank component}
 #'  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
 #'  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}
+#'  \item{sigma: }{standard deviations of input columns}
 #'  \item{nu: }{diagonal value, \eqn{\nu}, of target matrix in shrinkage}
 #'  \item{n: }{number of samples (i.e. rows) in the original data}
 #'  \item{p: }{number of features (i.e. columns) in the original data}
@@ -26,17 +27,16 @@
 # setClass('eclairs', representation('list'))
 setClass("eclairs", contains = "list")
 
-# elements in list U =\t'matrix', dSq = 'array', lambda \t= 'numeric', n \t=
-# 'numeric', p \t= 'numeric', k \t= 'numeric'))
 
 #' @importFrom methods show
 setMethod("print", "eclairs", function(x) {
   show(x)
 })
 
-
 setMethod("show", "eclairs", function(object) {
-  if (object$nu == 1) {
+  isCorrMatrix <- all(object$sigma == 1)
+
+  if (isCorrMatrix) {
     cat("       Estimate correlation with low rank and shrinkage\n\n")
   } else {
     cat("       Estimate covariance with low rank and shrinkage\n\n")
@@ -47,7 +47,25 @@ setMethod("show", "eclairs", function(object) {
   cat("  lambda:            ", format(object$lambda, digits = 3), "\n")
   cat("  nu:                ", format(object$nu, digits = 3), "\n")
 
-  if (object$nu == 1) {
+  if (!isCorrMatrix) {
+    # print standard deviations of features
+    if (length(object$sigma) > 2) {
+      values <- object$sigma[c(1, 2, length(object$sigma))]
+      values <- format(values, digits = 3)
+      values <- paste(values[1], values[2], "...", values[3])
+    } else {
+      values <- format(object$sigma, digits = 3)
+      values <- paste(values, collapse = " ")
+    }
+    startText <- paste("  sd(", length(object$sigma), "): ", sep = "")
+    n <- 21 - nchar(startText) + 1
+    startText <- paste0(startText, paste(rep(" ", n), collapse = ""))
+    cat(startText, values, "\n", sep = "")
+  }
+
+
+
+  if (isCorrMatrix) {
     rho_mle <- averageCorr(object, "MLE")
     rho_eb <- averageCorr(object, "EB")
     cat("  Avg corr (MLE):    ", format(rho_mle, digits = 3), "\n")
@@ -65,10 +83,9 @@ setMethod("show", "eclairs", function(object) {
 #'
 #' Get full covariance/correlation matrix from \link{eclairs} decomposition
 #'
-#' @param Sigma.eclairs eclairs decomposition
+#' @param ecl eclairs decomposition
 #' @param lambda shrinkage parameter for the convex combination.
-# @param forCols (TRUE) compute covariance between columns If FALSE, compute
-# covariance between rows
+#'
 #' @param ... other arguments
 #'
 #' @return p x p covariance/correlation matrix
@@ -76,9 +93,8 @@ setMethod("show", "eclairs", function(object) {
 #' @details The full matrix is computationally expensive to compute and uses a lot of memory for large p.  So it is better to use \link{decorrelate} or \link{mult_eclairs} to perform projections in \eqn{O(np)} time.
 #'
 #' @examples
-#'
 #' library(Rfast)
-#' set.seed(1)
+#'
 #' n <- 800 # number of samples
 #' p <- 200 # number of features
 #'
@@ -86,31 +102,30 @@ setMethod("show", "eclairs", function(object) {
 #' Sigma <- autocorr.mat(p, .9)
 #'
 #' # draw data from correlation matrix Sigma
-#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 #' rownames(Y) <- paste0("sample_", seq(n))
 #' colnames(Y) <- paste0("gene_", seq(p))
 #'
 #' # eclairs decomposition
-#' Sigma.eclairs <- eclairs(Y)
+#' ecl <- eclairs(Y)
 #'
 #' # extract covariance implied by eclairs decomposition
-#' getCov(Sigma.eclairs)[1:3, 1:3]
+#' getCov(ecl)[1:3, 1:3]
 #'
 #' @rdname getCov
 #' @export
-setGeneric("getCov", function(Sigma.eclairs, lambda, ...) standardGeneric("getCov"))
-# , forCols=TRUE
+setGeneric("getCov", function(ecl, lambda, ...) standardGeneric("getCov"))
 
 #' @rdname getCov
 #' @export
-setGeneric("getCor", function(Sigma.eclairs, lambda, ...) standardGeneric("getCor"))
+setGeneric("getCor", function(ecl, lambda, ...) standardGeneric("getCor"))
 
 
 
 #' @rdname getCov
 #' @export
-setMethod("getCov", c(Sigma.eclairs = "eclairs"), function(
-    Sigma.eclairs, lambda,
+setMethod("getCov", c(ecl = "eclairs"), function(
+    ecl, lambda,
     ...) {
   # if disableWarn is specified and is TRUE, set disableWarn = TRUE else
   # FALSE
@@ -120,41 +135,52 @@ setMethod("getCov", c(Sigma.eclairs = "eclairs"), function(
     disableWarn <- lst[["disableWarn"]]
   }
 
-  if (!disableWarn & Sigma.eclairs$nu == 1) {
+  if (!disableWarn & all(ecl$sigma == 1)) {
     warning("eclairs estimated correlation, so the correlation matrix is returned")
   }
 
-  if (missing(lambda)) {
-    lambda <- Sigma.eclairs$lambda
-  }
-
-
-  # if( forCols ){ covariance between columns A = x$U %*% diag(x$dSq
-  # *(1-x$lambda)) %*% t(x$U) + diag(x$lambda, x$p)
-  res <- Sigma.eclairs$U %*% ((Sigma.eclairs$dSq * (1 - lambda)) * t(Sigma.eclairs$U)) +
-    diag(Sigma.eclairs$nu * lambda, Sigma.eclairs$p)
-  # }else{ \t# covariance between rows \tres = Sigma.eclairs$V %*%
-  # ((Sigma.eclairs$dSq *(1-lambda)) * t(Sigma.eclairs$V)) +
-  # diag(Sigma.eclairs$nu*lambda, Sigma.eclairs$n) }
-
-  rownames(res) <- Sigma.eclairs$colnames
-  colnames(res) <- Sigma.eclairs$colnames
-
-  res
+  .getCovCor(ecl,
+    lambda = lambda,
+    method = "covariance"
+  )
 })
 
 
 #' @importFrom stats cov2cor
 #' @rdname getCov
 #' @export
-setMethod("getCor", c(Sigma.eclairs = "eclairs"), function(
-    Sigma.eclairs, lambda,
+setMethod("getCor", c(ecl = "eclairs"), function(
+    ecl, lambda,
     ...) {
-  cov2cor(getCov(Sigma.eclairs, lambda = lambda, disableWarn = TRUE))
+  .getCovCor(ecl,
+    lambda = lambda,
+    method = "correlation"
+  )
 })
 
 
+.getCovCor <- function(ecl, lambda, method = c("covariance", "correlation")) {
+  method <- match.arg(method)
 
+  if (missing(lambda)) {
+    lambda <- ecl$lambda
+  }
+
+  # reconstruct correlation matrix
+  C <- ecl$U %*% ((ecl$dSq * (1 - lambda)) * t(ecl$U)) +
+    diag(ecl$nu * lambda, ecl$p)
+
+  if (method == "covariance" & !all(ecl$sigma == 1)) {
+    # scale by standard deviations
+    D <- diag(ecl$sigma)
+    C <- D %*% C %*% D
+  }
+
+  rownames(C) <- ecl$colnames
+  colnames(C) <- ecl$colnames
+
+  C
+}
 
 
 
@@ -165,17 +191,15 @@ setMethod("getCor", c(Sigma.eclairs = "eclairs"), function(
 #' @param X data matrix with n samples as rows and p features as columns
 #' @param k the rank of the low rank component
 #' @param lambda shrinkage parameter. If not specified, it is estimated from the data.
-#' @param compute compute the 'covariance' (default) or 'correlation'
+#' @param compute evaluate either the \code{"covariance"} or \code{"correlation"} of \code{X}
 #' @param n.samples number of samples data is from.  Usually \code{nrow(X)}, but can be other values in special cases.
-# @param center center columns of X (default: TRUE) @param scale scale columns
-# of X (default: TRUE)
-#' @param warmStart result of previous SVD to initialize values
 #'
 #' @return \link{eclairs} object storing:
 #' \itemize{
 #'  \item{U: }{orthonormal matrix with k columns representing the low rank component}
 #'  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
 #'  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}
+#'  \item{sigma: }{standard deviations of input columns}
 #'  \item{nu: }{diagonal value, \eqn{\nu}, of target matrix in shrinkage}
 #'  \item{n: }{number of samples (i.e. rows) in the original data}
 #'  \item{p: }{number of features (i.e. columns) in the original data}
@@ -187,11 +211,11 @@ setMethod("getCor", c(Sigma.eclairs = "eclairs"), function(
 #' }
 #'
 #' @details
-#' Compute \eqn{U}, \eqn{d^2} to approximate the covariance/correlation matrix between columns of data matrix X by \eqn{U diag(d^2 (1-\lambda)) U^T + diag(\nu * \lambda)}.  When computing the covariance matrix \eqn{\nu} is the constant variance which is the mean of all feature-wise variances.  When computing the correlation matrix, \eqn{\nu = 1}.
+#' Compute \eqn{U}, \eqn{d^2} to approximate the correlation matrix between columns of data matrix X by \eqn{U diag(d^2 (1-\lambda)) U^T + I\nu\lambda}.  When computing the covariance matrix, scale by the standard deviation of each feature.
 #'
 #' @examples
 #' library(Rfast)
-#' set.seed(1)
+#'
 #' n <- 800 # number of samples
 #' p <- 200 # number of features
 #'
@@ -199,7 +223,7 @@ setMethod("getCor", c(Sigma.eclairs = "eclairs"), function(
 #' Sigma <- autocorr.mat(p, .9)
 #'
 #' # draw data from correlation matrix Sigma
-#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 #' rownames(Y) <- paste0("sample_", seq(n))
 #' colnames(Y) <- paste0("gene_", seq(p))
 #'
@@ -218,9 +242,7 @@ setMethod("getCor", c(Sigma.eclairs = "eclairs"), function(
 #' @importFrom methods new
 #'
 #' @export
-eclairs <- function(
-    X, k, lambda = NULL, compute = c("covariance", "correlation"),
-    n.samples = nrow(X), warmStart = NULL) {
+eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"), n.samples = nrow(X)) {
   stopifnot(is.matrix(X))
   compute <- match.arg(compute)
 
@@ -234,24 +256,24 @@ eclairs <- function(
   n <- nrow(X)
   p <- ncol(X)
 
+  # scale of target matrix
+  nu <- 1
+
   # save row and columns names since X is overwritten
   rn <- rownames(X)
   cn <- colnames(X)
 
-  # scale=TRUE if correlation is computed, scale features
-  scale <- ifelse(compute == "correlation", TRUE, FALSE)
+  # scale so that cross-product gives correlation features are *columns*
+  X <- .standardise(X) / sqrt(n - 1)
 
-  # Estimate nu, the scale of the target matrix needs to be computed here,
-  # because X is overwritten
-  nu <- ifelse(compute == "correlation", 1, mean(colVars(X)))
+  # save standard deviation of input features
+  sigma <- attr(X, "sd")
 
-  # scale so that cross-product gives correlation features are *columns*\t
-  # Standarizing sets the varianes of each column to be equal \tso the using
-  # a single sigSq across all columns is a good \tapproximation X = scale(X)
-  # / sqrt(n-1) if( center | scale ){ \tX = standardise(X, center=center,
-  # scale=scale) } always divide by sqrt(n-1) so that var(x[,1]) is
-  # crossprod(x[,1])/(n-1) when center is TRUE
-  X <- standardise(X, center = TRUE, scale = scale) / sqrt(n - 1)
+  # if computing the correlation matrix,
+  # set the scale of each feature to 1
+  if (compute == "correlation") {
+    sigma[] <- 1
+  }
 
   if (missing(k)) {
     k <- min(n, p)
@@ -262,9 +284,7 @@ eclairs <- function(
 
   # SVD of X to get low rank estimate of Sigma
   if (k < min(p, n) / 3) {
-    # if( is.null(warmStart) ){ dcmp = svds(X, k, isreal=TRUE)
-    dcmp <- irlba(X, k) # should be faster than PRIMME::svds
-    # }else{\t\t\t \tdcmp = svds(X, k, v0=warmStart$U, isreal=TRUE) }
+    dcmp <- irlba(X, k)
   } else {
     dcmp <- svd(X)
 
@@ -277,7 +297,6 @@ eclairs <- function(
   }
 
   # Estimate lambda
-
   if (missing(lambda) | is.null(lambda)) {
     # Estimate lambda by empirical Bayes, using nu as scale of target Since
     # data is scaled to have var 1 (instead of n), multiply by n
@@ -291,16 +310,25 @@ eclairs <- function(
   # This is motivated by whitening:::makePositivDiagonal() but here adjust
   # both U and V so reconstructed data is correct
   values <- sign0(diag(dcmp$v))
-  # dcmp$v = sweep(dcmp$v, 2, values, '*') dcmp$u = sweep(dcmp$u, 2, values,
-  # '*')
 
   # faster version
   dcmp$v <- eachrow(dcmp$v, values, "*")
   dcmp$u <- eachrow(dcmp$u, values, "*")
 
   result <- list(
-    U = dcmp$v, dSq = dcmp$d^2, V = dcmp$u, lambda = res$lambda, logML = res$logML,
-    nu = nu, n = n.samples, p = p, k = k, rownames = rn, colnames = cn, method = "svd",
+    U = dcmp$v,
+    dSq = dcmp$d^2,
+    V = dcmp$u,
+    lambda = res$lambda,
+    logML = res$logML,
+    sigma = sigma,
+    nu = nu,
+    n = n.samples,
+    p = p,
+    k = k,
+    rownames = rn,
+    colnames = cn,
+    method = "svd",
     call = match.call()
   )
 
@@ -322,6 +350,19 @@ sign0 <- function(x) {
 
   res
 }
+
+# like Rfast::standardise()
+# but returns SD of each column
+.standardise <- function(x) {
+  y <- t(x) - Rfast::colmeans(x)
+  s <- sqrt(Rfast::rowsums(y^2) / (nrow(x) - 1))
+  y <- y / s
+  y <- t(y)
+
+  attr(y, "sd") <- s
+  y
+}
+
 
 #' Plot eclairs object
 #'

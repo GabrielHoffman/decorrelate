@@ -1,12 +1,14 @@
-#' Create autocorrelation matrix
+#' Create auto-correlation matrix
 #'
-#' Create autocorrelation matrix
+#' Create auto-correlation matrix
 #'
 #' @param p dimension of matrix
 #' @param rho autocorrelation value
 #'
+#' @return auto-matrix of size p with parameter rho
+#'
 #' @examples
-#' # Create 10x10 matrix with correlation between adjacent enties is 0.9
+#' # Create 4x4 matrix with correlation between adjacent enties is 0.9
 #' autocorr.mat(4, .9)
 #'
 #' @export

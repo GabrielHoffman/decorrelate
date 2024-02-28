@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,8 +72,8 @@
                         <h4 data-toc-skip class="author">Developed by <a href="http://gabrielhoffman.github.io/" class="external-link">Gabriel Hoffman</a>
 </h4>
             
-            <h4 data-toc-skip class="date">Run on 2023-09-22
-13:35:01.981039</h4>
+            <h4 data-toc-skip class="date">Run on 2024-02-27
+22:31:05.417545</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/GabrielHoffman/decorrelate/blob/HEAD/vignettes/decorrelate.Rmd" class="external-link"><code>vignettes/decorrelate.Rmd</code></a></small>
       <div class="d-none name"><code>decorrelate.Rmd</code></div>
@@ -126,7 +126,7 @@ rotated, scaled and rotated back to original axes.
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/GabrielHoffman/decorrelate" class="external-link">decorrelate</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://mvtnorm.R-forge.R-project.org" class="external-link">mvtnorm</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RfastOfficial/Rfast" class="external-link">Rfast</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">500</span>  <span class="co"># number of samples</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">200</span>  <span class="co"># number of features</span></span>
@@ -135,7 +135,7 @@ rotated, scaled and rotated back to original axes.
 <span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/autocorr.mat.html">autocorr.mat</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">0.9</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># draw data from correlation matrix Sigma</span></span>
-<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mvtnorm/man/Mvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span> <span class="op">*</span> <span class="fl">5.1</span><span class="op">)</span></span>
+<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span> <span class="op">*</span> <span class="fl">5.1</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"sample_"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"gene_"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p</span><span class="op">)</span></span>
 <span></span>
@@ -260,7 +260,7 @@ columns, but the correlation can be computed using
 <span><span class="co"># generate covariance matrix, where the diagonals (i.e. variances) vary</span></span>
 <span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/clusterGeneration/man/genPositiveDefMat.html" class="external-link">genPositiveDefMat</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">$</span><span class="va">Sigma</span></span>
 <span></span>
-<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mvtnorm/man/Mvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span>
+<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># examine variances of the first 5 variables</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">Y</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>

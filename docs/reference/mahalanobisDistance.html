@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.19</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,12 +54,12 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mahalanobisDistance</span><span class="op">(</span><span class="va">Sigma.eclairs</span>, <span class="va">X</span>, <span class="va">lambda</span>, center <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mahalanobisDistance</span><span class="op">(</span><span class="va">ecl</span>, <span class="va">X</span>, <span class="va">lambda</span>, center <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>Sigma.eclairs</dt>
+    <dl><dt>ecl</dt>
 <dd><p>estimate of covariance/correlation matrix from <code>eclairs</code> storing \(U\), \(d_1^2\), \(\lambda\) and \(\nu\)</p></dd>
 
 
@@ -68,7 +68,7 @@
 
 
 <dt>lambda</dt>
-<dd><p>specify lambda and override value from ‘Sigma.eclairs’</p></dd>
+<dd><p>specify lambda and override value from ‘ecl’</p></dd>
 
 
 <dt>center</dt>
@@ -89,7 +89,7 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RfastOfficial/Rfast" class="external-link">Rfast</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">800</span> <span class="co"># number of samples</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">200</span> <span class="co"># number of features</span></span></span>
 <span class="r-in"><span></span></span>
@@ -97,30 +97,31 @@
 <span class="r-in"><span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="autocorr.mat.html">autocorr.mat</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">.9</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># draw data from correlation matrix Sigma</span></span></span>
-<span class="r-in"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span> <span class="op">*</span> <span class="fl">5.1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span> <span class="op">*</span> <span class="fl">5.1</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># eclairs decomposition</span></span></span>
 <span class="r-in"><span><span class="va">ecl</span> <span class="op">&lt;-</span> <span class="fu"><a href="eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Mahalanobis distance after mean centering</span></span></span>
-<span class="r-in"><span><span class="va">Y_center</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="va">Y</span>, scale<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">mu</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colMeans</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Y_center</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="va">Y</span>, scale <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colMeans</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Standard R method</span></span></span>
-<span class="r-in"><span><span class="va">a</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/mahalanobis.html" class="external-link">mahalanobis</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">mu</span>, cov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/mahalanobis.html" class="external-link">mahalanobis</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">mu</span>, cov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># distance using eclairs decomposition, no shrinage</span></span></span>
-<span class="r-in"><span><span class="va">b</span> <span class="op">=</span> <span class="fu">mahalanobisDistance</span><span class="op">(</span><span class="va">ecl</span>, <span class="va">Y_center</span>, lambda<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">a</span><span class="op">-</span><span class="va">b</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -6.536993e-13  4.263256e-13</span>
+<span class="r-in"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu">mahalanobisDistance</span><span class="op">(</span><span class="va">ecl</span>, <span class="va">Y_center</span>, lambda <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">a</span> <span class="op">-</span> <span class="va">b</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -7.105427e-13  5.968559e-13</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># with shrinkage</span></span></span>
-<span class="r-in"><span><span class="va">d</span> <span class="op">=</span> <span class="fu">mahalanobisDistance</span><span class="op">(</span><span class="va">ecl</span>, <span class="va">Y_center</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">mahalanobisDistance</span><span class="op">(</span><span class="va">ecl</span>, <span class="va">Y_center</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># centering internally</span></span></span>
-<span class="r-in"><span><span class="va">e</span> <span class="op">=</span> <span class="fu">mahalanobisDistance</span><span class="op">(</span><span class="va">ecl</span>, <span class="va">Y</span>, center<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">d</span><span class="op">-</span><span class="va">e</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">e</span> <span class="op">&lt;-</span> <span class="fu">mahalanobisDistance</span><span class="op">(</span><span class="va">ecl</span>, <span class="va">Y</span>, center <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">d</span> <span class="op">-</span> <span class="va">e</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0 0</span>
+<span class="r-in"><span><span class="co">#</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

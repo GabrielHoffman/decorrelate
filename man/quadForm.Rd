@@ -4,10 +4,10 @@
 \alias{quadForm}
 \title{Evaluate quadratic form}
 \usage{
-quadForm(Sigma.eclairs, A, alpha = -1/2)
+quadForm(ecl, A, alpha = -1/2)
 }
 \arguments{
-\item{Sigma.eclairs}{estimate of covariance/correlation matrix from \code{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
+\item{ecl}{estimate of covariance/correlation matrix from \code{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
 \item{A}{matrix}
 
@@ -17,11 +17,10 @@ quadForm(Sigma.eclairs, A, alpha = -1/2)
 Evaluate quadratic form
 }
 \details{
-Evaluate quadratic form \eqn{A^T \Sigma^{2*\alpha} A}
+Evaluate quadratic form \eqn{A^T \Sigma^{2\alpha} A}
 }
 \examples{
 library(Rfast)
-set.seed(1)
 n <- 800 # number of samples
 p <- 200 # number of features
 
@@ -29,7 +28,7 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 
 # eclairs decomposition
 ecl <- eclairs(Y)

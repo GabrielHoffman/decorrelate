@@ -2,7 +2,7 @@
 % Please edit documentation in R/autocorr.mat.R
 \name{autocorr.mat}
 \alias{autocorr.mat}
-\title{Create autocorrelation matrix}
+\title{Create auto-correlation matrix}
 \usage{
 autocorr.mat(p, rho)
 }
@@ -11,11 +11,14 @@ autocorr.mat(p, rho)
 
 \item{rho}{autocorrelation value}
 }
+\value{
+auto-matrix of size p with parameter rho
+}
 \description{
-Create autocorrelation matrix
+Create auto-correlation matrix
 }
 \examples{
-# Create 10x10 matrix with correlation between adjacent enties is 0.9
+# Create 4x4 matrix with correlation between adjacent enties is 0.9
 autocorr.mat(4, .9)
 
 }

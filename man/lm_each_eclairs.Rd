@@ -8,7 +8,7 @@ lm_each_eclairs(
   formula,
   data,
   X,
-  Sigma.eclairs,
+  ecl,
   subset,
   weights,
   na.action,
@@ -30,7 +30,7 @@ lm_each_eclairs(
 
 \item{X}{matrix or data.frame where each column stores a predictor to be evaluated by the regression model one at a time.  The \eqn{i^{th}} model includes \code{X[,i]} as a predictor.}
 
-\item{Sigma.eclairs}{estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
+\item{ecl}{estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
 \item{subset}{same as for \link{lm}}
 
@@ -64,7 +64,7 @@ Fit linear model on each feature after applying decorrelation projection to resp
 }
 \examples{
 library(Rfast)
-set.seed(1)
+
 n <- 800 # number of samples
 p <- 200 # number of features
 
@@ -72,7 +72,7 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 
 # eclairs decomposition
 ecl <- eclairs(Y)

@@ -4,7 +4,7 @@
 \alias{mult_eclairs}
 \title{Multiply by eclairs matrix}
 \usage{
-mult_eclairs(X, U1, dSq1, lambda, nu, alpha, transpose = FALSE)
+mult_eclairs(X, U1, dSq1, lambda, nu, alpha, sigma, transpose = FALSE)
 }
 \arguments{
 \item{X}{matrix to be transformed so *columns* are independent}
@@ -18,6 +18,8 @@ mult_eclairs(X, U1, dSq1, lambda, nu, alpha, transpose = FALSE)
 \item{nu}{diagonal value of target matrix in shrinkage}
 
 \item{alpha}{exponent to be evaluated}
+
+\item{sigma}{standard deviation of each feature}
 
 \item{transpose}{logical, (default FALSE) indicating if X should be transposed first}
 }

@@ -5,9 +5,10 @@
 #'
 #' Summarize correlation matrix as a scalar scalar value, given its SVD and shrinkage parameter. \code{averageCorr()} computes the average correlation, and \code{averageCorrSq()} computes the average squared correlation, where both exclude the diagonal terms. \code{sumInverseCorr()} computes the sum of entries in the inverse correlation matrix to give the 'effective number of independent features'. \code{effVariance()} evaluates effective variance of the correlation (or covariance) matrix.  These values can be computed using the correlation matrix using standard MLE, or EB shrinkage.
 #'
-#' @param Sigma.eclairs estimate of correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
+#' @param ecl estimate of correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
 #' @param method compute average correlation for either the empirical Bayes (EB) shinken correlation matrix or the MLE correlation matrix
 #'
+#' @return value of summary statistic
 #' @details
 #' \code{tr()}: trace of the matrix. Sum of diagonals is the same as the sum of the eigen-values.
 #'
@@ -21,11 +22,10 @@
 #'
 #'
 #' @references
-#'   \insertAllCited{}
+#' \insertAllCited{}
 #'
 #' @examples
 #' library(Rfast)
-#' set.seed(1)
 #' n <- 200 # number of samples
 #' p <- 800 # number of features
 #'
@@ -34,44 +34,45 @@
 #' diag(Sigma) <- 1
 #'
 #' # draw data from correlation matrix Sigma
-#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma)
+#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma, seed = 1)
 #' rownames(Y) <- paste0("sample_", seq(n))
 #' colnames(Y) <- paste0("gene_", seq(p))
 #'
 #' # eclairs decomposition
-#' Sigma.eclairs <- eclairs(Y, compute = "cor")
+#' ecl <- eclairs(Y, compute = "cor")
 #'
 #' # Average correlation value
-#' averageCorr(Sigma.eclairs)
+#' averageCorr(ecl)
 #'
 #' # Average squared correlation value
-#' averageCorrSq(Sigma.eclairs)
+#' averageCorrSq(ecl)
 #'
 #' # Sum elements in inverse correlation matrix
 #' # Gives the effective number of independent features
-#' sumInverseCorr(Sigma.eclairs)
+#' sumInverseCorr(ecl)
 #'
 #' # Effective variance
-#' effVariance(Sigma.eclairs)
+#' effVariance(ecl)
 #'
 #' @rdname summarizeCorr
 #' @export
-averageCorr <- function(Sigma.eclairs, method = c("EB", "MLE")) {
+averageCorr <- function(ecl, method = c("EB", "MLE")) {
   method <- match.arg(method)
 
-  if (Sigma.eclairs$nu != 1) {
-    stop("Can only compute effective dependence on a correlation matrix")
+  # check if scale of all features is 1
+  if (!all(ecl$sigma == 1)) {
+    stop("Only computable from a corrrelation matrix")
   }
 
   if (method == "MLE") {
-    Sigma.eclairs$lambda <- 0
+    ecl$lambda <- 0
   }
 
-  p <- Sigma.eclairs$p
+  p <- ecl$p
 
   # Compute Grand sum: sum of all elements
   one <- rep(1, p)
-  gs <- quadForm(Sigma.eclairs, one, alpha = 1 / 2)
+  gs <- quadForm(ecl, one, alpha = 1 / 2)
 
   # subtract diagonal and divide by number of elements
   (gs - p) / (p * (p - 1))
@@ -81,24 +82,25 @@ averageCorr <- function(Sigma.eclairs, method = c("EB", "MLE")) {
 # Also see https://doi.org/10.1111/evo.14382
 #' @rdname summarizeCorr
 #' @export
-averageCorrSq <- function(Sigma.eclairs, method = c("EB", "MLE")) {
+averageCorrSq <- function(ecl, method = c("EB", "MLE")) {
   method <- match.arg(method)
 
-  if (Sigma.eclairs$nu != 1) {
-    stop("Can only compute effective dependence on a correlation matrix")
+  # check if scale of all features is 1
+  if (!all(ecl$sigma == 1)) {
+    stop("Only computable from a corrrelation matrix")
   }
 
   if (method == "MLE") {
-    Sigma.eclairs$lambda <- 0
+    ecl$lambda <- 0
   }
 
-  p <- Sigma.eclairs$p
+  p <- ecl$p
 
   # get eigen-values
-  dSq <- c(Sigma.eclairs$dSq, rep(0, max(0, Sigma.eclairs$p - length(Sigma.eclairs$dSq))))
+  dSq <- c(ecl$dSq, rep(0, max(0, ecl$p - length(ecl$dSq))))
 
   # get shrunken eigen-values
-  dSq.shrink <- dSq * (1 - Sigma.eclairs$lambda) + Sigma.eclairs$nu * Sigma.eclairs$lambda
+  dSq.shrink <- dSq * (1 - ecl$lambda) + ecl$nu * ecl$lambda
 
   # mean eigen-value
   m <- mean(dSq.shrink)
@@ -109,56 +111,62 @@ averageCorrSq <- function(Sigma.eclairs, method = c("EB", "MLE")) {
 
 #' @rdname summarizeCorr
 #' @export
-sumInverseCorr <- function(Sigma.eclairs, method = c("EB", "MLE")) {
+sumInverseCorr <- function(ecl, method = c("EB", "MLE")) {
   method <- match.arg(method)
 
-  if (Sigma.eclairs$nu != 1) {
-    stop("Can only compute effective dependence on a correlation matrix")
+  # check if scale of all features is 1
+  if (!all(ecl$sigma == 1)) {
+    stop("Only computable from a corrrelation matrix")
   }
 
   if (method == "MLE") {
-    Sigma.eclairs$lambda <- 0
+    ecl$lambda <- 0
   }
 
-  p <- Sigma.eclairs$p
+  p <- ecl$p
   one <- rep(1, p)
 
-  quadForm(Sigma.eclairs, one)
+  quadForm(ecl, one)
 }
 
 
 #' @rdname summarizeCorr
 #' @export
-effVariance <- function(Sigma.eclairs, method = c("EB", "MLE")) {
+effVariance <- function(ecl, method = c("EB", "MLE")) {
   method <- match.arg(method)
 
   if (method == "MLE") {
-    Sigma.eclairs$lambda <- 0
+    ecl$lambda <- 0
   }
 
   # Can be either a covariance or correlation matrix det(C)^(1/p) Compute in
   # log space then exponentiate
-  exp(logDet(Sigma.eclairs) / Sigma.eclairs$p)
+  exp(logDet(ecl) / ecl$p)
 }
 
 
 #' @rdname summarizeCorr
 #' @export
-tr <- function(Sigma.eclairs, method = c("EB", "MLE")) {
+tr <- function(ecl, method = c("EB", "MLE")) {
   method <- match.arg(method)
 
+  # check if scale of all features is 1
+  if (!all(ecl$sigma == 1)) {
+    stop("Only computable from a corrrelation matrix")
+  }
+
   if (method == "MLE") {
-    Sigma.eclairs$lambda <- 0
+    ecl$lambda <- 0
   }
 
   # sum of eigen-values
-  p <- Sigma.eclairs$p
+  p <- ecl$p
 
   # get eigen-values
-  dSq <- c(Sigma.eclairs$dSq, rep(0, max(0, Sigma.eclairs$p - length(Sigma.eclairs$dSq))))
+  dSq <- c(ecl$dSq, rep(0, max(0, ecl$p - length(ecl$dSq))))
 
   # get shrunken eigen-values
-  dSq.shrink <- dSq * (1 - Sigma.eclairs$lambda) + Sigma.eclairs$nu * Sigma.eclairs$lambda
+  dSq.shrink <- dSq * (1 - ecl$lambda) + ecl$nu * ecl$lambda
 
   sum(dSq.shrink)
 }

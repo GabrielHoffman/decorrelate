@@ -4,13 +4,35 @@
 \alias{logDet}
 \title{Evaluate the log determinant}
 \usage{
-logDet(Sigma.eclairs, alpha = 1)
+logDet(ecl, alpha = 1)
 }
 \arguments{
-\item{Sigma.eclairs}{estimate of covariance/correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
+\item{ecl}{estimate of covariance/correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
 \item{alpha}{exponent to be applied to eigen-values}
 }
+\value{
+log determinant
+}
 \description{
 Evaluate the log determinant of the matrix
+}
+\examples{
+library(Rfast)
+
+n <- 800 # number of samples
+p <- 200 # number of features
+
+# create correlation matrix
+Sigma <- autocorr.mat(p, .9)
+
+# draw data from correlation matrix Sigma
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
+rownames(Y) <- paste0("sample_", seq(n))
+colnames(Y) <- paste0("gene_", seq(p))
+
+# eclairs decomposition
+ecl <- eclairs(Y)
+
+logDet(ecl)
 }

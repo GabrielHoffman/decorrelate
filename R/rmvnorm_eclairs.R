@@ -8,17 +8,18 @@
 #'
 #' @param n sample size
 #' @param mu mean vector
-#' @param Sigma.eclairs covariance matrix as an \link{eclairs} object
+#' @param ecl covariance matrix as an \link{eclairs} object
 #' @param v degrees of freedom, defaults to Inf.  If finite, uses a multivariate t distribution
+#' @param seed If you want the same to be generated again use a seed for the generator, an integer number
 #'
 #' @details
 #' Draw from multivariate normal and t distributions using eclairs decomposition.  If the (implied) covariance matrix is \eqn{p \times p}, the standard approach is \eqn{O(p^3)}. Taking advantage of the previously computed eclairs decomposition of rank \eqn{k}, this can be done in \eqn{O(pk^2)}.
 #'
-#' @return matrix where rows are samples from multivariate normal or t distribution where columns have covariance specified by \code{Sigma.eclairs}
+#' @return matrix where rows are samples from multivariate normal or t distribution where columns have covariance specified by \code{ecl}
 #'
 #' @examples
 #' library(Rfast)
-#' set.seed(1)
+#'
 #' n <- 800 # number of samples
 #' p <- 200 # number of features
 #'
@@ -26,13 +27,13 @@
 #' Sigma <- autocorr.mat(p, .9)
 #'
 #' # draw data from correlation matrix Sigma
-#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma)
+#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma, seed = 1)
 #'
 #' # perform eclairs decomposition
 #' ecl <- eclairs(Y)
 #'
 #' # draw from multivariate normal
-#' n <- 100000
+#' n <- 10000
 #' mu <- rep(0, ncol(Y))
 #'
 #' # using eclairs decomposition
@@ -51,32 +52,19 @@
 #' @importFrom methods is
 #' @importFrom Rfast matrnorm
 #' @export
-rmvnorm_eclairs <- function(n, mu, Sigma.eclairs, v = Inf) {
-  stopifnot(is(Sigma.eclairs, "eclairs"))
+rmvnorm_eclairs <- function(n, mu, ecl, v = Inf, seed = NULL) {
+  stopifnot(is(ecl, "eclairs"))
 
   p <- length(mu)
 
   # simulate from standard normal
-  X <- matrnorm(n, p)
-
-  # get full covariance matrix from eclairs sigma = getCov(Sigma.eclairs)
-
-  # transform by covariance and add mean\t res1 = X %*% chol(sigma) + rep(mu,
-  # rep(n, p))
-
-  # alpha = 1/2 induces correlation res2 = mult_eclairs(X, Sigma.eclairs$U,
-  # Sigma.eclairs$dSq, Sigma.eclairs$lambda, alpha = 1/2) + rep(mu, rep(n,
-  # p))
-
-
-  # cov(res1)[1:3, 1:3] cov(res2)[1:3, 1:3]
-
-  # hist(cov(res1) - cov(res2)) hist(cov(res2) - sigma)
+  X <- matrnorm(n, p, seed = seed)
 
   # Create X %*% sqrt of Sigma alpha = 1/2 induces correlation, -1/2 removes
   # correlation
-  X_transform <- mult_eclairs(X, Sigma.eclairs$U, Sigma.eclairs$dSq, Sigma.eclairs$lambda,
-    Sigma.eclairs$nu,
+  X_transform <- mult_eclairs(X, ecl$U, ecl$dSq, ecl$lambda,
+    ecl$nu,
+    ecl$sigma,
     alpha = 1 / 2
   )
 

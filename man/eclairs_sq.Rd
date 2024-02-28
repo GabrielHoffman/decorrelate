@@ -4,15 +4,10 @@
 \alias{eclairs_sq}
 \title{Compute eclairs decomp of squared correlation matrix}
 \usage{
-eclairs_sq(
-  Sigma.eclairs,
-  rank1 = Sigma.eclairs$k,
-  rank2 = Inf,
-  varianceFraction = 1
-)
+eclairs_sq(ecl, rank1 = ecl$k, rank2 = Inf, varianceFraction = 1)
 }
 \arguments{
-\item{Sigma.eclairs}{estimate of correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
+\item{ecl}{estimate of correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
 \item{rank1}{use the first 'rank' singular vectors from the SVD.  Using increasing rank1 will increase the accuracy of the estimation.  But note that the computationaly complexity is O(P choose(rank, 2)), where P is the number of features in the dataset}
 
@@ -35,7 +30,6 @@ In practice, this can be reduced to O(P (choose(R,2) + R)^2)
 \examples{
 # Compute correlations directly and using eclairs decomp
 
-set.seed(1)
 n <- 600 # number of samples
 p <- 100 # number of features
 
@@ -43,7 +37,7 @@ p <- 100 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- Rfast::rmvnorm(n, rep(0, p), sigma = Sigma)
+Y <- Rfast::rmvnorm(n, rep(0, p), sigma = Sigma, seed = 1)
 rownames(Y) <- paste0("sample_", seq(n))
 colnames(Y) <- paste0("gene_", seq(p))
 

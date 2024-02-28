@@ -4,14 +4,14 @@
 \alias{decorrelate}
 \title{Decorrelation projection}
 \usage{
-decorrelate(X, Sigma.eclairs, lambda, transpose = FALSE, alpha = -1/2)
+decorrelate(X, ecl, lambda, transpose = FALSE, alpha = -1/2)
 }
 \arguments{
 \item{X}{matrix to be transformed so *columns* are independent}
 
-\item{Sigma.eclairs}{estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
+\item{ecl}{estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
-\item{lambda}{specify lambda and override value from \code{Sigma.eclairs}}
+\item{lambda}{specify lambda and override value from \code{ecl}}
 
 \item{transpose}{logical, (default FALSE) indicating if X should be transposed first}
 
@@ -28,7 +28,7 @@ Efficient decorrelation projection using \link{eclairs} decomposition
 }
 \examples{
 library(Rfast)
-set.seed(1)
+
 n <- 800 # number of samples
 p <- 200 # number of features
 
@@ -36,7 +36,7 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 
 # eclairs decomposition
 ecl <- eclairs(Y)

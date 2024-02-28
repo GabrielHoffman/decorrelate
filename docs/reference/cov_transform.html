@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,17 +55,18 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cov_transform</span><span class="op">(</span></span>
-<span>  <span class="va">Sigma.eclairs</span>,</span>
+<span>  <span class="va">ecl</span>,</span>
 <span>  <span class="va">f</span>,</span>
 <span>  <span class="va">n.boot</span>,</span>
 <span>  lambda <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  compute <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"covariance"</span>, <span class="st">"correlation"</span><span class="op">)</span></span>
+<span>  compute <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"covariance"</span>, <span class="st">"correlation"</span><span class="op">)</span>,</span>
+<span>  seed <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>Sigma.eclairs</dt>
+    <dl><dt>ecl</dt>
 <dd><p>covariance/correlation matrix as an <a href="eclairs.html">eclairs</a> object</p></dd>
 
 
@@ -82,14 +83,18 @@
 
 
 <dt>compute</dt>
-<dd><p>compute the 'covariance' (default) or 'correlation'</p></dd>
+<dd><p>evaluate either the <code>"covariance"</code> or <code>"correlation"</code> of <code>X</code></p></dd>
+
+
+<dt>seed</dt>
+<dd><p>If you want the same to be generated again use a seed for the generator, an integer number</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p><a href="eclairs.html">eclairs</a> decomposition represented correlation/covariance on the transformed data</p>
+<p><a href="eclairs.html">eclairs</a> decomposition representing correlation/covariance on the transformed data</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -101,7 +106,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RfastOfficial/Rfast" class="external-link">Rfast</a></span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: Rcpp</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: RcppZiggurat</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">800</span> <span class="co"># number of samples</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">200</span> <span class="co"># number of features</span></span></span>
 <span class="r-in"><span></span></span>
@@ -109,7 +114,7 @@
 <span class="r-in"><span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="autocorr.mat.html">autocorr.mat</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">.9</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># sample matrix from MVN with covariance Sigma</span></span></span>
-<span class="r-in"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># perform eclairs decomposition</span></span></span>
 <span class="r-in"><span><span class="va">ecl</span> <span class="op">&lt;-</span> <span class="fu"><a href="eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span></span>
@@ -138,7 +143,7 @@
 <span class="r-in"><span><span class="co"># Evaluate differences</span></span></span>
 <span class="r-in"><span><span class="co"># small differences are due to Monte Carlo error from boostrap sampling</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">C1</span> <span class="op">-</span> <span class="va">C2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.1190848  0.1128373</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.1174916  0.1155881</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot entries from two covariance estimates</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>pty <span class="op">=</span> <span class="st">"s"</span><span class="op">)</span></span></span>
@@ -147,7 +152,8 @@
 <span class="r-plt img"><img src="cov_transform-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Save above but compute eclairs for correlation matrix</span></span></span>
+<span class="r-in"><span><span class="co"># Same above but compute eclairs for correlation matrix</span></span></span>
+<span class="r-in"><span><span class="co">#-------------------------------------------------------</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Evaluate eclairs decomposition on boostrap samples</span></span></span>
 <span class="r-in"><span><span class="va">ecl2</span> <span class="op">&lt;-</span> <span class="fu">cov_transform</span><span class="op">(</span><span class="va">ecl</span>, f <span class="op">=</span> <span class="va">f</span>, <span class="va">n_boot</span>, compute <span class="op">=</span> <span class="st">"correlation"</span>, lambda <span class="op">=</span> <span class="fl">1e-4</span><span class="op">)</span></span></span>
@@ -164,7 +170,7 @@
 <span class="r-in"><span><span class="co"># Evaluate differences</span></span></span>
 <span class="r-in"><span><span class="co"># small differences are due to Monte Carlo error from boostrap sampling</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">C1</span> <span class="op">-</span> <span class="va">C2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.02578170  0.02425485</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.02505992  0.02403754</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot entries from two correlation estimates</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>pty <span class="op">=</span> <span class="st">"s"</span><span class="op">)</span></span></span>

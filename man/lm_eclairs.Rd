@@ -7,7 +7,7 @@
 lm_eclairs(
   formula,
   data,
-  Sigma.eclairs,
+  ecl,
   subset,
   weights,
   na.action,
@@ -27,7 +27,7 @@ lm_eclairs(
 
 \item{data}{a matrix or data.frame containing the variables in the model}
 
-\item{Sigma.eclairs}{estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
+\item{ecl}{estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
 \item{subset}{same as for \link{lm}}
 
@@ -64,7 +64,7 @@ This function fit a linear regression to the transformed response, and transform
 }
 \examples{
 library(Rfast)
-set.seed(1)
+
 n <- 800 # number of samples
 p <- 200 # number of features
 
@@ -72,7 +72,7 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 
 # eclairs decomposition
 ecl <- eclairs(Y)

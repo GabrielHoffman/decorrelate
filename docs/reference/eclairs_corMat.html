@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">eclairs_corMat</span><span class="op">(</span><span class="va">C</span>, <span class="va">n</span>, k <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">C</span><span class="op">)</span><span class="op">)</span>, lambda <span class="op">=</span> <span class="cn">NULL</span>, warmStart <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">eclairs_corMat</span><span class="op">(</span><span class="va">C</span>, <span class="va">n</span>, k <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">C</span><span class="op">)</span><span class="op">)</span>, lambda <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -74,10 +74,6 @@
 <dt>lambda</dt>
 <dd><p>shrinkage parameter. If not specified, it is estimated from the data.</p></dd>
 
-
-<dt>warmStart</dt>
-<dd><p>result of previous SVD to initialize values</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -86,6 +82,7 @@
 <p><a href="eclairs.html">eclairs</a> object storing:</p><ul><li><p>U: orthonormal matrix with k columns representing the low rank component</p></li>
 <li><p>dSq: eigen-values so that \(U diag(d^2) U^T\) is the low rank component</p></li>
 <li><p>lambda: shrinkage parameter \(\lambda\) for the scaled diagonal component</p></li>
+<li><p>sigma: standard deviations of input columns</p></li>
 <li><p>nu: diagonal value, \(\nu\), of target matrix in shrinkage</p></li>
 <li><p>n: number of samples (i.e. rows) in the original data</p></li>
 <li><p>p: number of features (i.e. columns) in the original data</p></li>
@@ -99,7 +96,7 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RfastOfficial/Rfast" class="external-link">Rfast</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">800</span> <span class="co"># number of samples</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">200</span> <span class="co"># number of features</span></span></span>
 <span class="r-in"><span></span></span>
@@ -107,7 +104,7 @@
 <span class="r-in"><span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="autocorr.mat.html">autocorr.mat</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">.9</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># draw data from correlation matrix Sigma</span></span></span>
-<span class="r-in"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span> <span class="op">*</span> <span class="fl">5.1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span> <span class="op">*</span> <span class="fl">5.1</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"sample_"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"gene_"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -117,11 +114,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Original data dims: 800 x 200 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Low rank component: 200 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   lambda:             0.0266 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   lambda:             0.0265 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   nu:                 1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Avg corr (MLE):     0.0886 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Avg corr (EB):      0.0862 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   logML:              -117256 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Avg corr (MLE):     0.0854 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Avg corr (EB):      0.0832 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   logML:              -117651 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># eclairs decomposition from correlation matrix</span></span></span>
 <span class="r-in"><span><span class="fu">eclairs_corMat</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span></span>
@@ -129,11 +126,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Original data dims: 800 x 200 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Low rank component: 200 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   lambda:             0.0266 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   lambda:             0.0265 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   nu:                 1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Avg corr (MLE):     0.0886 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Avg corr (EB):      0.0862 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   logML:              -117256 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Avg corr (MLE):     0.0854 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Avg corr (EB):      0.0832 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   logML:              -117651 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

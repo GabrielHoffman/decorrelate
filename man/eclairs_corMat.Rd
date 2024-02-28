@@ -4,7 +4,7 @@
 \alias{eclairs_corMat}
 \title{Estimate covariance/correlation with low rank and shrinkage}
 \usage{
-eclairs_corMat(C, n, k = min(n, nrow(C)), lambda = NULL, warmStart = NULL)
+eclairs_corMat(C, n, k = min(n, nrow(C)), lambda = NULL)
 }
 \arguments{
 \item{C}{sample correlation matrix between features}
@@ -14,8 +14,6 @@ eclairs_corMat(C, n, k = min(n, nrow(C)), lambda = NULL, warmStart = NULL)
 \item{k}{the rank of the low rank component.  Defaults to min of sample size and feature number, \code{min(n, p)}.}
 
 \item{lambda}{shrinkage parameter. If not specified, it is estimated from the data.}
-
-\item{warmStart}{result of previous SVD to initialize values}
 }
 \value{
 \link{eclairs} object storing:
@@ -23,6 +21,7 @@ eclairs_corMat(C, n, k = min(n, nrow(C)), lambda = NULL, warmStart = NULL)
  \item{U: }{orthonormal matrix with k columns representing the low rank component}
  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}
+ \item{sigma: }{standard deviations of input columns}
  \item{nu: }{diagonal value, \eqn{\nu}, of target matrix in shrinkage}
  \item{n: }{number of samples (i.e. rows) in the original data}
  \item{p: }{number of features (i.e. columns) in the original data}
@@ -38,7 +37,7 @@ Estimate covariance/correlation with low rank and shrinkage from the correlation
 }
 \examples{
 library(Rfast)
-set.seed(1)
+
 n <- 800 # number of samples
 p <- 200 # number of features
 
@@ -46,7 +45,7 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 rownames(Y) <- paste0("sample_", 1:n)
 colnames(Y) <- paste0("gene_", 1:p)
 

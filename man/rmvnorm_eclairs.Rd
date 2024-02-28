@@ -4,19 +4,21 @@
 \alias{rmvnorm_eclairs}
 \title{Draw from multivariate normal and t distributions}
 \usage{
-rmvnorm_eclairs(n, mu, Sigma.eclairs, v = Inf)
+rmvnorm_eclairs(n, mu, ecl, v = Inf, seed = NULL)
 }
 \arguments{
 \item{n}{sample size}
 
 \item{mu}{mean vector}
 
-\item{Sigma.eclairs}{covariance matrix as an \link{eclairs} object}
+\item{ecl}{covariance matrix as an \link{eclairs} object}
 
 \item{v}{degrees of freedom, defaults to Inf.  If finite, uses a multivariate t distribution}
+
+\item{seed}{If you want the same to be generated again use a seed for the generator, an integer number}
 }
 \value{
-matrix where rows are samples from multivariate normal or t distribution where columns have covariance specified by \code{Sigma.eclairs}
+matrix where rows are samples from multivariate normal or t distribution where columns have covariance specified by \code{ecl}
 }
 \description{
 Draw from multivariate normal and t distributions using eclairs decomposition
@@ -26,7 +28,7 @@ Draw from multivariate normal and t distributions using eclairs decomposition.  
 }
 \examples{
 library(Rfast)
-set.seed(1)
+
 n <- 800 # number of samples
 p <- 200 # number of features
 
@@ -34,13 +36,13 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma, seed = 1)
 
 # perform eclairs decomposition
 ecl <- eclairs(Y)
 
 # draw from multivariate normal
-n <- 100000
+n <- 10000
 mu <- rep(0, ncol(Y))
 
 # using eclairs decomposition

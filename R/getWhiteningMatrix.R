@@ -4,8 +4,8 @@
 #'
 #' Get whitening matrix implied by \link{eclairs} decompostion
 #'
-#' @param Sigma.eclairs estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
-#' @param lambda specify lambda and override value from \code{Sigma.eclairs}
+#' @param ecl estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
+#' @param lambda specify lambda and override value from \code{ecl}
 #'
 #' @return whitening matrix
 
@@ -15,7 +15,7 @@
 #' n <- 2000
 #' p <- 3
 #'
-#' Y <- matrnorm(n, p) * 10
+#' Y <- matrnorm(n, p, seed = 1) * 10
 #'
 #' # decorrelate with implicit whitening matrix
 #' # give same result as explicity whitening matrix
@@ -33,40 +33,31 @@
 #' range(Z1 - Z2)
 #'
 #' @export
-getWhiteningMatrix <- function(Sigma.eclairs, lambda) {
-  stopifnot(is(Sigma.eclairs, "eclairs"))
+getWhiteningMatrix <- function(ecl, lambda) {
+  stopifnot(is(ecl, "eclairs"))
 
   if (!missing(lambda)) {
-    Sigma.eclairs$lambda <- lambda
+    ecl$lambda <- lambda
   }
-
-  # only valid for n > p
-
-  # v = with(Sigma.eclairs, dSq*(1-lambda) + lambda*nu)
-
-  # # this corresponds to ZCA whitening # omit Sigma.eclairs$U for PCA
-  # whitening alpha = -1/2 Sigma.eclairs$U %*% ((v^alpha)*
-  # t(Sigma.eclairs$U))
-
-  # general solution that applies to the low rank case
-
-  # adapted from mult_eclairs()
 
   # pass R CMD check
   U <- dSq <- lambda <- nu <- NULL
 
-  v <- with(Sigma.eclairs, dSq * (1 - lambda) + lambda * nu)
+  v <- with(ecl, dSq * (1 - lambda) + lambda * nu)
 
   alpha <- -1 / 2
 
   # when lambda is zero, avoid computing the second part
   part1 <- 0
-  if (Sigma.eclairs$lambda > 0) {
-    part1 <- with(Sigma.eclairs, (diag(1, p) - tcrossprod(U, U)) * ((lambda *
-      nu)^alpha))
+  if (ecl$lambda > 0) {
+    part1 <- with(ecl, (diag(1, p) - tcrossprod(U, U)) * ((lambda * nu)^alpha))
   }
 
-  W <- with(Sigma.eclairs, U %*% ((v^alpha) * t(U)) + part1)
+  W <- with(ecl, U %*% ((v^alpha) * t(U)) + part1)
 
+  if (any(ecl$sigma != 1)) {
+    # W %*% diag(ecl$sigma^(2*alpha))
+    W <- t(t(W) * (ecl$sigma^(2 * alpha)))
+  }
   W
 }

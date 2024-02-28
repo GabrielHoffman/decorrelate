@@ -8,13 +8,13 @@
 #' @param n number of samples used to estimate the sample correlation matrix
 #' @param k the rank of the low rank component.  Defaults to min of sample size and feature number, \code{min(n, p)}.
 #' @param lambda shrinkage parameter. If not specified, it is estimated from the data.
-#' @param warmStart result of previous SVD to initialize values
 #'
 #' @return \link{eclairs} object storing:
 #' \itemize{
 #'  \item{U: }{orthonormal matrix with k columns representing the low rank component}
 #'  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
 #'  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}
+#'  \item{sigma: }{standard deviations of input columns}
 #'  \item{nu: }{diagonal value, \eqn{\nu}, of target matrix in shrinkage}
 #'  \item{n: }{number of samples (i.e. rows) in the original data}
 #'  \item{p: }{number of features (i.e. columns) in the original data}
@@ -27,7 +27,7 @@
 #'
 #' @examples
 #' library(Rfast)
-#' set.seed(1)
+#'
 #' n <- 800 # number of samples
 #' p <- 200 # number of features
 #'
@@ -35,7 +35,7 @@
 #' Sigma <- autocorr.mat(p, .9)
 #'
 #' # draw data from correlation matrix Sigma
-#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 #' rownames(Y) <- paste0("sample_", 1:n)
 #' colnames(Y) <- paste0("gene_", 1:p)
 #'
@@ -51,7 +51,7 @@
 #' @importFrom Matrix diag isSymmetric
 #'
 #' @export
-eclairs_corMat <- function(C, n, k = min(n, nrow(C)), lambda = NULL, warmStart = NULL) {
+eclairs_corMat <- function(C, n, k = min(n, nrow(C)), lambda = NULL) {
   # check that diagonals are all equal, up to a tolerance
   if (!all.equal(as.numeric(diag(C)), rep(1, ncol(C)))) {
     stop("All diagonal entries of C must be 1")
@@ -75,11 +75,10 @@ eclairs_corMat <- function(C, n, k = min(n, nrow(C)), lambda = NULL, warmStart =
   if (k > p / 3) {
     dcmp <- eigen(C)
   } else {
-    # partial eigen decomposition if( is.null(warmStart) ){
+    # partial eigen decomposition
     suppressWarnings({
       dcmp <- partial_eigen(C, k)
     })
-    # }else{\t\t \tdcmp <- eigs_sym(C, k, isreal=TRUE, x0=warmStart$U) }
   }
 
   # keep first k eigen values and vectors
@@ -105,15 +104,26 @@ eclairs_corMat <- function(C, n, k = min(n, nrow(C)), lambda = NULL, warmStart =
   # Modify sign of dcmp$v and dcmp$u so principal components are consistant
   # This is motivated by whitening:::makePositivDiagonal() but here adjust
   # both U and V so reconstructed data is correct
-  values <- sign(diag(dcmp$vectors))
+  values <- sign0(diag(dcmp$vectors))
 
   # faster version
   dcmp$vectors <- eachrow(dcmp$vectors, values, "*")
 
   result <- list(
-    U = dcmp$vectors, dSq = dcmp$values, V = NULL, lambda = lambda,
-    nu = nu, n = n, p = p, k = k, logML = logML, rownames = NULL, colnames = colnames(C),
-    method = "eigen", call = match.call()
+    U = dcmp$vectors,
+    dSq = dcmp$values,
+    V = NULL,
+    lambda = lambda,
+    sigma = rep(1, ncol(C)),
+    nu = nu,
+    n = n,
+    p = p,
+    k = k,
+    logML = logML,
+    rownames = NULL,
+    colnames = colnames(C),
+    method = "eigen",
+    call = match.call()
   )
 
   new("eclairs", result)

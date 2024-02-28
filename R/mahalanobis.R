@@ -5,9 +5,9 @@
 #'
 #' Mahalanobis Distance using \code{eclairs()} decomposition
 #'
-#' @param Sigma.eclairs estimate of covariance/correlation matrix from \code{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
+#' @param ecl estimate of covariance/correlation matrix from \code{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
 #' @param X data matrix
-#' @param lambda specify lambda and override value from ‘Sigma.eclairs’
+#' @param lambda specify lambda and override value from ‘ecl’
 #' @param center logical: should columns be centered internally
 #'
 #' @return array of distances
@@ -17,7 +17,7 @@
 #'
 #' @examples
 #' library(Rfast)
-#' set.seed(1)
+#'
 #' n <- 800 # number of samples
 #' p <- 200 # number of features
 #'
@@ -25,7 +25,7 @@
 #' Sigma <- autocorr.mat(p, .9)
 #'
 #' # draw data from correlation matrix Sigma
-#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 #'
 #' # eclairs decomposition
 #' ecl <- eclairs(Y)
@@ -49,7 +49,7 @@
 #' range(d - e)
 #' #
 #' @export
-mahalanobisDistance <- function(Sigma.eclairs, X, lambda, center = FALSE) {
+mahalanobisDistance <- function(ecl, X, lambda, center = FALSE) {
   if (is.numeric(X) & !is.matrix(X)) {
     X <- matrix(X, nrow = 1)
   }
@@ -58,7 +58,7 @@ mahalanobisDistance <- function(Sigma.eclairs, X, lambda, center = FALSE) {
   X_center <- scale(X, center = center, scale = FALSE)
 
   # transform
-  res <- decorrelate(X_center, Sigma.eclairs, lambda = lambda)
+  res <- decorrelate(X_center, ecl, lambda = lambda)
 
   # sum of squares for each column
   rowSums(res^2)

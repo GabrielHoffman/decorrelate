@@ -7,16 +7,16 @@
 \alias{getCor,eclairs-method}
 \title{Get full covariance/correlation matrix from \link{eclairs}}
 \usage{
-getCov(Sigma.eclairs, lambda, ...)
+getCov(ecl, lambda, ...)
 
-getCor(Sigma.eclairs, lambda, ...)
+getCor(ecl, lambda, ...)
 
-\S4method{getCov}{eclairs}(Sigma.eclairs, lambda, ...)
+\S4method{getCov}{eclairs}(ecl, lambda, ...)
 
-\S4method{getCor}{eclairs}(Sigma.eclairs, lambda, ...)
+\S4method{getCor}{eclairs}(ecl, lambda, ...)
 }
 \arguments{
-\item{Sigma.eclairs}{eclairs decomposition}
+\item{ecl}{eclairs decomposition}
 
 \item{lambda}{shrinkage parameter for the convex combination.}
 
@@ -32,9 +32,8 @@ Get full covariance/correlation matrix from \link{eclairs} decomposition
 The full matrix is computationally expensive to compute and uses a lot of memory for large p.  So it is better to use \link{decorrelate} or \link{mult_eclairs} to perform projections in \eqn{O(np)} time.
 }
 \examples{
-
 library(Rfast)
-set.seed(1)
+
 n <- 800 # number of samples
 p <- 200 # number of features
 
@@ -42,14 +41,14 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 rownames(Y) <- paste0("sample_", seq(n))
 colnames(Y) <- paste0("gene_", seq(p))
 
 # eclairs decomposition
-Sigma.eclairs <- eclairs(Y)
+ecl <- eclairs(Y)
 
 # extract covariance implied by eclairs decomposition
-getCov(Sigma.eclairs)[1:3, 1:3]
+getCov(ecl)[1:3, 1:3]
 
 }

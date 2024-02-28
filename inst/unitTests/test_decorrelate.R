@@ -1,5 +1,28 @@
 
-library(RUnit)
+test_new = function(){
+
+	library(decorrelate)
+	library(Rfast)
+	n = 8000
+	p = 2
+
+	Sigma = autocorr.mat(p, 0)
+
+	Y = rmvnorm(n, rep(0, p), sigma=Sigma, seed=1)
+
+	# whitening transform
+	A = decorrelate::whiten(Y, lambda=0)
+	B = whitening::whiten(Y)
+	checkEqualsNumeric(cov(A), cov(B))
+
+	# applying whitening matrix directly
+	ecl = eclairs(Y, lambda=0, compute="cov")
+	W1 = getWhiteningMatrix(ecl, lambda=0)
+	A = tcrossprod(Y, W1)
+	W2 = whitening::whiteningMatrix(cov(Y))
+	B = tcrossprod(Y, W2)
+	checkEqualsNumeric(cov(A), cov(B))
+}
 
 test_decorrelate = function(){
 
@@ -25,7 +48,7 @@ test_decorrelate = function(){
 	# Estimate covariance from Y
 	cor.est = eclairs( Y, k=3, lambda=lambda)
 
-	z.decorr = t(mult_eclairs(t(zstat), cor.est$U, cor.est$dSq, cor.est$lambda, cor.est$nu, alpha = -1/2))
+	z.decorr = t(mult_eclairs(t(zstat), cor.est$U, cor.est$dSq, cor.est$lambda, cor.est$nu, alpha = -1/2, cor.est$sigma))
 
 	z.decorr2 = decorrelate(zstat, cor.est, transpose=TRUE )
 
@@ -93,8 +116,8 @@ test_lrmult = function(){
 
 	b = checkEquals(Y.decorr1, Y.decorr2)
 
-
-	Y.decorr2 = mult_eclairs(Y, U1, dSq1, lambda, 1, alpha)
+	sig = rep(1, ncol(Y))	
+	Y.decorr2 = mult_eclairs(Y, U1, dSq1, lambda, 1, alpha, sig)
 
 	c = checkEquals(Y.decorr1, Y.decorr2)
 
@@ -435,10 +458,15 @@ test_whitening_matrix = function(){
 
 	# compare decorrelate and whiten
 	ecl <- eclairs(Y, compute="covariance", lambda=0)
-	Z1 <- decorrelate(Y, ecl)
-	Z2 = whiten(Y)
+	Z1 <- decorrelate(Y, ecl, lambda=0)
+	Z2 = decorrelate::whiten(Y, lambda=0)
 	checkEqualsNumeric(Z1, Z2)
 
+	# compare covariance matrices of whitened data
+	ecl <- eclairs(Y, compute="covariance", lambda=0)
+	Z1 <- decorrelate(Y, ecl, lambda=0)
+	Z2 = whitening::whiten(Y)
+	checkEqualsNumeric(cov(Z1), cov(Z2))
 
 	# covariance
 	###############
@@ -447,19 +475,19 @@ test_whitening_matrix = function(){
 	# compare whitening matrices
 	W1 = getWhiteningMatrix( ecl, lambda=0 )
 	W2 = whiteningMatrix(cov(Y), method='ZCA')
-	checkEqualsNumeric(W1, W2)
+	checkEqualsNumeric(cov(tcrossprod(Y, W1)), cov(tcrossprod(Y, W2)))
 
 	# compare transformed data
 	Z1 = tcrossprod(Y, W1)
 	Z2 = tcrossprod(Y, W2)
-	checkEqualsNumeric(Z1, Z2)
+	checkEqualsNumeric(cov(Z1), cov(Z2))
 
 	# since covariance is removed, 
 	# the covariance of the trasnformed data is identity
 	# cov(Z1)
 	# cor(Z1)
 
-	Z3 = whiten(Y, method="ZCA")
+	Z3 = whitening::whiten(Y, method="ZCA")
 	checkEqualsNumeric(Z3, Z2)
 
 
@@ -491,6 +519,120 @@ test_whitening_matrix = function(){
 
 }
 
+
+
+# library(RUnit)
+
+
+# set.seed(1)
+# n = 300000 # number of samples
+# p = 2 # number of features]
+
+# # sample matrix from MVN with covariance Sigma
+# Sigma = matrix(c(3, 2, 2, 5), 2,2)
+# Y = rmvnorm(n, rep(0, p), sigma=Sigma, set.seed=1)
+
+# # same
+# ecl = eclairs(Y, compute = "cor", lambda=0)
+# ecl$U
+# ecl$dSq
+# eigen(cor(Y))
+
+
+# # why is this different?
+# # because sigma is variable
+# ecl = eclairs(Y, compute = "cov", lambda=0)
+# ecl$U
+# ecl$dSq
+# eigen(cov(Y))
+
+
+
+
+
+# minvsqrt <- function(S) {
+# dcmp <- eigen(S)
+# with(dcmp, vectors %*% diag(1 / sqrt(values)) %*% t(vectors))
+# }
+# cov(Y %*% minvsqrt(cor(Y)))
+
+# ecl = eclairs(Y, compute = "cor", lambda=0)
+# getCor(ecl)
+# cor(decorrelate(Y, ecl))
+# cor(Y)
+# cor(Y %*% minvsqrt(cov(Y)))
+
+
+
+# ecl = eclairs(Y, compute = "cor", lambda=0)
+# whitening::whiteningMatrix(cor(Y))
+# getWhiteningMatrix(ecl)
+
+# # decorrelate doesn't set cor to zero
+# cov(whitening::whiten(Y))
+# cov(decorrelate::whiten(Y, lambda=0))
+
+
+
+# ecl = eclairs(Y, compute = "cov", lambda=0)
+# whitening::whiteningMatrix(cov(Y))
+# getWhiteningMatrix(ecl)
+
+
+# getWhiteningMatrix(ecl, lambda=0)
+# whitening::whiteningMatrix(cov(Y))
+
+
+
+
+# W = getWhiteningMatrix(ecl)
+# cor(tcrossprod(Y, W))
+# cor(whiten(Y, lambda=0))
+
+
+# W = whitening::whiteningMatrix(cov(Y))
+# cor(tcrossprod(Y, W))
+
+
+
+# ecl = eclairs(Y, compute = "cov", lambda=0)
+# getCov(ecl)
+# cov(Y)
+# cov(decorrelate(Y, ecl))
+
+
+
+# W = getWhiteningMatrix(ecl)
+# whitening::whiteningMatrix(cov(Y))
+# cov(tcrossprod(Y, W))
+
+# # whitening matrices are the same
+# ecl = eclairs(Y, compute = "cor", lambda=0)
+# getWhiteningMatrix(ecl)
+# minvsqrt(cor(Y))
+
+# # slight rounding error?
+# # or is factoring out Z wrong?
+# ecl = eclairs(Y, compute = "cov", lambda=0)
+# getWhiteningMatrix(ecl)
+# minvsqrt(cov(Y))
+
+
+# cov(Y %*% getWhiteningMatrix(ecl))
+# cov(Y %*% minvsqrt(cov(Y)))
+
+
+# ecl = eclairs(Y, compute = "cov", lambda=0)
+# v <- ecl$dSq
+
+# alpha <- -1 / 2
+
+# if( any(ecl$sigma != 1)){
+# # ecl$U <- diag(ecl$sigma^alpha) %*% ecl$U 
+# ecl$U <- diag(1/sqrt(ecl$sigma)) %*% ecl$U 
+# }
+
+# W <- with(ecl, U %*% diag(1/sqrt(v)) %*% t(U))
 
 
 

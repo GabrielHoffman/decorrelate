@@ -5,15 +5,16 @@
 \title{Estimate covariance matrix after applying transformation}
 \usage{
 cov_transform(
-  Sigma.eclairs,
+  ecl,
   f,
   n.boot,
   lambda = NULL,
-  compute = c("covariance", "correlation")
+  compute = c("covariance", "correlation"),
+  seed = NULL
 )
 }
 \arguments{
-\item{Sigma.eclairs}{covariance/correlation matrix as an \link{eclairs} object}
+\item{ecl}{covariance/correlation matrix as an \link{eclairs} object}
 
 \item{f}{function specifying the transformation.}
 
@@ -21,10 +22,12 @@ cov_transform(
 
 \item{lambda}{shrinkage parameter.  If not specified, it is estimated from the data.}
 
-\item{compute}{compute the 'covariance' (default) or 'correlation'}
+\item{compute}{evaluate either the \code{"covariance"} or \code{"correlation"} of \code{X}}
+
+\item{seed}{If you want the same to be generated again use a seed for the generator, an integer number}
 }
 \value{
-\link{eclairs} decomposition represented correlation/covariance on the transformed data
+\link{eclairs} decomposition representing correlation/covariance on the transformed data
 }
 \description{
 Given covariance between features in the original data, estimate the covariance matrix after applying a transformation to each feature.  Here we use the eclairs decomposition of the original covariance matrix, perform a parametric bootstrap and return the eclairs decomposition of the covariance matrix of the transformed data.
@@ -34,7 +37,7 @@ When the transformation is linear, these covariance matrices are the same.
 }
 \examples{
 library(Rfast)
-set.seed(1)
+
 n <- 800 # number of samples
 p <- 200 # number of features
 
@@ -42,7 +45,7 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # sample matrix from MVN with covariance Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma, seed = 1)
 
 # perform eclairs decomposition
 ecl <- eclairs(Y)
@@ -78,7 +81,8 @@ plot(C1, C2, main = "Concordance between covariances")
 abline(0, 1, col = "red")
 
 
-# Save above but compute eclairs for correlation matrix
+# Same above but compute eclairs for correlation matrix
+#-------------------------------------------------------
 
 # Evaluate eclairs decomposition on boostrap samples
 ecl2 <- cov_transform(ecl, f = f, n_boot, compute = "correlation", lambda = 1e-4)

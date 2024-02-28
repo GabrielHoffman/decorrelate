@@ -1,4 +1,8 @@
 
+# decorrelate 0.1.0
+* Feb 27, 2024
+* update all functions to process covariance by shrinking correlation and retaining variance information
+
 # decorrelate 0.0.19
 * Jan 02, 2024
 * add `mahalanobisDistance()`

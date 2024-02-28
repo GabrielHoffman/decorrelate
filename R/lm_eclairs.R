@@ -5,7 +5,7 @@
 #' @param formula an object of class 'formula' (or one that can be coerced to that class): a symbolic description of the model to be fitted.
 
 #' @param data a matrix or data.frame containing the variables in the model
-#' @param Sigma.eclairs estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
+#' @param ecl estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
 #' @param subset same as for \link{lm}
 #' @param weights same as for \link{lm}
 #' @param na.action same as for \link{lm}
@@ -25,7 +25,7 @@
 #'
 #' @examples
 #' library(Rfast)
-#' set.seed(1)
+#'
 #' n <- 800 # number of samples
 #' p <- 200 # number of features
 #'
@@ -33,7 +33,7 @@
 #' Sigma <- autocorr.mat(p, .9)
 #'
 #' # draw data from correlation matrix Sigma
-#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 #'
 #' # eclairs decomposition
 #' ecl <- eclairs(Y)
@@ -51,7 +51,7 @@
 #' @import stats
 #' @export
 lm_eclairs <- function(
-    formula, data, Sigma.eclairs, subset, weights, na.action, method = "qr",
+    formula, data, ecl, subset, weights, na.action, method = "qr",
     model = TRUE, x = FALSE, y = FALSE, qr = TRUE, singular.ok = TRUE, contrasts = NULL,
     offset, ...) {
   ret.x <- x
@@ -74,7 +74,7 @@ lm_eclairs <- function(
   mt <- attr(mf, "terms")
 
   # get response from above scope and then apply transformation
-  y <- decorrelate(model.response(mf, "numeric"), Sigma.eclairs, transpose = TRUE)
+  y <- decorrelate(model.response(mf, "numeric"), ecl, transpose = TRUE)
 
   w <- as.vector(model.weights(mf))
   if (!is.null(w) && !is.numeric(w)) {
@@ -117,7 +117,7 @@ lm_eclairs <- function(
     x <- model.matrix(mt, mf, contrasts)
 
     # get predictors and apply transformation
-    x <- decorrelate(x, Sigma.eclairs, transpose = TRUE)
+    x <- decorrelate(x, ecl, transpose = TRUE)
 
     z <- if (is.null(w)) {
       lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...)
@@ -159,7 +159,7 @@ lm_eclairs <- function(
 
 #' @param data a matrix or data.frame containing the variables in the model
 #' @param X matrix or data.frame where each column stores a predictor to be evaluated by the regression model one at a time.  The \eqn{i^{th}} model includes \code{X[,i]} as a predictor.
-#' @param Sigma.eclairs estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
+#' @param ecl estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}
 #' @param subset same as for \link{lm}
 #' @param weights same as for \link{lm}
 #' @param na.action same as for \link{lm}
@@ -179,7 +179,7 @@ lm_eclairs <- function(
 #'
 #' @examples
 #' library(Rfast)
-#' set.seed(1)
+#'
 #' n <- 800 # number of samples
 #' p <- 200 # number of features
 #'
@@ -187,7 +187,7 @@ lm_eclairs <- function(
 #' Sigma <- autocorr.mat(p, .9)
 #'
 #' # draw data from correlation matrix Sigma
-#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 #'
 #' # eclairs decomposition
 #' ecl <- eclairs(Y)
@@ -226,7 +226,7 @@ lm_eclairs <- function(
 #' @import stats
 #' @export
 lm_each_eclairs <- function(
-    formula, data, X, Sigma.eclairs, subset, weights, na.action,
+    formula, data, X, ecl, subset, weights, na.action,
     method = "qr", model = TRUE, x = FALSE, y = FALSE, qr = TRUE, singular.ok = TRUE,
     contrasts = NULL, offset, ...) {
   # method = 'qr' singular.ok = TRUE contrasts = NULL
@@ -250,7 +250,7 @@ lm_each_eclairs <- function(
 
   # get response from above scope and then apply transformation
   y <- model.response(mf, "numeric")
-  y.transform <- decorrelate(y, Sigma.eclairs, transpose = TRUE)
+  y.transform <- decorrelate(y, ecl, transpose = TRUE)
 
   # w <- as.vector(model.weights(mf)) if (!is.null(w) && !is.numeric(w))
   # stop(''weights' must be a numeric vector')
@@ -277,10 +277,10 @@ lm_each_eclairs <- function(
   x <- model.matrix(mt, mf, contrasts)
 
   # get predictors and apply transformation
-  X.transform <- decorrelate(x, Sigma.eclairs, transpose = TRUE)
+  X.transform <- decorrelate(x, ecl, transpose = TRUE)
 
   # transform matrix of features
-  X.features.transform <- decorrelate(X, Sigma.eclairs, transpose = TRUE)
+  X.features.transform <- decorrelate(X, ecl, transpose = TRUE)
 
   # Perform pre-projection
   obj <- lm.projection(y.transform, X.transform)

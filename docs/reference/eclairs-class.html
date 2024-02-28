@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,7 @@
     <p>Object storing:</p><ul><li><p>U: orthonormal matrix with k columns representing the low rank component</p></li>
 <li><p>dSq: eigen-values so that \(U diag(d^2) U^T\) is the low rank component</p></li>
 <li><p>lambda: shrinkage parameter \(\lambda\) for the scaled diagonal component</p></li>
+<li><p>sigma: standard deviations of input columns</p></li>
 <li><p>nu: diagonal value, \(\nu\), of target matrix in shrinkage</p></li>
 <li><p>n: number of samples (i.e. rows) in the original data</p></li>
 <li><p>p: number of features (i.e. columns) in the original data</p></li>

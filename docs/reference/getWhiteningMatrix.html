@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,17 +54,17 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getWhiteningMatrix</span><span class="op">(</span><span class="va">Sigma.eclairs</span>, <span class="va">lambda</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getWhiteningMatrix</span><span class="op">(</span><span class="va">ecl</span>, <span class="va">lambda</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>Sigma.eclairs</dt>
+    <dl><dt>ecl</dt>
 <dd><p>estimate of covariance/correlation matrix from <a href="eclairs.html">eclairs</a> storing \(U\), \(d_1^2\), \(\lambda\) and \(\nu\)</p></dd>
 
 
 <dt>lambda</dt>
-<dd><p>specify lambda and override value from <code>Sigma.eclairs</code></p></dd>
+<dd><p>specify lambda and override value from <code>ecl</code></p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -81,7 +81,7 @@
 <span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">2000</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">3</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/matrnorm.html" class="external-link">matrnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">p</span><span class="op">)</span> <span class="op">*</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/matrnorm.html" class="external-link">matrnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">p</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">10</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># decorrelate with implicit whitening matrix</span></span></span>
 <span class="r-in"><span><span class="co"># give same result as explicity whitening matrix</span></span></span>
@@ -97,7 +97,7 @@
 <span class="r-in"><span><span class="va">Z2</span> <span class="op">&lt;-</span> <span class="fu"><a href="decorrelate.html">decorrelate</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">ecl</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">Z1</span> <span class="op">-</span> <span class="va">Z2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -8.881784e-16  1.332268e-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -8.881784e-16  8.881784e-16</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

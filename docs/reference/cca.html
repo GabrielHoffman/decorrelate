@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,10 +80,16 @@
 
 </dl></div>
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>statistics summarizing CCA</p>
+    </div>
+    <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Results from standard CCA are based on the SVD of \(\Sigma_{xx}^{-\frac{1}{2}} \Sigma_{xy} \Sigma_{yy}^{-\frac{1}{2}}\).</p>
 <p>Avoids computation of \(\Sigma_{xx}^{-\frac{1}{2}}\) by using eclairs.  Avoids cov(X,Y) by framing this as a matrix product that can be distributed. Uses low rank SVD.
-Other regularized CCA addes lambda to covariance like Ridge. Here it is a mixture</p>
+Other regularized CCA adds lambda to covariance like Ridge. Here it is a mixture</p>
     </div>
 
     <div class="section level2">

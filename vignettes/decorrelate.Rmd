@@ -121,7 +121,7 @@ plot_grid(fig1, fig2, fig3, fig4, ncol = 4, labels = "AUTO")
 # Basic usage
 ```{r example.1, fig.height=5, fig.width=5}
 library(decorrelate)
-library(mvtnorm)
+library(Rfast)
 
 n <- 500 # number of samples
 p <- 200 # number of features
@@ -130,7 +130,7 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 rownames(Y) <- paste0("sample_", 1:n)
 colnames(Y) <- paste0("gene_", 1:p)
 

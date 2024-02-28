@@ -9,8 +9,7 @@ eclairs(
   k,
   lambda = NULL,
   compute = c("covariance", "correlation"),
-  n.samples = nrow(X),
-  warmStart = NULL
+  n.samples = nrow(X)
 )
 }
 \arguments{
@@ -20,11 +19,9 @@ eclairs(
 
 \item{lambda}{shrinkage parameter. If not specified, it is estimated from the data.}
 
-\item{compute}{compute the 'covariance' (default) or 'correlation'}
+\item{compute}{evaluate either the \code{"covariance"} or \code{"correlation"} of \code{X}}
 
 \item{n.samples}{number of samples data is from.  Usually \code{nrow(X)}, but can be other values in special cases.}
-
-\item{warmStart}{result of previous SVD to initialize values}
 }
 \value{
 \link{eclairs} object storing:
@@ -32,6 +29,7 @@ eclairs(
  \item{U: }{orthonormal matrix with k columns representing the low rank component}
  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}
+ \item{sigma: }{standard deviations of input columns}
  \item{nu: }{diagonal value, \eqn{\nu}, of target matrix in shrinkage}
  \item{n: }{number of samples (i.e. rows) in the original data}
  \item{p: }{number of features (i.e. columns) in the original data}
@@ -46,11 +44,11 @@ eclairs(
 Estimate the covariance/correlation between columns as the weighted sum of a low rank matrix and a scaled identity matrix.  The weight acts to shrink the sample correlation matrix towards the identity matrix or the sample covariance matrix towards a scaled identity matrix with constant variance.  An estimate of this form is useful because it is fast, and enables fast operations downstream.  The method is based on the Gaussian Inverse Wishart Empirical Bayes (GIW-EB) model.
 }
 \details{
-Compute \eqn{U}, \eqn{d^2} to approximate the covariance/correlation matrix between columns of data matrix X by \eqn{U diag(d^2 (1-\lambda)) U^T + diag(\nu * \lambda)}.  When computing the covariance matrix \eqn{\nu} is the constant variance which is the mean of all feature-wise variances.  When computing the correlation matrix, \eqn{\nu = 1}.
+Compute \eqn{U}, \eqn{d^2} to approximate the correlation matrix between columns of data matrix X by \eqn{U diag(d^2 (1-\lambda)) U^T + I\nu\lambda}.  When computing the covariance matrix, scale by the standard deviation of each feature.
 }
 \examples{
 library(Rfast)
-set.seed(1)
+
 n <- 800 # number of samples
 p <- 200 # number of features
 
@@ -58,7 +56,7 @@ p <- 200 # number of features
 Sigma <- autocorr.mat(p, .9)
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 rownames(Y) <- paste0("sample_", seq(n))
 colnames(Y) <- paste0("gene_", seq(p))
 

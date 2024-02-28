@@ -28,9 +28,8 @@ setMethod("print", "fastcca", function(x) {
 
 
 setMethod("show", "fastcca", function(object) {
+  x <- object
 
-  x = object
-  
   cat("       Fast regularized canonical correlation analysis\n\n")
 
   k <- min(3, x$n.comp)
@@ -58,6 +57,7 @@ setMethod("show", "fastcca", function(object) {
 #' @param lambda.x optional shrinkage parameter for estimating covariance of X. If NULL, estimate from data.
 #' @param lambda.y optional shrinkage parameter for estimating covariance of Y. If NULL, estimate from data.
 #'
+#' @details summary statistics of CCA
 #' @details
 #' Results from standard CCA are based on the SVD of \eqn{\Sigma_{xx}^{-\frac{1}{2}} \Sigma_{xy} \Sigma_{yy}^{-\frac{1}{2}}}.
 #'

@@ -8,20 +8,23 @@
 \alias{tr}
 \title{Summarize correlation matrix}
 \usage{
-averageCorr(Sigma.eclairs, method = c("EB", "MLE"))
+averageCorr(ecl, method = c("EB", "MLE"))
 
-averageCorrSq(Sigma.eclairs, method = c("EB", "MLE"))
+averageCorrSq(ecl, method = c("EB", "MLE"))
 
-sumInverseCorr(Sigma.eclairs, method = c("EB", "MLE"))
+sumInverseCorr(ecl, method = c("EB", "MLE"))
 
-effVariance(Sigma.eclairs, method = c("EB", "MLE"))
+effVariance(ecl, method = c("EB", "MLE"))
 
-tr(Sigma.eclairs, method = c("EB", "MLE"))
+tr(ecl, method = c("EB", "MLE"))
 }
 \arguments{
-\item{Sigma.eclairs}{estimate of correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
+\item{ecl}{estimate of correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
 \item{method}{compute average correlation for either the empirical Bayes (EB) shinken correlation matrix or the MLE correlation matrix}
+}
+\value{
+value of summary statistic
 }
 \description{
 Summarize correlation matrix as a scalar scalar value, given its SVD and shrinkage parameter. \code{averageCorr()} computes the average correlation, and \code{averageCorrSq()} computes the average squared correlation, where both exclude the diagonal terms. \code{sumInverseCorr()} computes the sum of entries in the inverse correlation matrix to give the 'effective number of independent features'. \code{effVariance()} evaluates effective variance of the correlation (or covariance) matrix.  These values can be computed using the correlation matrix using standard MLE, or EB shrinkage.
@@ -39,7 +42,6 @@ Summarize correlation matrix as a scalar scalar value, given its SVD and shrinka
 }
 \examples{
 library(Rfast)
-set.seed(1)
 n <- 200 # number of samples
 p <- 800 # number of features
 
@@ -48,25 +50,25 @@ Sigma <- matrix(.2, p, p)
 diag(Sigma) <- 1
 
 # draw data from correlation matrix Sigma
-Y <- rmvnorm(n, rep(0, p), sigma = Sigma)
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma, seed = 1)
 rownames(Y) <- paste0("sample_", seq(n))
 colnames(Y) <- paste0("gene_", seq(p))
 
 # eclairs decomposition
-Sigma.eclairs <- eclairs(Y, compute = "cor")
+ecl <- eclairs(Y, compute = "cor")
 
 # Average correlation value
-averageCorr(Sigma.eclairs)
+averageCorr(ecl)
 
 # Average squared correlation value
-averageCorrSq(Sigma.eclairs)
+averageCorrSq(ecl)
 
 # Sum elements in inverse correlation matrix
 # Gives the effective number of independent features
-sumInverseCorr(Sigma.eclairs)
+sumInverseCorr(ecl)
 
 # Effective variance
-effVariance(Sigma.eclairs)
+effVariance(ecl)
 
 }
 \references{

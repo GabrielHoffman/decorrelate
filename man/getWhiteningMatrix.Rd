@@ -4,12 +4,12 @@
 \alias{getWhiteningMatrix}
 \title{Get whitening matrix}
 \usage{
-getWhiteningMatrix(Sigma.eclairs, lambda)
+getWhiteningMatrix(ecl, lambda)
 }
 \arguments{
-\item{Sigma.eclairs}{estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
+\item{ecl}{estimate of covariance/correlation matrix from \link{eclairs} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
-\item{lambda}{specify lambda and override value from \code{Sigma.eclairs}}
+\item{lambda}{specify lambda and override value from \code{ecl}}
 }
 \value{
 whitening matrix
@@ -23,7 +23,7 @@ library(Rfast)
 n <- 2000
 p <- 3
 
-Y <- matrnorm(n, p) * 10
+Y <- matrnorm(n, p, seed = 1) * 10
 
 # decorrelate with implicit whitening matrix
 # give same result as explicity whitening matrix

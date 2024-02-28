@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,8 @@
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Results from standard CCA are based on the SVD of \(\Sigma_{xx}^{-\frac{1}{2}} \Sigma_{xy} \Sigma_{yy}^{-\frac{1}{2}}\).</p>
+    <p>summary statistics of CCA</p>
+<p>Results from standard CCA are based on the SVD of \(\Sigma_{xx}^{-\frac{1}{2}} \Sigma_{xy} \Sigma_{yy}^{-\frac{1}{2}}\).</p>
 <p>Uses <code><a href="eclairs.html">eclairs()</a></code> and empirical Bayes covariance regularization, and applies speed up of RCCA Tuzhilina et al. (2020)
  to perform CCA on n PCs and instead of p features.  Memory usage is \(\mathcal{O}(np)\) instead of \(\mathcal{O}(p^2)\).  Computation is \(\mathcal{O}(n^2p)\) instead of \(\mathcal{O}(p^3)\) or \(\mathcal{O}(np^2)\)</p>
     </div>

@@ -7,22 +7,23 @@
 #'
 #' Given covariance between features in the original data, estimate the covariance matrix after applying a transformation to each feature.  Here we use the eclairs decomposition of the original covariance matrix, perform a parametric bootstrap and return the eclairs decomposition of the covariance matrix of the transformed data.
 #'
-#' @param Sigma.eclairs covariance/correlation matrix as an \link{eclairs} object
+#' @param ecl covariance/correlation matrix as an \link{eclairs} object
 #' @param f function specifying the transformation.
 # The default function is \eqn{\log(x^2 + 1e-3)} which offsets \eqn{x^2} away
 # from zero since \eqn{\log(x^2)} is not defined for \eqn{x=0}.
 #' @param n.boot number of parametric bootstrap samples.  Increasing n gives more precise estimates.
 #' @param lambda shrinkage parameter.  If not specified, it is estimated from the data.
-#' @param compute compute the 'covariance' (default) or 'correlation'
+#' @param compute evaluate either the \code{"covariance"} or \code{"correlation"} of \code{X}
+#' @param seed If you want the same to be generated again use a seed for the generator, an integer number
 #'
 #' @details
 #' When the transformation is linear, these covariance matrices are the same.
 #'
-#' @return \link{eclairs} decomposition represented correlation/covariance on the transformed data
+#' @return \link{eclairs} decomposition representing correlation/covariance on the transformed data
 #'
 #' @examples
 #' library(Rfast)
-#' set.seed(1)
+#'
 #' n <- 800 # number of samples
 #' p <- 200 # number of features
 #'
@@ -30,7 +31,7 @@
 #' Sigma <- autocorr.mat(p, .9)
 #'
 #' # sample matrix from MVN with covariance Sigma
-#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma)
+#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma, seed = 1)
 #'
 #' # perform eclairs decomposition
 #' ecl <- eclairs(Y)
@@ -66,7 +67,8 @@
 #' abline(0, 1, col = "red")
 #'
 #'
-#' # Save above but compute eclairs for correlation matrix
+#' # Same above but compute eclairs for correlation matrix
+#' #-------------------------------------------------------
 #'
 #' # Evaluate eclairs decomposition on boostrap samples
 #' ecl2 <- cov_transform(ecl, f = f, n_boot, compute = "correlation", lambda = 1e-4)
@@ -90,20 +92,20 @@
 #' abline(0, 1, col = "red")
 #'
 #' @export
-cov_transform <- function(Sigma.eclairs, f, n.boot, lambda = NULL, compute = c(
+cov_transform <- function(ecl, f, n.boot, lambda = NULL, compute = c(
                             "covariance",
                             "correlation"
-                          )) {
-  stopifnot(is(Sigma.eclairs, "eclairs"))
+                          ), seed = NULL) {
+  stopifnot(is(ecl, "eclairs"))
   stopifnot(is(f, "function"))
   compute <- match.arg(compute)
 
-  mu <- rep(0, Sigma.eclairs$p)
+  mu <- rep(0, ecl$p)
 
-  # draw samples from the multivariate normal with covariance Sigma.eclairs
-  X <- rmvnorm_eclairs(n.boot, mu, Sigma.eclairs)
+  # draw samples from the multivariate normal with covariance ecl
+  X <- rmvnorm_eclairs(n.boot, mu, ecl, seed = seed)
 
-  # Perofrm eclairs decomposition of sampled data after applying transform f
+  # Perform eclairs decomposition of sampled data after applying transform f
   # set scale=FALSE to get covariance
-  eclairs(f(X), lambda = lambda, compute = compute, warmStart = Sigma.eclairs)
+  eclairs(f(X), lambda = lambda, compute = compute)
 }
