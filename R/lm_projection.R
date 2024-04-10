@@ -33,13 +33,6 @@ lm.projection <- function(y, X) {
 }
 
 
-# @examples # Hypothesis test of Sepal.Width from full model 
-# fit = lm(Petal.Width ~ Sepal.Length + Sepal.Width, iris)
-# coef(summary(fit))['Sepal.Width',]
-
-# # # Hypothesis test of Sepal.Width using pre-fit model 
-# obj = decorrelate:::lm.projection(iris$Petal.Width, model.matrix(~Sepal.Length, iris))
-# decorrelate:::lm.test(obj, iris$Sepal.Width)
 lm.test <- function(obj, A, two.sided = TRUE) {
   if (!is.matrix(A)) {
     A <- matrix(A, ncol = 1)
