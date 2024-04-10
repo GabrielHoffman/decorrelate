@@ -4,6 +4,10 @@
 Feb 27, 2024
 	- fastcca() and cca() are only consistance with standard CCA when column SD's are set to 1
 	- need to scale by sigma somewhere
+	- cov_transform() produces covariance following transform via monto-carla sampling
+	- use __delta method__ instead
+
+
 
 Feb 16, 2024
 	can used z directly instead of computing SVD 

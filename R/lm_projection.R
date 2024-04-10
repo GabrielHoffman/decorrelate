@@ -8,14 +8,6 @@
 # new lower dimensional space.  With 10 covariates, this can be 20X faster Plus
 # this takes advantage of sparseMatrix A, while lm does not
 
-# @examples # Hypothesis test of Sepal.Width from full model fit = lm(
-# Petal.Width ~ Sepal.Length + Sepal.Width, iris)
-# coef(summary(fit))['Sepal.Width',]
-
-# # Hypothesis test of Sepal.Width using pre-fit model obj =
-# lm.projection(iris$Petal.Width, model.matrix(~Sepal.Length, iris)) lm.test(
-# obj, iris$Sepal.Width)
-
 
 
 
@@ -31,7 +23,8 @@ lm.projection <- function(y, X) {
   if (is.matrix(y) && (ncol(y) > 1)) {
     stop("Only one response variable is allowed")
   }
-  M <- tcrossprod(solve(crossprod(X)), X)
+  # M <- tcrossprod(solve(crossprod(X)), X)
+  M <- solve(crossprod(X), t(X))
 
   Py <- y - X %*% (M %*% y)
   # Pa = a - X %*% (M %*% a)
@@ -39,6 +32,14 @@ lm.projection <- function(y, X) {
   list(M = M, Py = Py, X = X)
 }
 
+
+# @examples # Hypothesis test of Sepal.Width from full model 
+# fit = lm(Petal.Width ~ Sepal.Length + Sepal.Width, iris)
+# coef(summary(fit))['Sepal.Width',]
+
+# # # Hypothesis test of Sepal.Width using pre-fit model 
+# obj = decorrelate:::lm.projection(iris$Petal.Width, model.matrix(~Sepal.Length, iris))
+# decorrelate:::lm.test(obj, iris$Sepal.Width)
 lm.test <- function(obj, A, two.sided = TRUE) {
   if (!is.matrix(A)) {
     A <- matrix(A, ncol = 1)
@@ -73,28 +74,3 @@ lm.test <- function(obj, A, two.sided = TRUE) {
 
 
 
-
-# n = 1000 p = 10
-
-# X = cbind(1, matrix(rnorm(n*p), n, p)) A = matrix(rnorm(n), ncol=1) y = a/10
-# + matrix(rnorm(n), ncol=1)
-
-# # baseline # for many values of a fit = lm(y ~ 0+X + A) coef(summary(fit))
-
-# fit = lm(y ~ 0+X) coef(summary(fit))
-
-# sse = sum((resid(fit))^2) sqrt(diag(solve(crossprod(X)) * sse/(n-ncol(X))))
-
-
-
-# # get projected system P = diag(1,n) - X %*%
-# tcrossprod(solve(crossprod(X)),X) Py = P %*% y Pa = P %*% a
-
-# Py = y - X %*% (tcrossprod(solve(crossprod(X)),X) %*% y) Pa = a - X %*%
-# (tcrossprod(solve(crossprod(X)),X) %*% a)
-
-# beta = solve(crossprod(Pa)) %*% crossprod(Pa, Py)
-
-# sse = sum((Py - Pa %*% beta)^2)
-
-# sqrt(solve(crossprod(Pa)) * sse/(n-ncol(X)-ncol(a)))
