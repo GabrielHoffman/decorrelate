@@ -1,8 +1,8 @@
 Package: decorrelate
 Type: Package
 Title: Decorrelation projection scalable to high dimensional data using estimated correlation with low rank and shrinkage
-Version: 0.1.0
-Date: 2024-02-27
+Version: 0.1.1
+Date: 2024-04-16
 Authors@R: 
   c(person(given = "Gabriel",
            family = "Hoffman",
@@ -29,7 +29,7 @@ Suggests:
     colorRamps,
     RUnit,
     latex2exp,
-    rmarkdown,
+    rmarkdown
 biocViews: RNASeq,
     GeneExpression,
     GeneSetEnrichment,
@@ -43,17 +43,19 @@ biocViews: RNASeq,
     Normalization,
     Software
 Depends:
-    R (>= 4.0.0),
+    R (>= 4.2.0),
     methods
 Imports:
     Rfast,
     irlba,
     graphics,
+    Rcpp,
     CholWishart,
     Matrix,
     Rdpack,
     utils,
     stats
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 RdMacros: Rdpack
 VignetteBuilder: knitr
+LinkingTo: Rcpp, RcppArmadillo

@@ -22,6 +22,8 @@
 #'
 #' @return a matrix product
 #'
+# @import Rcpp
+#' @useDynLib decorrelate
 #' @importFrom Matrix crossprod tcrossprod t
 #' @export
 mult_eclairs <- function(X, U1, dSq1, lambda, nu, alpha, sigma, transpose = FALSE) {

@@ -78,14 +78,14 @@ Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 ecl <- eclairs(Y)
 
 # simulate covariates
-data <- data.frame(matrnorm(p, 2))
+data <- data.frame(matrnorm(p, 2, seed=1))
 colnames(data) <- paste0("v", 1:2)
 
 # simulate response
 y <- rnorm(p)
 
 # Simulate 1000 features to test
-X <- matrnorm(p, 1000)
+X <- matrnorm(p, 1000, seed=1)
 colnames(X) <- paste0("set_", seq(ncol(X)))
 
 # Use linear model to test each feature stored as columns in X

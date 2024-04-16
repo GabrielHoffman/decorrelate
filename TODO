@@ -1,5 +1,10 @@
 
 
+April 15, 
+	- faster CCA
+	- faster mmult() to for diagonal matricies
+	  - see misc_vp/daxpy.R
+
 
 Feb 27, 2024
 	- fastcca() and cca() are only consistance with standard CCA when column SD's are set to 1
