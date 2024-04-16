@@ -2,8 +2,9 @@
 
 April 15, 
 	- faster CCA
-	- faster mmult() to for diagonal matricies
-	  - see misc_vp/daxpy.R
+	- use dmult() to multiply by diagonal matrix 
+	  by scaling rows or columns
+	- make sure sigma term is handled in _ALL_ cases, like fastcca2()
 
 
 Feb 27, 2024

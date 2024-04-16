@@ -1,7 +1,4 @@
-// #include  "Rcpp.h"
-#include <RcppArmadillo.h>
-
-// [[Rcpp::depends(RcppArmadillo)]]
+#include  "Rcpp.h"
 
 using namespace Rcpp;
 
@@ -40,16 +37,19 @@ NumericMatrix dmult_( const NumericMatrix m, const NumericVector v, bool dleft){
   
 
 
-// Use RcppArmadaillo, but not faster
-// [[Rcpp::export]]
-arma::mat dmult_arma(arma::mat M, arma::rowvec v, bool dleft=true ){ 
-  if( dleft )
-    M.each_col() %= v.t();
-  else
-    M.each_row() %= v;
+// #include <RcppArmadillo.h>
 
-  return M;
-}
+// // [[Rcpp::depends(RcppArmadillo)]]
+// // Use RcppArmadaillo, but not faster
+// // [[Rcpp::export]]
+// arma::mat dmult_arma(arma::mat M, arma::rowvec v, bool dleft=true ){ 
+//   if( dleft )
+//     M.each_col() %= v.t();
+//   else
+//     M.each_row() %= v;
+
+//   return M;
+// }
 
 
 

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -164,27 +164,27 @@
 <span class="r-in"><span><span class="va">ecl</span> <span class="op">&lt;-</span> <span class="fu"><a href="eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># simulate covariates</span></span></span>
-<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/matrnorm.html" class="external-link">matrnorm</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/matrnorm.html" class="external-link">matrnorm</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">2</span>, seed<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"v"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># simulate response</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Simulate 1000 features to test</span></span></span>
-<span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/matrnorm.html" class="external-link">matrnorm</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">1000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/matrnorm.html" class="external-link">matrnorm</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">1000</span>, seed<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"set_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Use linear model to test each feature stored as columns in X</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">lm_each_eclairs</span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">v1</span> <span class="op">+</span> <span class="va">v2</span>, <span class="va">data</span>, <span class="va">X</span>, <span class="va">ecl</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              beta         se      tstat      pvalue</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_1 -0.16703568 0.08128893 -2.0548392 0.041221108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_2 -0.07615383 0.07861769 -0.9686603 0.333908503</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_3 -0.18859306 0.07192186 -2.6221939 0.009422846</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_4  0.01542967 0.08016403  0.1924762 0.847568485</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_5  0.19481142 0.07321819  2.6606969 0.008444046</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_6 -0.11326614 0.07647159 -1.4811532 0.140171531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                beta           se       tstat     pvalue</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_1  5.166534e+12 1.349789e+14  0.03827661 0.96950610</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_2 -1.975365e+12 4.435601e+13 -0.04453434 0.96452382</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_3  6.001931e-02 6.669849e-02  0.89986017 0.36929892</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_4  1.762556e-01 7.204890e-02  2.44633279 0.01531368</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_5  4.532761e-02 6.121303e-02  0.74048965 0.45988907</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_6 -2.328702e-02 6.468273e-02 -0.36001921 0.71922041</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Analysis after non-linear transform</span></span></span>
 <span class="r-in"><span><span class="co">#------------------------------------</span></span></span>
@@ -200,13 +200,13 @@
 <span class="r-in"><span><span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu">lm_each_eclairs</span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">~</span> <span class="va">v1</span> <span class="op">+</span> <span class="va">v2</span>, <span class="va">data</span>, <span class="va">X</span>, <span class="va">ecl_transform</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              beta         se      tstat      pvalue</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_1 -0.16703568 0.08128893 -2.0548392 0.041221108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_2 -0.07615383 0.07861769 -0.9686603 0.333908503</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_3 -0.18859306 0.07192186 -2.6221939 0.009422846</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_4  0.01542967 0.08016403  0.1924762 0.847568485</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_5  0.19481142 0.07321819  2.6606969 0.008444046</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_6 -0.11326614 0.07647159 -1.4811532 0.140171531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                beta           se       tstat     pvalue</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_1  5.166534e+12 1.349789e+14  0.03827661 0.96950610</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_2 -1.975365e+12 4.435601e+13 -0.04453434 0.96452382</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_3  6.001931e-02 6.669849e-02  0.89986017 0.36929892</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_4  1.762556e-01 7.204890e-02  2.44633279 0.01531368</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_5  4.532761e-02 6.121303e-02  0.74048965 0.45988907</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_6 -2.328702e-02 6.468273e-02 -0.36001921 0.71922041</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

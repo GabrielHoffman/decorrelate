@@ -5,7 +5,3 @@ dmult_ <- function(m, v, dleft) {
     .Call('_decorrelate_dmult_', PACKAGE = 'decorrelate', m, v, dleft)
 }
 
-dmult_arma <- function(M, v, dleft = TRUE) {
-    .Call('_decorrelate_dmult_arma', PACKAGE = 'decorrelate', M, v, dleft)
-}
-

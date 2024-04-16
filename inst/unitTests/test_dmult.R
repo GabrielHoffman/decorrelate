@@ -10,36 +10,61 @@ test_dmult = function(){
 	mat = Rfast::matrnorm(n,p)
 	v = rnorm(p)
 
+	# right multiply
 	A = dmult(mat, v, side="right")
-	B = t( t(mat) * v )
+	B = mat %*% diag(v)
 	checkEqualsNumeric(A,B)
 
-
+	# left multiply
 	n = 30
 	p = 20
 	mat = Rfast::matrnorm(p,n)
 	v = rnorm(p)
 
 	A = dmult(mat, v, side="left")
-	B = v * mat
+	B = diag(v) %*% mat
 	checkEqualsNumeric(A,B)
 }
 
+# Timings
 
+# library(Matrix)
+# library(RhpcBLASctl)
+# library(decorrelate)
+# library(RUnit)
 
+# RhpcBLASctl::omp_set_num_threads(1)
 
-# n = 30000
-# p = 200
+# n = 3000
+# p = 6000
 # mat = Rfast::matrnorm(n,p)
 # v = rnorm(p)
 
 # library(microbenchmark)
 # m <- microbenchmark( 
-# 	mat %*% diag(v) , 
+# 	# mat %*% diag(v) , 
+# 	as.matrix(mat %*% Diagonal(length(v), v)) , 
 # 	dmult( mat , v, side="right" ) ,
 # 	decorrelate:::dmult_arma( mat , v, FALSE ) ,
 # 	sweep(mat, 2, v, FUN = "*") ,   
 # 	t( t(mat) * v ) , 
+# 	times = 20 )
+# print( m , "relative" , order = "median" , digits = 3 )
+
+
+# n = 3000
+# p = 6000
+# mat = Rfast::matrnorm(p,n)
+# v = rnorm(p)
+
+# library(microbenchmark)
+# m <- microbenchmark( 
+# 	diag(v) %*% mat , 
+# 	as.matrix(Diagonal(length(v), v) %*% mat) , 
+# 	dmult( mat , v, side="left" ) ,
+# 	decorrelate:::dmult_arma( mat , v, TRUE ) ,
+# 	sweep(mat, 1, v, FUN = "*") ,   
+# 	v * mat , 
 # 	times = 20 )
 # print( m , "relative" , order = "median" , digits = 3 )
 

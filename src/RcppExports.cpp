@@ -24,23 +24,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// dmult_arma
-arma::mat dmult_arma(arma::mat M, arma::rowvec v, bool dleft);
-RcppExport SEXP _decorrelate_dmult_arma(SEXP MSEXP, SEXP vSEXP, SEXP dleftSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type M(MSEXP);
-    Rcpp::traits::input_parameter< arma::rowvec >::type v(vSEXP);
-    Rcpp::traits::input_parameter< bool >::type dleft(dleftSEXP);
-    rcpp_result_gen = Rcpp::wrap(dmult_arma(M, v, dleft));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_decorrelate_dmult_", (DL_FUNC) &_decorrelate_dmult_, 3},
-    {"_decorrelate_dmult_arma", (DL_FUNC) &_decorrelate_dmult_arma, 3},
     {NULL, NULL, 0}
 };
 
