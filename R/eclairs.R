@@ -73,7 +73,7 @@ setMethod("show", "eclairs", function(object) {
   }
 
   cat(
-    "  logML:             ", format(object$logML, digits = 1, scientific = FALSE),
+    "  logLik:            ", format(object$logLik, digits = 1, scientific = FALSE),
     "\n"
   )
 })
@@ -170,6 +170,10 @@ setMethod("getCor", c(ecl = "eclairs"), function(
   C <- ecl$U %*% ((ecl$dSq * (1 - lambda)) * t(ecl$U)) +
     diag(ecl$nu * lambda, ecl$p)
 
+  # A <- with(ecl, dmult(U[,seq(k),drop=FALSE], sqrt(dSq[seq(k)]), "right"))
+  # C <- tcrossprod(A)
+  # diag(C) <- diag(C) + ecl$nu * lambda
+
   if (method == "covariance" & !all(ecl$sigma == 1)) {
     # scale by standard deviations
     D <- diag(ecl$sigma)
@@ -228,14 +232,14 @@ setMethod("getCor", c(ecl = "eclairs"), function(
 #' colnames(Y) <- paste0("gene_", seq(p))
 #'
 #' # eclairs decomposition: covariance
-#' Sigma.eclairs <- eclairs(Y, compute = "covariance")
+#' ecl <- eclairs(Y, compute = "covariance")
 #'
-#' Sigma.eclairs
+#' ecl
 #'
 #' # eclairs decomposition: correlation
-#' Sigma.eclairs <- eclairs(Y, compute = "correlation")
+#' ecl <- eclairs(Y, compute = "correlation")
 #'
-#' Sigma.eclairs
+#' ecl
 #'
 #' @importFrom Rfast standardise colVars eachrow
 #' @importFrom irlba irlba
@@ -255,9 +259,6 @@ eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"
 
   n <- nrow(X)
   p <- ncol(X)
-
-  # scale of target matrix
-  nu <- 1
 
   # save row and columns names since X is overwritten
   rn <- rownames(X)
@@ -296,16 +297,6 @@ eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"
     }
   }
 
-  # Estimate lambda
-  if (missing(lambda) | is.null(lambda)) {
-    # Estimate lambda by empirical Bayes, using nu as scale of target Since
-    # data is scaled to have var 1 (instead of n), multiply by n
-    res <- estimate_lambda_eb(n.samples * dcmp$d^2, n.samples, p, nu)
-  } else {
-    # compute logML for specified lambda value
-    res <- estimate_lambda_eb(n.samples * dcmp$d^2, n.samples, p, nu, lambda = lambda)
-  }
-
   # Modify sign of dcmp$v and dcmp$u so principal components are consistant
   # This is motivated by whitening:::makePositivDiagonal() but here adjust
   # both U and V so reconstructed data is correct
@@ -315,14 +306,14 @@ eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"
   dcmp$v <- eachrow(dcmp$v, values, "*")
   dcmp$u <- eachrow(dcmp$u, values, "*")
 
-  result <- list(
+  ecl <- list(
     U = dcmp$v,
     dSq = dcmp$d^2,
     V = dcmp$u,
-    lambda = res$lambda,
-    logML = res$logML,
+    lambda = NA,
+    logLik = NA,
     sigma = sigma,
-    nu = nu,
+    nu = NA,
     n = n.samples,
     p = p,
     k = k,
@@ -331,8 +322,15 @@ eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"
     method = "svd",
     call = match.call()
   )
+  ecl <- new("eclairs", ecl)
 
-  new("eclairs", result)
+  # estimate lambda and nu values
+  res <- getShrinkageParams( ecl, k, lambda = lambda)
+  ecl$lambda <- res$lambda
+  ecl$nu <- res$nu
+  ecl$logLik <- res$logLik
+
+  ecl
 }
 
 

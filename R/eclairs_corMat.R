@@ -93,14 +93,6 @@ eclairs_corMat <- function(C, n, k = min(n, nrow(C)), lambda = NULL) {
     dcmp$vectors <- dcmp$vectors[, keep, drop = FALSE]
   }
 
-  if (missing(lambda) | is.null(lambda)) {
-    # Estimate lambda by empirical Bayes, using nu as scale of target Since
-    # data is scaled to have var 1 (instead of n), multiply by n
-    res <- estimate_lambda_eb(n * dcmp$values, n, p, nu)
-    lambda <- res$lambda
-    logML <- res$logML
-  }
-
   # Modify sign of dcmp$v and dcmp$u so principal components are consistant
   # This is motivated by whitening:::makePositivDiagonal() but here adjust
   # both U and V so reconstructed data is correct
@@ -109,22 +101,30 @@ eclairs_corMat <- function(C, n, k = min(n, nrow(C)), lambda = NULL) {
   # faster version
   dcmp$vectors <- eachrow(dcmp$vectors, values, "*")
 
-  result <- list(
+  ecl <- list(
     U = dcmp$vectors,
     dSq = dcmp$values,
     V = NULL,
-    lambda = lambda,
+    lambda = NA,
     sigma = rep(1, ncol(C)),
-    nu = nu,
+    nu = NA,
     n = n,
     p = p,
     k = k,
-    logML = logML,
+    logLik = NA,
     rownames = NULL,
     colnames = colnames(C),
     method = "eigen",
     call = match.call()
   )
 
-  new("eclairs", result)
+  ecl <- new("eclairs", ecl)
+  
+  # estimate lambda and nu values
+  res <- getShrinkageParams( ecl, lambda = lambda)
+  ecl$lambda <- res$lambda
+  ecl$nu <- res$nu
+  ecl$logLik <- res$logLik
+
+  ecl
 }

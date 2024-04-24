@@ -92,8 +92,12 @@ reform_decomp <- function(ecl, k = ecl$k, drop = NULL) {
     # if( ecl$method == 'eigen' ) Reconstruct original dataset
     # from eigen decomposition
 
-    C_reconstruct <- with(ecl, U %*% (dSq * t(U)))
-    C_reconstruct <- diag(ecl$sigma) %*% C_reconstruct %*% diag(ecl$sigma)
+    # C_reconstruct <- with(ecl, U %*% (dSq * t(U)))
+    # C_reconstruct <- diag(ecl$sigma) %*% C_reconstruct %*% diag(ecl$sigma)
+    dM <- with(ecl, dmult(U, dSq, "right"))
+    Cr <- with(ecl, tcrossprod(U, dM))
+    dM2 <- dmult(Cr, ecl$sigma, "right")
+    C_reconstruct <- dmult(dM2, ecl$sigma, "left")
 
     ecl <- eclairs_corMat(C_reconstruct[keep, keep, drop = FALSE],
       n = n,

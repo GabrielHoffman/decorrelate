@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,6 +81,7 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Naively multiplying by a diagonal matrix with <code>p</code> entries takes \(\mathcal{O}(p^2)\), even though must values in the diagonal matrix are zero.  R has built in syntax to scale <em>columns</em>, so <code>diag(v) %*% M</code> can be evaluated with <code>v * M</code>.  This is often difficult to remember, hard to look up, and scaling <em>rows</em> requires <code>t(t(M) * v)</code>.  This is hard to read and write, and requires two transpose operations.</p>
 <p>Here, <code>dmult()</code> uses <code>Rcpp</code> to evaluate the right multiplication efficiently, and uses <code>v * M</code> for left multiplication.  This gives good performance and readability.</p>
+<p>In principle, the <code>Rcpp</code> code can be modified to use BLAS for better performance by treating a <code>NumericMatrix</code> as a <code>C</code> array.  But this is not currently a bottleneck</p>
     </div>
 
     <div class="section level2">

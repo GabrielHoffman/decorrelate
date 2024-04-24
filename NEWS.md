@@ -1,4 +1,13 @@
 
+# decorrelate 0.1.2
+* April 23, 2024
+* use `dmult()` instead of transposing
+* estimate `nu` to give correlation matrix close to having diagonals 1
+
+# decorrelate 0.1.1
+* Feb 27, 2024
+* update all functions to process covariance by shrinking correlation and retaining variance information
+
 # decorrelate 0.1.0
 * Feb 27, 2024
 * update all functions to process covariance by shrinking correlation and retaining variance information

@@ -37,14 +37,16 @@ test_estimate_lambda = function(){
 	########################
 
 	# evaluate eigen-values
-	if( n > p){
-		eigs = eigen(crossprod(X), symmetric=TRUE)$values
-	}else{
-		eigs = eigen(tcrossprod(X), symmetric=TRUE)$values
-	}
+	# if( n > p){
+	# 	eigs = eigen(crossprod(X), symmetric=TRUE)$values
+	# }else{
+	# 	eigs = eigen(tcrossprod(X), symmetric=TRUE)$values
+	# }
 
-	# estimate lambda value
-	est = decorrelate::estimate_lambda_eb(eigs, n, p, nu=nu)
+	# # estimate lambda value
+	# est = decorrelate::estimate_lambda_eb(eigs, n, p, nu=nu)
+
+
 
 	# test stability of lambda as rank changes
     # sapply((n-20):n, function(k){
@@ -107,7 +109,8 @@ test_estimate_lambda = function(){
     # lambda_eclairs = estimate_lambda_eb(n*ecl$dSq, n, p, nu)
 
 	# check two estimates of lambda
-	checkEqualsNumeric( fit@alphaOpt, est$lambda, tolerance=1e-4) & checkEqualsNumeric( fit@alphaOpt, ecl$lambda, tolerance=1e-4)
+	# checkEqualsNumeric( fit@alphaOpt, est$lambda, tolerance=1e-4) & checkEqualsNumeric( fit@alphaOpt, ecl$lambda, tolerance=1e-4)
+	checkEqualsNumeric( fit@alphaOpt, ecl$lambda, tolerance=1e-4)
 }
 
 test_large_scale = function(){

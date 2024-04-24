@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,6 +48,17 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.2" id="decorrelate-012">decorrelate 0.1.2<a class="anchor" aria-label="anchor" href="#decorrelate-012"></a></h2>
+<ul><li>April 23, 2024</li>
+<li>use <code><a href="../reference/dmult.html">dmult()</a></code> instead of transposing</li>
+<li>estimate <code>nu</code> to give correlation matrix close to having diagonals 1</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1" id="decorrelate-011">decorrelate 0.1.1<a class="anchor" aria-label="anchor" href="#decorrelate-011"></a></h2>
+<ul><li>Feb 27, 2024</li>
+<li>update all functions to process covariance by shrinking correlation and retaining variance information</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="decorrelate-010">decorrelate 0.1.0<a class="anchor" aria-label="anchor" href="#decorrelate-010"></a></h2>
 <ul><li>Feb 27, 2024</li>
 <li>update all functions to process covariance by shrinking correlation and retaining variance information</li>
@@ -84,7 +95,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.14" id="decorrelate-0014">decorrelate 0.0.14<a class="anchor" aria-label="anchor" href="#decorrelate-0014"></a></h2>
-<ul><li>add <code><a href="../reference/series_start_total.html">series_start_total()</a></code> and use it in <code><a href="../reference/estimate_lambda_eb.html">estimate_lambda_eb()</a></code> for partial SVD</li>
+<ul><li>add <code>series_start_total()</code> and use it in <code>estimate_lambda_eb()</code> for partial SVD</li>
 <li>this substantially improves estimation of lambda when partial SVD is used</li>
 <li>add <code><a href="../reference/summarizeCorr.html">averageCorr()</a></code>
 </li>
@@ -129,7 +140,7 @@
 <li>
 <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> for eclairs shows arrow on right for zero eigen-values</li>
 <li>
-<code><a href="../reference/estimate_lambda_eb.html">estimate_lambda_eb()</a></code> now returns logML for estimated or specified lambda</li>
+<code>estimate_lambda_eb()</code> now returns logML for estimated or specified lambda</li>
 <li>this is stored by <code><a href="../reference/eclairs.html">eclairs()</a></code>
 </li>
 </ul></div>
@@ -144,7 +155,7 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.6" id="decorrelate-006">decorrelate 0.0.6<a class="anchor" aria-label="anchor" href="#decorrelate-006"></a></h2>
 <ul><li>May 25, 2021</li>
-<li>add <code><a href="../reference/estimate_lambda_eb.html">estimate_lambda_eb()</a></code> to perform empirical Bayes estimation of lambda</li>
+<li>add <code>estimate_lambda_eb()</code> to perform empirical Bayes estimation of lambda</li>
 <li>works for truncated SVD by setting missing ev’s to the mean residual variance</li>
 <li>this makes estimation of lambda stable for varying ranks</li>
 <li>add <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> for eclairs</li>

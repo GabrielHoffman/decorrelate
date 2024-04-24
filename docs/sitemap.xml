@@ -46,6 +46,9 @@
     <loc>http://gabrielhoffman.github.io/decorrelate/reference/decorrelate.html</loc>
   </url>
   <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/dmult.html</loc>
+  </url>
+  <url>
     <loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs-class.html</loc>
   </url>
   <url>
@@ -80,6 +83,9 @@
   </url>
   <url>
     <loc>http://gabrielhoffman.github.io/decorrelate/reference/getCov.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/getShrinkageParams.html</loc>
   </url>
   <url>
     <loc>http://gabrielhoffman.github.io/decorrelate/reference/getWhiteningMatrix.html</loc>

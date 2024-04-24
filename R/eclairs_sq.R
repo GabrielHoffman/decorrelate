@@ -131,13 +131,7 @@ eclairs_sq <- function(
     }
   }
 
-  # eclairs
-
-  # Estimate lambda by empirical Bayes, using nu as scale of target Since
-  # data is scaled to have var 1 (instead of n), multiply by n
-  res <- estimate_lambda_eb(n * dcmp$d^2, n, p, nu)
-
-  # Modify sign of dcmp$v and dcmp$u so principal components are consistant
+    # Modify sign of dcmp$v and dcmp$u so principal components are consistant
   # This is motivated by whitening:::makePositivDiagonal() but here adjust
   # both U and V so reconstructed data is correct
   values <- sign(diag(dcmp$u))
@@ -147,10 +141,28 @@ eclairs_sq <- function(
   dcmp$u <- eachrow(dcmp$u, values, "*")
 
   ecl <- list(
-    U = dcmp$u, dSq = dcmp$d^2, V = dcmp$v, lambda = res$lambda, logML = res$logML,
-    nu = nu, n = n, p = p, k = length(dcmp$d), rownames = ecl$rownames,
-    colnames = ecl$colnames, method = "svd", call = match.call()
+    U = dcmp$u, 
+    dSq = dcmp$d^2, 
+    V = dcmp$v, 
+    lambda = NA, 
+    logLik = NA,
+    nu = NA, 
+    n = n, 
+    p = p, 
+    k = length(dcmp$d), 
+    rownames = ecl$rownames,
+    colnames = ecl$colnames, 
+    method = "svd", 
+    call = match.call()
   )
 
-  new("eclairs", ecl)
+  ecl <- new("eclairs", ecl)
+
+  # estimate lambda and nu values
+  res <- getShrinkageParams( ecl)
+  ecl$lambda <- res$lambda
+  ecl$nu <- res$nu
+  ecl$logLik <- res$logLik
+
+  ecl
 }

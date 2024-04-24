@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,8 +69,9 @@
 </h3>
 <p>Data whitening is a widely used preprocessing step to remove correlation structure since statistical models often assume independence <a href="https://doi.org/10.1080/00031305.2016.1277159" class="external-link">(Kessy, et al. 2017)</a>. The typical procedures transforms the observed data by an inverse square root of the sample correlation matrix (<strong>Figure 1</strong>). For low dimension data (i.e. <em>n</em> &gt; <em>p</em>), this transformation produces transformed data with an identity sample covariance matrix. This procedure assumes either that the true covariance matrix is know, or is well estimated by the sample covariance matrix. Yet the use of the sample covariance matrix for this transformation can be problematic since <strong>1)</strong> the complexity is 𝒪(<em>p</em><sup>3</sup>) and <strong>2)</strong> it is not applicable to the high dimensional (i.e. <em>n</em> ≪ <em>p</em>) case since the sample covariance matrix is no longer full rank.</p>
 <p>Here we use a probabilistic model of the observed data to apply a whitening transformation. Our Gaussian Inverse Wishart Empirical Bayes (GIW-EB) <strong>1)</strong> model substantially reduces computational complexity, and <strong>2)</strong> regularizes the eigen-values of the sample covariance matrix to improve out-of-sample performance.</p>
-<div class="figure">
-<img src="reference/figures/README-run.examples-1.png" alt=""><p class="caption"><strong>Figure 1:</strong> Illustration of steps in whitening transformation</p>
+<div class="float">
+<img src="reference/figures/README-run.examples-1.png" alt="Figure 1: Illustration of steps in whitening transformation"><div class="figcaption">
+<strong>Figure 1:</strong> Illustration of steps in whitening transformation</div>
 </div>
 </div>
 <div class="section level2">

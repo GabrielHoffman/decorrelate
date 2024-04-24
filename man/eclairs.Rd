@@ -61,13 +61,13 @@ rownames(Y) <- paste0("sample_", seq(n))
 colnames(Y) <- paste0("gene_", seq(p))
 
 # eclairs decomposition: covariance
-Sigma.eclairs <- eclairs(Y, compute = "covariance")
+ecl <- eclairs(Y, compute = "covariance")
 
-Sigma.eclairs
+ecl
 
 # eclairs decomposition: correlation
-Sigma.eclairs <- eclairs(Y, compute = "correlation")
+ecl <- eclairs(Y, compute = "correlation")
 
-Sigma.eclairs
+ecl
 
 }

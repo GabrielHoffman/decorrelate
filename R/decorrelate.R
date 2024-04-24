@@ -42,7 +42,8 @@ mult_eclairs <- function(X, U1, dSq1, lambda, nu, alpha, sigma, transpose = FALS
     if (!isCorrMatrix) {
       # scale rows by standard deviation of input cols
       # X <- diag(sigma^(2*alpha)) %*% X
-      X <- (sigma^(2 * alpha)) * X
+      # X <- (sigma^(2 * alpha)) * X
+      X <- dmult(X, sigma^(2 * alpha), "left")
     }
 
     # decorrelate rows
@@ -54,7 +55,10 @@ mult_eclairs <- function(X, U1, dSq1, lambda, nu, alpha, sigma, transpose = FALS
       part1 <- ((X - tcrossprod(U1, X_U1)) * ((lambda * nu)^alpha))
     }
 
-    result <- crossprod((v^alpha) * t(U1), t(X_U1)) + part1
+    # result <- crossprod((v^alpha) * t(U1), t(X_U1)) + part1
+    dM <- dmult(U1, v^alpha, "right")
+    result <- tcrossprod(dM, X_U1) + part1
+
   } else {
     if (ncol(X) != nrow(U1)) {
       stop(
@@ -66,7 +70,8 @@ mult_eclairs <- function(X, U1, dSq1, lambda, nu, alpha, sigma, transpose = FALS
     if (!isCorrMatrix) {
       # scale columns by standard deviation of input cols
       # X <- X %*% diag(sigma^(2*alpha))
-      X <- t(t(X) * (sigma^(2 * alpha)))
+      # X <- t(t(X) * (sigma^(2 * alpha)))
+      X <- dmult(X, sigma^(2 * alpha), "right")
     }
 
     # decorrelate columns
@@ -78,7 +83,10 @@ mult_eclairs <- function(X, U1, dSq1, lambda, nu, alpha, sigma, transpose = FALS
       part1 <- (X - tcrossprod(X_U1, U1)) * ((lambda * nu)^alpha)
     }
 
-    result <- X_U1 %*% ((v^alpha) * t(U1)) + part1
+    # result <- X_U1 %*% ((v^alpha) * t(U1)) + part1
+    dM <- dmult(U1, v^alpha, "right")
+    result <- tcrossprod(X_U1, dM) + part1
+
   }
   result
 }

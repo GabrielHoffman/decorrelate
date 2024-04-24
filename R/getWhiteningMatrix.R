@@ -53,11 +53,14 @@ getWhiteningMatrix <- function(ecl, lambda) {
     part1 <- with(ecl, (diag(1, p) - tcrossprod(U, U)) * ((lambda * nu)^alpha))
   }
 
-  W <- with(ecl, U %*% ((v^alpha) * t(U)) + part1)
+  # W <- with(ecl, U %*% ((v^alpha) * t(U)) + part1)
+  dM = with(ecl, dmult(U, v^alpha, "right"))
+  W = with(ecl, tcrossprod(U,dM)) + part1
 
   if (any(ecl$sigma != 1)) {
     # W %*% diag(ecl$sigma^(2*alpha))
-    W <- t(t(W) * (ecl$sigma^(2 * alpha)))
+    # W <- t(t(W) * (ecl$sigma^(2 * alpha)))
+    W = dmult(W, ecl$sigma^(2*alpha), "right")
   }
   W
 }
