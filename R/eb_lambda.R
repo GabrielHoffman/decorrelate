@@ -26,8 +26,9 @@ getNu = function(ecl, k, a.value){
   if( ecl$lambda == 0 | ecl$lambda == 1){
     nu = 1
   }else{
-    # estimate nu
-    nu = with(ecl, (1 - (1 - lambda)/p*a.value)/ lambda)
+    # estimate nu to satisfy
+    # p = (1-ecl$lambda)*a.value + ecl$lambda*nu*p
+    nu = with(ecl, (p - (1 - lambda)*a.value)/ (p*lambda))
   }
 
   nu
