@@ -166,13 +166,14 @@ setMethod("getCor", c(ecl = "eclairs"), function(
     lambda <- ecl$lambda
   }
 
+
   # reconstruct correlation matrix
-  C <- ecl$U %*% ((ecl$dSq * (1 - lambda)) * t(ecl$U)) +
+  # C <- ecl$U %*% ((ecl$dSq * (1 - lambda)) * t(ecl$U)) +
     diag(ecl$nu * lambda, ecl$p)
 
-  # A <- with(ecl, dmult(U[,seq(k),drop=FALSE], sqrt(dSq[seq(k)]), "right"))
-  # C <- tcrossprod(A)
-  # diag(C) <- diag(C) + ecl$nu * lambda
+  A <- with(ecl, dmult(U[,seq(k),drop=FALSE], sqrt(dSq[seq(k)]), "right"))
+  C <- (1 - lambda)*tcrossprod(A)
+  diag(C) <- diag(C) + ecl$nu * lambda
 
   if (method == "covariance" & !all(ecl$sigma == 1)) {
     # scale by standard deviations
@@ -422,3 +423,5 @@ setMethod("plot", "eclairs", function(x, y, ...) {
     arrows(xvals[1], yvals[1], xvals[2], yvals[2], length = 0.1, col = col)
   }
 })
+
+
