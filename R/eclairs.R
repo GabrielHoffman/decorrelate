@@ -169,7 +169,7 @@ setMethod("getCor", c(ecl = "eclairs"), function(
 
   # reconstruct correlation matrix
   # C <- ecl$U %*% ((ecl$dSq * (1 - lambda)) * t(ecl$U)) +
-    diag(ecl$nu * lambda, ecl$p)
+    # diag(ecl$nu * lambda, ecl$p)
 
   A <- with(ecl, dmult(U[,seq(k),drop=FALSE], sqrt(dSq[seq(k)]), "right"))
   C <- (1 - lambda)*tcrossprod(A)
