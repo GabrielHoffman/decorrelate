@@ -5,9 +5,10 @@
 
 <br>
 <br>
-<div style="text-align: justify">
+
 ### Fast Probabilistic Whitening Transformation for Ultra-High Dimensional Data
 
+<div style="text-align: justify">
 Data whitening is a widely used preprocessing step to remove correlation
 structure since statistical models often assume independence [(Kessy, et
 al. 2017)](https://doi.org/10.1080/00031305.2016.1277159). The typical
@@ -31,6 +32,8 @@ to improve out-of-sample performance.
 
 ![**Figure 1:** Illustration of steps in whitening
 transformation](man/figures/README-run.examples-1.png)
+
+<br>
 
 ## Installation
 

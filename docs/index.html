@@ -45,15 +45,19 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><br><br><div class="section level3" style="text-align: justify">
+  <main id="main" class="col-md-9"><p><br><br></p>
+<div class="section level3">
 <h3 id="fast-probabilistic-whitening-transformation-for-ultra-high-dimensional-data">Fast Probabilistic Whitening Transformation for Ultra-High Dimensional Data<a class="anchor" aria-label="anchor" href="#fast-probabilistic-whitening-transformation-for-ultra-high-dimensional-data"></a>
 </h3>
+<div style="text-align: justify">
 <p>Data whitening is a widely used preprocessing step to remove correlation structure since statistical models often assume independence <a href="https://doi.org/10.1080/00031305.2016.1277159" class="external-link">(Kessy, et al. 2017)</a>. The typical procedures transforms the observed data by an inverse square root of the sample correlation matrix (<strong>Figure 1</strong>). For low dimension data (i.e. <em>n</em> &gt; <em>p</em>), this transformation produces transformed data with an identity sample covariance matrix. This procedure assumes either that the true covariance matrix is know, or is well estimated by the sample covariance matrix. Yet the use of the sample covariance matrix for this transformation can be problematic since <strong>1)</strong> the complexity is 𝒪(<em>p</em><sup>3</sup>) and <strong>2)</strong> it is not applicable to the high dimensional (i.e. <em>n</em> ≪ <em>p</em>) case since the sample covariance matrix is no longer full rank.</p>
 <p>Here we use a probabilistic model of the observed data to apply a whitening transformation. Our Gaussian Inverse Wishart Empirical Bayes (GIW-EB) <strong>1)</strong> model substantially reduces computational complexity, and <strong>2)</strong> regularizes the eigen-values of the sample covariance matrix to improve out-of-sample performance.</p>
 </div>
 <div class="float">
 <img src="reference/figures/README-run.examples-1.png" alt="Figure 1: Illustration of steps in whitening transformation"><div class="figcaption">
 <strong>Figure 1:</strong> Illustration of steps in whitening transformation</div>
+</div>
+<p><br></p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
