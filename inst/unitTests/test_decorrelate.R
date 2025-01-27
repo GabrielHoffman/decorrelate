@@ -6,7 +6,7 @@ test_new = function(){
 	n = 8000
 	p = 2
 
-	Sigma = autocorr.mat(p, 0)
+	Sigma = autocorr.mat(p, .5)*2
 
 	Y = rmvnorm(n, rep(0, p), sigma=Sigma, seed=1)
 

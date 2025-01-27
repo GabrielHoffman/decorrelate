@@ -49,45 +49,39 @@ cca <- function(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL)
 
   n.comp <- min(ncol(X), ncol(Y), nrow(X), k)
 
-  # mean center columns
-  X.center <- scale(X, scale = FALSE)
-  Y.center <- scale(Y, scale = FALSE)
-  n <- nrow(X)
-
   if (nrow(X) != nrow(Y)) {
     stop("X and Y must have the same number of rows")
   }
 
-  # Evaluate: Sig_{xx}^{-.5} Sig_{xy} Sig_{yy}^{-.5} Sig = minvsqrt(cov(X))
-  # %*% cov(X,Y) %*% minvsqrt(cov(Y)) But using faster algorithm
+  # mean center columns
+  X <- scale(X, scale = FALSE)
+  Y <- scale(Y, scale = FALSE)
+
+  # Evaluate: Sig_{xx}^{-.5} Sig_{xy} Sig_{yy}^{-.5} 
+  # This is the cross covariance of whitened X and Y
 
   # eclairs decomposition
-  ecl.x <- eclairs(X, lambda = lambda.x, compute = "cov")
-  ecl.y <- eclairs(Y, lambda = lambda.y, compute = "cov")
+  ecl.x <- eclairs(X, lambda = lambda.x, compute = "cor")
+  ecl.y <- eclairs(Y, lambda = lambda.y, compute = "cor")
 
-  # creates a matrix that is ncol(X) * ncol(Y) tmp1 = decorrelate(cov(X,Y),
-  # ecl.x, transpose=TRUE)
+  # whiten
+  X.whiten <- decorrelate(X, ecl.x)
+  Y.whiten <- decorrelate(Y, ecl.y)
 
-  # evaluates the same quantity in linear time X and Y are mean centered by
-  # cov()
-  tmp1 <- crossprod(Y.center, decorrelate(X.center / (n - 1), ecl.x))
-
-  Sig <- decorrelate(t(tmp1), ecl.y)
-
-  # scale by shrinkage parameters
-  Sig <- Sig * sqrt(1 - ecl.x$lambda) * sqrt(1 - ecl.y$lambda)
+  # cross covariance
+  Sig.cross <- crossprod(X.whiten, Y.whiten) / (n1-1)
 
   # SVD on
-  if (k > min(dim(Sig)) / 3) {
-    dcmp <- svd(Sig)
+  if (k > min(dim(Sig.cross)) / 3) {
+    dcmp <- svd(Sig.cross)
 
-    if (k < min(dim(Sig))) {
+    if (k < min(dim(Sig.cross))) {
       dcmp$d <- dcmp$d[seq_len(n.comp)]
       dcmp$u <- dcmp$u[, seq_len(n.comp), drop = FALSE]
       dcmp$v <- dcmp$v[, seq_len(n.comp), drop = FALSE]
     }
   } else {
-    dcmp <- irlba(Sig, nv = n.comp)
+    dcmp <- irlba(Sig.cross, nv = n.comp)
   }
 
   # set diagonals to be positive
@@ -100,7 +94,7 @@ cca <- function(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL)
 
   y.coefs <- decorrelate(dcmp$v, ecl.y, transpose = TRUE)
   y.vars <- Y %*% y.coefs
-  rownames(y.vars) <- rownames(X)
+  rownames(y.vars) <- rownames(Y)
 
   rho <- diag(cor(x.vars, y.vars))[seq(n.comp)]
   names(rho) <- paste("can.comp", seq(n.comp), sep = "")
@@ -122,19 +116,29 @@ cca <- function(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL)
   load.y <- cor(Y, y.vars)
 
   # compute redundancy index
-  ri.x <- rho.mod^2 * apply(load.x, 2, function(x) mean(x^2))
-  ri.y <- rho.mod^2 * apply(load.y, 2, function(x) mean(x^2))
+  # ri.x <- rho.mod^2 * apply(load.x, 2, function(x) mean(x^2))
+  # ri.y <- rho.mod^2 * apply(load.y, 2, function(x) mean(x^2))
 
-  names(ri.x) <- paste("can.comp", seq_len(n.comp), sep = "")
-  names(ri.y) <- paste("can.comp", seq_len(n.comp), sep = "")
+  # names(ri.x) <- paste("can.comp", seq_len(n.comp), sep = "")
+  # names(ri.y) <- paste("can.comp", seq_len(n.comp), sep = "")
 
   res <- list(
-    n.comp = n.comp, rho.mod = rho.mod, cor = rho, cramer.V = cramer.V,
-    x.coefs = x.coefs, x.vars = x.vars, x.ri = ri.x, y.coefs = y.coefs, y.vars = y.vars,
-    y.ri = ri.y, lambdas = c(x = ecl.x$lambda, y = ecl.y$lambda), dims = c(
+    n.comp = n.comp, 
+    rho.mod = rho.mod, 
+    cor = rho, 
+    cramer.V = cramer.V,
+    x.coefs = x.coefs, 
+    x.vars = x.vars, 
+    # x.ri = ri.x, 
+    y.coefs = y.coefs, 
+    y.vars = y.vars,
+    # y.ri = ri.y, 
+    lambdas = c(x = ecl.x$lambda, y = ecl.y$lambda), 
+    dims = c(
       n1 = n1,
-      n2 = n2, p1 = p1, p2 = p2
-    )
+      n2 = n2, 
+      p1 = p1, 
+      p2 = p2)
   )
 
   new("fastcca", res)

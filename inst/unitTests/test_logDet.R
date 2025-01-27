@@ -8,24 +8,24 @@ test_logDet = function(){
 	p = 12
 
 	# create correlation matrix
-	Sigma = autocorr.mat(p, .9)
+	Sigma = autocorr.mat(p, .9) *4
 
 	# draw data from correlation matrix Sigma
 	Y = rmvnorm(n, rep(0, p), sigma=Sigma)
 
 	# eclairs decomposition
-	Sigma.eclairs = eclairs( Y )
+	ecl = eclairs( Y )
 
-	a = logDet(Sigma.eclairs)
-	b = determinant(getCov(Sigma.eclairs))$modulus
+	a = logDet(ecl)
+	b = determinant(getCov(ecl))$modulus
 	checkEqualsNumeric(a,b)
 
-	a = logDet(Sigma.eclairs, 0.5)
-	b = determinant(chol(getCov(Sigma.eclairs)))$modulus
+	a = logDet(ecl, 0.5)
+	b = determinant(chol(getCov(ecl)))$modulus
 	checkEqualsNumeric(a,b)
 
-	a = logDet(Sigma.eclairs, -1)
-	b = determinant(solve(getCov(Sigma.eclairs)))$modulus
+	a = logDet(ecl, -1)
+	b = determinant(solve(getCov(ecl)))$modulus
 	checkEqualsNumeric(a,b)
 }
 
@@ -44,13 +44,39 @@ test_tr = function(){
 	Y = rmvnorm(n, rep(0, p), sigma=Sigma)
 
 	# eclairs decomposition
-	Sigma.eclairs = eclairs( Y, compute="corr" )
+	ecl = eclairs( Y, compute="corr" )
 
-	a = tr(Sigma.eclairs)
-	b = sum(eigen(getCor(Sigma.eclairs))$values)
+	a = tr(ecl)
+	b = sum(eigen(getCor(ecl))$values)
+	d = sum(diag(getCor(ecl)))
 	checkEqualsNumeric(a,b)
+	checkEqualsNumeric(a,d)
+
+	# test for covariance with non-identity sigma
+	# create covariance matrix
+	# Sigma = autocorr.mat(p, .9) * 4
+	# Y = rmvnorm(n, rep(0, p), sigma=Sigma)
+
+	# # eclairs decomposition
+	# ecl = eclairs( Y )
+
+	# a = tr(ecl)
+	# b = sum(eigen(getCov(ecl))$values)
+	# d = sum(diag(getCov(ecl)))
+	# checkEqualsNumeric(a,b)
+	# checkEqualsNumeric(a,d)
+
+	# a = diag(getCor(ecl))
+	# sum(a*ecl$sigma^2)
+
+	# a = eigen(getCov(ecl))$values
+	# sum(a*ecl$sigma^2)
+
+
 }
 
+
+sum(getCov(ecl))
 
 
 
@@ -90,23 +116,23 @@ test_quadForm = function(){
 	n = 800 
 	p = 12
 
-	# create correlation matrix
-	Sigma = autocorr.mat(p, .9)
+	# create covariance matrix
+	Sigma = autocorr.mat(p, .9) * 4
 
 	# draw data from correlation matrix Sigma
 	Y = rmvnorm(n, rep(0, p), sigma=Sigma*4.5)
 
 	# eclairs decomposition
-	Sigma.eclairs = eclairs( Y )
+	ecl = eclairs( Y )
 
 	# return scalar
-	a = quadForm( Sigma.eclairs, Y[1,])
-	b = Y[1,] %*% solve(getCov(Sigma.eclairs)) %*% ( Y[1,])
+	a = quadForm( ecl, Y[1,])
+	b = Y[1,] %*% solve(getCov(ecl)) %*% ( Y[1,])
 	checkEqualsNumeric(a,b)
 
 	# return matrix
-	a = quadForm( Sigma.eclairs, Y[1:2,])
-	b = Y[1:2,] %*% solve(getCov(Sigma.eclairs)) %*% t( Y[1:2,])
+	a = quadForm( ecl, Y[1:2,])
+	b = Y[1:2,] %*% solve(getCov(ecl)) %*% t( Y[1:2,])
 	checkEqualsNumeric(a,b)
 }
 

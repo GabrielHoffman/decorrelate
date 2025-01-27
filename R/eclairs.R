@@ -166,7 +166,6 @@ setMethod("getCor", c(ecl = "eclairs"), function(
     lambda <- ecl$lambda
   }
 
-
   # reconstruct correlation matrix
   # C <- ecl$U %*% ((ecl$dSq * (1 - lambda)) * t(ecl$U)) +
     # diag(ecl$nu * lambda, ecl$p)

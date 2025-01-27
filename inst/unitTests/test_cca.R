@@ -9,8 +9,8 @@ test_cca = function(){
 	p2 = 4
 
 	# draw data from correlation matrix Sigma
-	X = rmvnorm(n, rep(0, p1), autocorr.mat(p1, .9))
-	Y = rmvnorm(n, rep(0, p2), autocorr.mat(p2, .9))
+	X = rmvnorm(n, rep(0, p1), autocorr.mat(p1, .9), seed=1)
+	Y = rmvnorm(n, rep(0, p2), autocorr.mat(p2, .9), seed=3)
 
 	X = scale(X)
 	Y = scale(Y)

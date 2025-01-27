@@ -2,13 +2,10 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
 <!-- badges: end -->
-<style>
-body {
-text-align: justify}
-</style>
 
 <br>
-
+<br>
+<div style="text-align: justify">
 ### Fast Probabilistic Whitening Transformation for Ultra-High Dimensional Data
 
 Data whitening is a widely used preprocessing step to remove correlation
@@ -30,6 +27,7 @@ whitening transformation. Our Gaussian Inverse Wishart Empirical Bayes
 (GIW-EB) **1)** model substantially reduces computational complexity,
 and **2)** regularizes the eigen-values of the sample covariance matrix
 to improve out-of-sample performance.
+</div>
 
 ![**Figure 1:** Illustration of steps in whitening
 transformation](man/figures/README-run.examples-1.png)

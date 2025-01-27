@@ -1,5 +1,23 @@
 
 
+May 5,
+	decorrelate::cca() and decorrelate::fastcca() are tested against others
+	Using only correlation, there is a speed up like in RCCA
+	but using covariance, just do
+		ecl.x <- eclairs(scale(X), compute = "cov")
+		ecl.y <- eclairs(scale(Y), compute = "cov")
+
+		X.decorr = decorrelate(scale(X), ecl.x, lambda=0)
+		Y.decorr = decorrelate(scale(Y), ecl.y, lambda=0)
+
+		# close to the same, why not?
+		res1 = svd(cor(X.decorr, Y.decorr))
+
+		Since terms don't cancel out anymore.
+		Is time different than RCCA?
+
+		see crossprod.R
+
 April 15, 
 	- faster CCA
 	- use dmult() to multiply by diagonal matrix 
