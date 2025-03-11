@@ -293,8 +293,8 @@ eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"
       error = function(e){
       # very rarely, svd() above can fail
       # fall back on interative 
-      d <- min(c(k, dim(X)-1))
-      irlba(X, k )
+      k2 <- min(c(k, dim(X)-1))
+      suppressWarnings(irlba(X, k2 ))
       })
 
     # if k < min(n,p) truncate spectrum
