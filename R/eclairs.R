@@ -287,7 +287,15 @@ eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"
   if (k < min(p, n) / 3) {
     dcmp <- irlba(X, k)
   } else {
-    dcmp <- svd(X)
+    dcmp <- tryCatch({
+      svd(X)
+      },
+      error = function(e){
+      # very rarely, svd() above can fail
+      # fall back on interative 
+      d <- min(c(k, dim(X)-1))
+      irlba(X, k )
+      })
 
     # if k < min(n,p) truncate spectrum
     if (k < length(dcmp$d)) {
