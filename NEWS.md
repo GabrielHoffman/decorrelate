@@ -2,6 +2,8 @@
 # decorrelate 0.1.3
 * March 11, 2025
 * in `eclairs()`, if `svd()` fails fall back on `irlba()`
+* `sumInverseCorr()` has upper bound of `p`
+* fix docs
 
 # decorrelate 0.1.2
 * April 23, 2024

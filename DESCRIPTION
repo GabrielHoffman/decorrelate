@@ -18,7 +18,6 @@ Suggests:
     BiocStyle,
     knitr,
     pander,
-    beam,
     whitening,
     CCA,
     yacca,
@@ -29,6 +28,7 @@ Suggests:
     colorRamps,
     RUnit,
     latex2exp,
+    clusterGeneration,
     rmarkdown
 biocViews: RNASeq,
     GeneExpression,

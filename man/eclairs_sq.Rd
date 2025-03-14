@@ -22,10 +22,9 @@ compute the eclairs of C^2
 Given the eclairs decomp of C, compute the eclairs decomp of C^2
 }
 \details{
-Consider a data matrix X_{N x P} of P features and N samples where N << P. Let the columns of X be scaled so that C_{P x P} = XX^T.  C is often too big to compute directly since it is O(P^2) and O(P^3) to invert.  But we can compute the SVD of X in O(PN^2).
-The goal is to compute the SVD of the matrix C^2, given only the SVD of C in less than O(P^2 time).  Here we compute this SVD of C^2 in O(PN^4) time, which is tractible for small N.
+Consider a data matrix \eqn{X_{N x P}} of \eqn{P} features and \eqn{N} samples where \eqn{N << P}. Let the columns of X be scaled so that \eqn{C_{P x P} = XX^T}.  C is often too big to compute directly since it is O(P^2) and O(P^3) to invert.  But we can compute the SVD of X in O(PN^2).
+The goal is to compute the SVD of the matrix C^2, given only the SVD of C in less than \eqn{O(P^2)} time.  Here we compute this SVD of C^2 in \eqn{O(PN^4)} time, which is tractible for small N.
 Moreover, if we use an SVD X = UDV^T with of rank R, we can approximate the SVD of C^2 in O(PR^4) using only D and V
-In practice, this can be reduced to O(P (choose(R,2) + R)^2)
 }
 \examples{
 # Compute correlations directly and using eclairs decomp

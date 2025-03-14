@@ -126,7 +126,9 @@ sumInverseCorr <- function(ecl, method = c("EB", "MLE")) {
   p <- ecl$p
   one <- rep(1, p)
 
-  quadForm(ecl, one)
+  value = quadForm(ecl, one)
+
+  min(p, value)
 }
 
 

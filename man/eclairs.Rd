@@ -25,7 +25,7 @@ eclairs(
 }
 \value{
 \link{eclairs} object storing:
-\itemize{
+\describe{
  \item{U: }{orthonormal matrix with k columns representing the low rank component}
  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}

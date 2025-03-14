@@ -7,7 +7,7 @@
 #' Class \code{fastcca}
 #'
 #' @details Object storing:
-#' \itemize{
+#' \describe{
 #'  \item{n.comp: }{number of canonical components}
 #'  \item{cors: }{canonical correlations}
 #'  \item{x.coefs: }{canonical coefficients for X}

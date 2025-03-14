@@ -7,7 +7,7 @@
 #' Class \code{eclairs}
 #'
 #' @details Object storing:
-#' \itemize{
+#' \describe{
 #'  \item{U: }{orthonormal matrix with k columns representing the low rank component}
 #'  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
 #'  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}
@@ -63,13 +63,17 @@ setMethod("show", "eclairs", function(object) {
     cat(startText, values, "\n", sep = "")
   }
 
-
-
   if (isCorrMatrix) {
-    rho_mle <- averageCorr(object, "MLE")
+    # rho_mle <- averageCorr(object, "MLE")
     rho_eb <- averageCorr(object, "EB")
-    cat("  Avg corr (MLE):    ", format(rho_mle, digits = 3), "\n")
+    # cat("  Avg corr (MLE):    ", format(rho_mle, digits = 3), "\n")
     cat("  Avg corr (EB):     ", format(rho_eb, digits = 3), "\n")
+
+    # peff_mle <- sumInverseCorr(object, "MLE")
+    peff_eb <- sumInverseCorr(object, "EB")
+    digits <- log10(object$p) + 2
+    # cat("  Eff # feat. (MLE): ", format(peff_mle, digits = digits), "\n")
+    cat("  Eff # feat. (EB):  ", format(peff_eb, digits = digits), "\n")
   }
 
   cat(
@@ -199,7 +203,7 @@ setMethod("getCor", c(ecl = "eclairs"), function(
 #' @param n.samples number of samples data is from.  Usually \code{nrow(X)}, but can be other values in special cases.
 #'
 #' @return \link{eclairs} object storing:
-#' \itemize{
+#' \describe{
 #'  \item{U: }{orthonormal matrix with k columns representing the low rank component}
 #'  \item{dSq: }{eigen-values so that \eqn{U diag(d^2) U^T} is the low rank component}
 #'  \item{lambda: }{shrinkage parameter \eqn{\lambda} for the scaled diagonal component}

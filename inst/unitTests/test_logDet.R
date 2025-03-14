@@ -76,9 +76,6 @@ test_tr = function(){
 }
 
 
-sum(getCov(ecl))
-
-
 
 test_kappa = function(){
 

@@ -315,7 +315,7 @@ test_lm_each_eclairs = function(){
 test_reform_decomp = function(){
 
 	library(RUnit)
-	library(PRIMME)
+	# library(PRIMME)
 	library(decorrelate)
 	library(Matrix)
 	library(Rfast)
