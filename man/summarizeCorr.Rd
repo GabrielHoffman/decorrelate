@@ -12,7 +12,7 @@ averageCorr(ecl, method = c("EB", "MLE"))
 
 averageCorrSq(ecl, method = c("EB", "MLE"))
 
-sumInverseCorr(ecl, method = c("EB", "MLE"))
+sumInverseCorr(ecl, method = c("EB", "MLE"), absolute = TRUE)
 
 effVariance(ecl, method = c("EB", "MLE"))
 
@@ -22,6 +22,8 @@ tr(ecl, method = c("EB", "MLE"))
 \item{ecl}{estimate of correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
 
 \item{method}{compute average correlation for either the empirical Bayes (EB) shinken correlation matrix or the MLE correlation matrix}
+
+\item{absolute}{if \code{TRUE} (default) evaluate on absolute correlation matrix}
 }
 \value{
 value of summary statistic

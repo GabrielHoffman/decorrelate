@@ -1,49 +1,162 @@
-<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/404.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/articles/cca.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/articles/computational_scaling.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/articles/decorrelate.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/articles/index.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/articles/intuition.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/articles/simulation.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/authors.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/index.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/news/index.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/autocorr.mat.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/averageCorr.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/cca.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/cov_transform.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/decorrelate.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/dmult.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs-class.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs_corMat.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs_sq.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/effDependence.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/ergpca.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/est_lambda_ev.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/estimate_lambda_eb.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/fastcca-class.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/fastcca.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/getCov.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/getShrinkageParams.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/getWhiteningMatrix.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/gpca.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/index.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/kappa.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/lm_each_eclairs.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/lm_eclairs.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/logDet.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/mahalanobisDistance.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/mult_eclairs.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/optimal_SVHT_coef.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/plot-eclairs-method.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/quadForm.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/reform_decomp.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/rmvnorm_eclairs.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/series_start_total.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/summarizeCorr.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/sv_threshold.html</loc></url>
-<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/whiten.html</loc></url>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/404.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/articles/cca.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/articles/computational_scaling.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/articles/decorrelate.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/articles/intuition.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/articles/simulation.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/authors.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/index.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/news/index.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/autocorr.mat.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/averageCorr.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/averageCorrSq.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/cca.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/cov_transform.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/decorrelate.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/dmult.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs-class.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs_corMat.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/eclairs_sq.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/effDependence.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/effVariance.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/ergpca.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/est_lambda_ev.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/estimate_lambda_eb.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/fastcca-class.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/fastcca.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/getCor,eclairs-method.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/getCor.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/getCov,eclairs-method.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/getCov.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/getShrinkageParams.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/getWhiteningMatrix.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/gpca.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/kappa.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/lm_each_eclairs.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/lm_eclairs.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/logDet.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/mahalanobisDistance.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/mult_eclairs.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/optimal_SVHT_coef.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/plot-eclairs-method.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/quadForm.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/reform_decomp.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/rmvnorm_eclairs.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/series_start_total.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/sumInverseCorr.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/summarizeCorr.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/sv_threshold.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/tr.html</loc>
+  </url>
+  <url>
+    <loc>http://gabrielhoffman.github.io/decorrelate/reference/whiten.html</loc>
+  </url>
 </urlset>
-
