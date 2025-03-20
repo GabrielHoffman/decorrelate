@@ -61,10 +61,11 @@ setMethod("show", "fastcca", function(object) {
 #' @details
 #' Results from standard CCA are based on the SVD of \eqn{\Sigma_{xx}^{-\frac{1}{2}} \Sigma_{xy} \Sigma_{yy}^{-\frac{1}{2}}}.
 #'
-#' Uses \code{eclairs()} and empirical Bayes covariance regularization, and applies speed up of RCCA \insertCite{tuzhilina2020canonical;textual}{decorrelate} to perform CCA on n PCs and instead of p features.  Memory usage is \eqn{\mathcal{O}(np)} instead of \eqn{\mathcal{O}(p^2)}.  Computation is \eqn{\mathcal{O}(n^2p)} instead of \eqn{\mathcal{O}(p^3)} or \eqn{\mathcal{O}(np^2)}
+#' Uses \code{eclairs()} and empirical Bayes covariance regularization, and applies speed up of RCCA (Tuzhilina, et al. 2023) to perform CCA on n PCs and instead of p features.  Memory usage is \eqn{\mathcal{O}(np)} instead of \eqn{\mathcal{O}(p^2)}.  Computation is \eqn{\mathcal{O}(n^2p)} instead of \eqn{\mathcal{O}(p^3)} or \eqn{\mathcal{O}(np^2)}
 # Computation is n^2p instead of p^3 of np^2
 #'
-#' @references \insertAllCited{}
+#' @references 
+#' Tuzhilina, E., Tozzi, L., & Hastie, T. (2023). Canonical correlation analysis in high dimensions with structured regularization. Statistical modelling, 23(3), 203-227.
 #'
 #' @examples
 #' pop <- LifeCycleSavings[, 2:3]

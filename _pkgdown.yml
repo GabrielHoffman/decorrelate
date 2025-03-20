@@ -8,6 +8,7 @@ authors:
 
 template:
   bootstrap: 5
+  math-rendering: katex
   bootswatch: flatly
   
   params:

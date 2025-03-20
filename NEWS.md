@@ -1,3 +1,7 @@
+# decorrelate 0.1.4
+* March 20, 2025
+* update docs
+* update `sumInverseCorr()` based on `direction`
 
 # decorrelate 0.1.3
 * March 11, 2025

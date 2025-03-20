@@ -64,16 +64,15 @@ setMethod("show", "eclairs", function(object) {
   }
 
   if (isCorrMatrix) {
-    # rho_mle <- averageCorr(object, "MLE")
     rho_eb <- averageCorr(object, "EB")
-    # cat("  Avg corr (MLE):    ", format(rho_mle, digits = 3), "\n")
     cat("  Avg corr (EB):     ", format(rho_eb, digits = 3), "\n")
 
-    # peff_mle <- sumInverseCorr(object, "MLE")
-    peff_eb <- sumInverseCorr(object, "EB")
-    digits <- log10(object$p) + 2
-    # cat("  Eff # feat. (MLE): ", format(peff_mle, digits = digits), "\n")
-    cat("  Eff # feat. (EB):  ", format(peff_eb, digits = digits), "\n")
+    rhoSq_eb <- averageCorrSq(object, "EB")
+    cat("  Avg corrSq (EB):   ", format(rhoSq_eb, digits = 3), "\n")
+
+    # peff_eb <- sumInverseCorr(object, "EB")
+    # digits <- ceiling(log10(object$p) + 2)
+    # cat("  Eff # feat. (EB):  ", format(peff_eb, digits = digits), "\n")
   }
 
   cat(
@@ -248,6 +247,7 @@ setMethod("getCor", c(ecl = "eclairs"), function(
 #' @importFrom Rfast standardise colVars eachrow
 #' @importFrom irlba irlba
 #' @importFrom methods new
+#' @importFrom stats cor
 #'
 #' @export
 eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"), n.samples = nrow(X)) {
@@ -331,6 +331,8 @@ eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"
     k = k,
     rownames = rn,
     colnames = cn,
+    # compute is each column in X is increasing or decreasing
+    direction = sign(c(cor(X, seq(nrow(X))))),
     method = "svd",
     call = match.call()
   )
