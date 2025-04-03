@@ -6,7 +6,7 @@
 #' @param lambda specify lambda to override value from \code{z}
 #'
 #' @return condition number of the correlation matrix.  If \code{z} is a covariance matrix, kappa is only computed for the correlation component
-#' 
+#'
 #' @examples
 #' library(Rfast)
 #'

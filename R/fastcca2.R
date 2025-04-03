@@ -1,7 +1,6 @@
-
 # # library(Rfast)
 # # library(decorrelate)
-# # X = matrnorm(10000, 3) %*% diag(seq(3)+3) 
+# # X = matrnorm(10000, 3) %*% diag(seq(3)+3)
 # # Y = matrnorm(10000, 4) %*% diag(seq(4)+3)
 # # # X = whiten(X, lambda=0)
 # # # Y = whiten(Y, lambda=0)
@@ -53,11 +52,11 @@
 #   ecl.x = eclairs(X, lambda = 0, compute="cov")
 #   ecl.y = eclairs(Y, lambda = 0, compute="cov")
 
-#   C = with(ecl.x, tcrossprod(U,V)) %*% 
+#   C = with(ecl.x, tcrossprod(U,V)) %*%
 #   	  with(ecl.y, tcrossprod(V,U))
 #   dcmp = svd( C )
 
-#   A = crossprod(decorrelate::whiten(X, lambda=0), 
+#   A = crossprod(decorrelate::whiten(X, lambda=0),
 #   				decorrelate::whiten(Y, lambda=0)) / (n1-1)
 #   C/A
 
@@ -68,7 +67,7 @@
 #   decorrelate(t(dcmp2$v), ecl.y)
 
 #   res2 = geigen(A, diag(3), diag(4))
-  
+
 #   diag(cor(res$Lmat, res2$Lmat))
 #   diag(cor(res$Mmat, res2$Mmat))
 
@@ -76,7 +75,7 @@
 
 
 #   # NOTE:
-#   # 
+#   #
 
 #   # set diagonals to be positive
 #   dcmp$v <- eachrow(dcmp$v, sign(diag(dcmp$v)), "*")
@@ -108,17 +107,17 @@
 
 
 
-#   C.std = crossprod(decorrelate::whiten(X, lambda=0), 
+#   C.std = crossprod(decorrelate::whiten(X, lambda=0),
 #   					decorrelate::whiten(Y, lambda=0)) / n1
 
 
 
 #   # cross-product matrix
-#   # \tilde D_x ^{-\frac{1}{2}}  D_x U_x^T U_y D_y \tilde D_y ^{-\frac{1}{2}} 
+#   # \tilde D_x ^{-\frac{1}{2}}  D_x U_x^T U_y D_y \tilde D_y ^{-\frac{1}{2}}
 #   d_til_x = with(ecl.x, sqrt(dSq / ((1-lambda)*dSq + lambda * nu)))
 #   d_til_y = with(ecl.y, sqrt(dSq / ((1-lambda)*dSq + lambda * nu)))
 
-#   C = diag(d_til_x^-0.5) %*% diag(sqrt(ecl.x$dSq)) %*% crossprod(ecl.x$V, ecl.y$V) %*% diag(sqrt(ecl.y$dSq)) %*% diag(d_til_y^-0.5) 
+#   C = diag(d_til_x^-0.5) %*% diag(sqrt(ecl.x$dSq)) %*% crossprod(ecl.x$V, ecl.y$V) %*% diag(sqrt(ecl.y$dSq)) %*% diag(d_til_y^-0.5)
 #   dcmp = svd( t(C)  )
 
 
@@ -167,10 +166,3 @@
 
 
 # }
-
-
-
-
-
-
-

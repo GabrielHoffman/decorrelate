@@ -13,6 +13,9 @@
 
 \item{...}{additional arguments}
 }
+\value{
+plot
+}
 \description{
 Plot eclairs object
 }

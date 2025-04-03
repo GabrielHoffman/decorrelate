@@ -58,7 +58,6 @@ mult_eclairs <- function(X, U1, dSq1, lambda, nu, alpha, sigma, transpose = FALS
     # result <- crossprod((v^alpha) * t(U1), t(X_U1)) + part1
     dM <- dmult(U1, v^alpha, "right")
     result <- tcrossprod(dM, X_U1) + part1
-
   } else {
     if (ncol(X) != nrow(U1)) {
       stop(
@@ -86,7 +85,6 @@ mult_eclairs <- function(X, U1, dSq1, lambda, nu, alpha, sigma, transpose = FALS
     # result <- X_U1 %*% ((v^alpha) * t(U1)) + part1
     dM <- dmult(U1, v^alpha, "right")
     result <- tcrossprod(X_U1, dM) + part1
-
   }
   result
 }
@@ -105,7 +103,7 @@ mult_eclairs <- function(X, U1, dSq1, lambda, nu, alpha, sigma, transpose = FALS
 #' @param alpha default = -1/2.  Exponent of eigen-values
 #'
 #' @details
-#'' FIX NOTATION HERE: Given a vector \eqn{x ~ N(0, \Sigma)} where \eqn{\Sigma = U diag(d_1^2) U^T + diag(\sigma^2)}, transform x so that it has an identity covariance matrix.  \eqn{\Sigma^{-0.5}x} is such a projection (see Strimmer whitening).  When \eqn{\Sigma} is \eqn{p \times p}, computing this projection naively is \eqn{O(p^3)}.  Here we take advantage of the fact that \eqn{\Sigma} is the sum of a low rank decomposition, plus a scaled identity matrix
+#' Apply a decorrelation transform using the implicit covariance approach to avoid directly evaluating the covariance matrix
 #'
 #' @return a matrix following the decorrelation transformation
 #'
@@ -126,7 +124,7 @@ mult_eclairs <- function(X, U1, dSq1, lambda, nu, alpha, sigma, transpose = FALS
 #'
 #' # whitened Y
 #' Y.transform <- decorrelate(Y, ecl)
-#'
+#' #
 #' @export
 decorrelate <- function(X, ecl, lambda, transpose = FALSE, alpha = -1 / 2) {
   stopifnot(is(ecl, "eclairs"))

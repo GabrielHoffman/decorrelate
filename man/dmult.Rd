@@ -20,7 +20,7 @@ matrix product
 Multiply by diagonal matrix using efficient algorithm
 }
 \details{
-Naively multiplying by a diagonal matrix with \code{p} entries takes \eqn{\mathcal{O}(p^2)}, even though must values in the diagonal matrix are zero.  R has built in syntax to scale \emph{columns}, so \code{diag(v) \%*\% M} can be evaluated with \code{v * M}.  This is often difficult to remember, hard to look up, and scaling \emph{rows} requires \code{t(t(M) * v)}.  This is hard to read and write, and requires two transpose operations.  
+Naively multiplying by a diagonal matrix with \code{p} entries takes \eqn{\mathcal{O}(p^2)}, even though must values in the diagonal matrix are zero.  R has built in syntax to scale \emph{columns}, so \code{diag(v) \%*\% M} can be evaluated with \code{v * M}.  This is often difficult to remember, hard to look up, and scaling \emph{rows} requires \code{t(t(M) * v)}.  This is hard to read and write, and requires two transpose operations.
 
 Here, \code{dmult()} uses \code{Rcpp} to evaluate the right multiplication efficiently, and uses \code{v * M} for left multiplication.  This gives good performance and readability.
 
@@ -29,23 +29,23 @@ In principle, the \code{Rcpp} code can be modified to use BLAS for better perfor
 \examples{
 # right multiply
 # mat \%*\% diag(v)
-n = 30
-p = 20
-mat = matrix(n*p, n,p)
-v = rnorm(p)
+n <- 30
+p <- 20
+mat <- matrix(n * p, n, p)
+v <- rnorm(p)
 
-A = dmult(mat, v, side="right")
-B = mat \%*\% diag(v)
+A <- dmult(mat, v, side = "right")
+B <- mat \%*\% diag(v)
 range(A - B)
 
 # left multiply
 # diag(v) \%*\% mat
-n = 30
-p = 20
-mat = matrix(n*p, p,n)
-v = rnorm(p)
+n <- 30
+p <- 20
+mat <- matrix(n * p, p, n)
+v <- rnorm(p)
 
-A = dmult(mat, v, side="left")
-B = diag(v) \%*\% mat
+A <- dmult(mat, v, side = "left")
+B <- diag(v) \%*\% mat
 range(A - B)
 }

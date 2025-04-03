@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,7 +87,7 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>' FIX NOTATION HERE: Given a vector \(x ~ N(0, \Sigma)\) where \(\Sigma = U diag(d_1^2) U^T + diag(\sigma^2)\), transform x so that it has an identity covariance matrix.  \(\Sigma^{-0.5}x\) is such a projection (see Strimmer whitening).  When \(\Sigma\) is \(p \times p\), computing this projection naively is \(O(p^3)\).  Here we take advantage of the fact that \(\Sigma\) is the sum of a low rank decomposition, plus a scaled identity matrix</p>
+    <p>Apply a decorrelation transform using the implicit covariance approach to avoid directly evaluating the covariance matrix</p>
     </div>
 
     <div class="section level2">
@@ -108,7 +108,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># whitened Y</span></span></span>
 <span class="r-in"><span><span class="va">Y.transform</span> <span class="op">&lt;-</span> <span class="fu">decorrelate</span><span class="op">(</span><span class="va">Y</span>, <span class="va">ecl</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

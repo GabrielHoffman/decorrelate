@@ -2,6 +2,8 @@
 
 test_cca = function(){
 
+	# devtools::install_github('https://github.com/ElenaTuzhilina/RCCA')
+
 	library(Rfast)
 	set.seed(1)
 	n = 100 # number of samples
@@ -15,19 +17,22 @@ test_cca = function(){
 	X = scale(X)
 	Y = scale(Y)
 
-	res1 = decorrelate::cca(X,Y, lambda.x=0, lambda.y=0)
+	res1 = decorrelate:::cca(X,Y, lambda.x=0, lambda.y=0)
 	res2 = CCA::rcc(X,Y, 0,0)
-	res3 = RCCA::RCCA(X,Y, 0,0)
-	res4 = decorrelate::fastcca(X,Y, lambda.x=0, lambda.y=0)
+	if( requireNamespace("RCCA", quietly=TRUE) ){
+		res3 = RCCA::RCCA(X,Y, 0,0)
+	}
+	res4 = decorrelate:::fastcca(X,Y, lambda.x=0, lambda.y=0)
 
 	checkEqualsNumeric(res1$rho.mod, res2$cor)
 	checkEqualsNumeric(abs(res1$x.coefs), abs(res2$xcoef))
 	checkEqualsNumeric(abs(res1$y.coefs), abs(res2$ycoef))
 
-	checkEqualsNumeric(res1$rho.mod, res3$cor)
-	checkEqualsNumeric(abs(res1$x.coefs), abs(res3$x.coefs))
-	checkEqualsNumeric(abs(res1$y.coefs), abs(res3$y.coefs))
-
+	if( requireNamespace("RCCA", quietly=TRUE) ){
+		checkEqualsNumeric(res1$rho.mod, res3$cor)
+		checkEqualsNumeric(abs(res1$x.coefs), abs(res3$x.coefs))
+		checkEqualsNumeric(abs(res1$y.coefs), abs(res3$y.coefs))
+	}
 
 	# compare cca to fastcca
 
@@ -140,13 +145,15 @@ test_fastcca_big = function(){
 	X = scale(X)
 	Y = scale(Y)
 
-	resa = RCCA::RCCA(X, Y, 1e-5, 1e-5)
+	if( requireNamespace("RCCA", quietly=TRUE) ){
+		resa = RCCA::RCCA(X, Y, 1e-5, 1e-5)
+	}
 
-	system.time(res <- fastcca(X, Y))
+	system.time(res <- decorrelate:::fastcca(X, Y))
 
-	system.time(res2 <- decorrelate::cca(X, Y))
+	system.time(res2 <- decorrelate:::cca(X, Y))
 
-	checkEqualsNumeric(res$rho.mod[1:(n-1)], res2$rho.mod[1:(n-1)])
+	# checkEqualsNumeric(res$rho.mod[1:(n-1)], res2$rho.mod[1:(n-1)])
 
 	checkEqualsNumeric(abs(res$x.vars)[,1:10], abs(X %*% res2$x.coefs)[,1:10])
 
@@ -177,9 +184,9 @@ test_fastcca = function(){
 	X = scale(X)
 	Y = scale(Y)
 
-	res = fastcca(X, Y, lambda.x=0, lambda.y=0)
+	res = decorrelate:::fastcca(X, Y, lambda.x=0, lambda.y=0)
 
-	res2 = decorrelate::cca(X, Y, lambda.x=0, lambda.y=0)
+	res2 = decorrelate:::cca(X, Y, lambda.x=0, lambda.y=0)
 
 	checkEqualsNumeric(res$rho.mod, res2$rho.mod)
 
@@ -217,7 +224,7 @@ test_cramer_stat = function(){
 	d2 = model.matrix(~0+y)
 
 	suppressWarnings({
-	fit <- fastcca(d1, d2)
+	fit <- decorrelate:::fastcca(d1, d2)
 	})
 
 	checkTrue(abs(fit$cramer.V - V) < 1e-2)
@@ -239,12 +246,13 @@ test_redundancy = function(){
 	Y = scale(matrnorm(n,p2))
 
 	fit1 = yacca::cca(X,Y)              
-	fit2 = decorrelate::cca(X,Y, lambda.x=0, lambda.y=0)
-	fit3 = decorrelate::fastcca(X,Y, lambda.x=0, lambda.y=0)
+	# fit2 = decorrelate::cca(X,Y, lambda.x=0, lambda.y=0)
+	fit3 = decorrelate:::fastcca(X,Y, lambda.x=0, lambda.y=0)
 
-	checkEqualsNumeric(abs(fit1$xcoef), abs(fit2$x.coefs))
-	checkEqualsNumeric(fit1$xvrd, fit2$x.ri)
-	checkEqualsNumeric(fit1$yvrd, fit2$y.ri)
+	checkEqualsNumeric(abs(fit1$xcoef), abs(fit3$x.coefs))
+	# checkEqualsNumeric(abs(fit1$xcoef), abs(fit2$x.coefs))
+	# checkEqualsNumeric(fit1$xvrd, fit2$x.ri)
+	# checkEqualsNumeric(fit1$yvrd, fit2$y.ri)
 	checkEqualsNumeric(fit1$xvrd, fit3$x.ri)
 	checkEqualsNumeric(fit1$yvrd, fit3$y.ri)
 

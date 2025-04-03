@@ -20,10 +20,11 @@
 #' @examples
 #' pop <- LifeCycleSavings[, 2:3]
 #' oec <- LifeCycleSavings[, -(2:3)]
-#' fastcca(pop, oec)
 #'
+#' decorrelate:::cca(pop, oec)
+#' #
 #' @importFrom irlba irlba
-#' @export
+# @export
 cca <- function(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL) {
   if (!is.matrix(X)) {
     X <- as.matrix(X)
@@ -57,7 +58,7 @@ cca <- function(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL)
   X <- scale(X, scale = FALSE)
   Y <- scale(Y, scale = FALSE)
 
-  # Evaluate: Sig_{xx}^{-.5} Sig_{xy} Sig_{yy}^{-.5} 
+  # Evaluate: Sig_{xx}^{-.5} Sig_{xy} Sig_{yy}^{-.5}
   # This is the cross covariance of whitened X and Y
 
   # eclairs decomposition
@@ -69,7 +70,7 @@ cca <- function(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL)
   Y.whiten <- decorrelate(Y, ecl.y)
 
   # cross covariance
-  Sig.cross <- crossprod(X.whiten, Y.whiten) / (n1-1)
+  Sig.cross <- crossprod(X.whiten, Y.whiten) / (n1 - 1)
 
   # SVD on
   if (k > min(dim(Sig.cross)) / 3) {
@@ -123,22 +124,23 @@ cca <- function(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL)
   # names(ri.y) <- paste("can.comp", seq_len(n.comp), sep = "")
 
   res <- list(
-    n.comp = n.comp, 
-    rho.mod = rho.mod, 
-    cor = rho, 
+    n.comp = n.comp,
+    rho.mod = rho.mod,
+    cor = rho,
     cramer.V = cramer.V,
-    x.coefs = x.coefs, 
-    x.vars = x.vars, 
-    # x.ri = ri.x, 
-    y.coefs = y.coefs, 
+    x.coefs = x.coefs,
+    x.vars = x.vars,
+    # x.ri = ri.x,
+    y.coefs = y.coefs,
     y.vars = y.vars,
-    # y.ri = ri.y, 
-    lambdas = c(x = ecl.x$lambda, y = ecl.y$lambda), 
+    # y.ri = ri.y,
+    lambdas = c(x = ecl.x$lambda, y = ecl.y$lambda),
     dims = c(
       n1 = n1,
-      n2 = n2, 
-      p1 = p1, 
-      p2 = p2)
+      n2 = n2,
+      p1 = p1,
+      p2 = p2
+    )
   )
 
   new("fastcca", res)

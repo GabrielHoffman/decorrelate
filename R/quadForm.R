@@ -9,6 +9,8 @@
 #' @details
 #' Evaluate quadratic form \eqn{A^T \Sigma^{2\alpha} A}
 #'
+#' @return scalar value
+#' 
 #' @examples
 #' library(Rfast)
 #' n <- 800 # number of samples

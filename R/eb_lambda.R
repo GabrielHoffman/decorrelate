@@ -16,26 +16,25 @@ alphaToDelta <- function(alpha, n, p) {
 # double deltaToAlpha(double delta, int n, int p){ return
 # (delta-p-1)/(n+delta-p-1); }
 deltaToAlpha <- function(delta, n, p) {
-  ifelse( is.finite(delta), (delta - p - 1) / (n + delta - p - 1), 1)
+  ifelse(is.finite(delta), (delta - p - 1) / (n + delta - p - 1), 1)
 }
 
-# Get nu so that (1-lambda) * Sigma_mle + nu*lambda*I 
+# Get nu so that (1-lambda) * Sigma_mle + nu*lambda*I
 # has a diagonal closest to identity.
-getNu = function(ecl, k, a.value){
-
-  if( ecl$lambda == 0 | ecl$lambda == 1){
-    nu = 1
-  }else{
+getNu <- function(ecl, k, a.value) {
+  if (ecl$lambda == 0 | ecl$lambda == 1) {
+    nu <- 1
+  } else {
     # estimate nu to satisfy
     # p = (1-ecl$lambda)*a.value + ecl$lambda*nu*p
-    nu = with(ecl, (p - (1 - lambda)*a.value)/ (p*lambda))
+    nu <- with(ecl, (p - (1 - lambda) * a.value) / (p * lambda))
   }
 
   nu
 }
 
 
-# Integrated log-likelihood for empirical Bayes 
+# Integrated log-likelihood for empirical Bayes
 #' @importFrom CholWishart lmvgamma
 logML <- function(delta, ecl, k, a.value) {
   p <- ecl$p
@@ -52,9 +51,9 @@ logML <- function(delta, ecl, k, a.value) {
   out <- out + 0.5 * delta * p * log(delta - p - 1)
 
   # eigs.app <- append(eigs, rep(0, p - length(eigs)))
-  # out <- out - 0.5 * (delta + n) * sum(log(nu*(delta - p - 1) + eigs.app))   
+  # out <- out - 0.5 * (delta + n) * sum(log(nu*(delta - p - 1) + eigs.app))
 
-  out <- out - 0.5 * (delta + n) * (sum(log(nu*(delta - p - 1) + eigs)) + (p-k)*log(nu*(delta - p - 1)))
+  out <- out - 0.5 * (delta + n) * (sum(log(nu * (delta - p - 1) + eigs)) + (p - k) * log(nu * (delta - p - 1)))
 
   # out - 0.5 * n * logdetD
   # out - 0.5 * n * 2*p*log(sqrt(nu))
@@ -94,48 +93,45 @@ logML <- function(delta, ecl, k, a.value) {
 #'
 #' # For full SVD
 #' getShrinkageParams(ecl)
-#' 
+#'
 #' # For truncated SVD at k = 20
 #' getShrinkageParams(ecl, k = 20)
 #'
-#' @references 
+#' @references
 #' Hannart, A., & Naveau, P. (2014). Estimating high dimensional covariance matrices: A new look at the Gaussian conjugate framework. Journal of Multivariate Analysis, 131, 149-162.
-#' 
+#'
 #' Leday, G. G., & Richardson, S. (2019). Fast Bayesian inference in large Gaussian graphical models. Biometrics, 75(4), 1288-1298.
 #
 #' @export
 getShrinkageParams <- function(ecl, k = ecl$k, minimum = 1e-04, lambda = NULL) {
-
   n <- ecl$n
   p <- ecl$p
 
   # factors of Sigma
   # sum of diagonals of Sigma
   ecl$k <- k
-  A = with(ecl, dmult(U[,seq(k),drop=FALSE], sqrt(dSq[seq(k)]), "right"))
-  a.value = sum(colSums(A^2))
+  A <- with(ecl, dmult(U[, seq(k), drop = FALSE], sqrt(dSq[seq(k)]), "right"))
+  a.value <- sum(colSums(A^2))
 
   # estimate lambda
-  if( is.null(lambda) ){
+  if (is.null(lambda)) {
     # get upper and lower values of range
     lowerVal <- alphaToDelta(minimum, n, p)
     upperVal <- alphaToDelta(1 - minimum, n, p)
 
     # get optimal estimate of delta using log-likelihood
-    res = optimize(function(x) logML(x, ecl, k, a.value), c(lowerVal, upperVal), maximum=TRUE)
+    res <- optimize(function(x) logML(x, ecl, k, a.value), c(lowerVal, upperVal), maximum = TRUE)
 
-    ll.value = res$objective
+    ll.value <- res$objective
     ecl$lambda <- deltaToAlpha(res$maximum, n, p)
-  }else{
-
+  } else {
     # compute logLik
-    ecl$lambda = lambda
-    delta = alphaToDelta(lambda, n, p)
-    ll.value = logML(delta, ecl, k, a.value)
+    ecl$lambda <- lambda
+    delta <- alphaToDelta(lambda, n, p)
+    ll.value <- logML(delta, ecl, k, a.value)
   }
 
   nu <- getNu(ecl, k, a.value)
 
   data.frame(lambda = ecl$lambda, logLik = ll.value, nu = nu)
 }
-

@@ -22,7 +22,7 @@
 #'
 #' # eclairs decomposition
 #' ecl <- eclairs(Y)
-#' 
+#'
 #' logDet(ecl)
 #' @export
 logDet <- function(ecl, alpha = 1) {

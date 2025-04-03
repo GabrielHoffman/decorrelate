@@ -64,16 +64,19 @@ setMethod("show", "fastcca", function(object) {
 #' Uses \code{eclairs()} and empirical Bayes covariance regularization, and applies speed up of RCCA (Tuzhilina, et al. 2023) to perform CCA on n PCs and instead of p features.  Memory usage is \eqn{\mathcal{O}(np)} instead of \eqn{\mathcal{O}(p^2)}.  Computation is \eqn{\mathcal{O}(n^2p)} instead of \eqn{\mathcal{O}(p^3)} or \eqn{\mathcal{O}(np^2)}
 # Computation is n^2p instead of p^3 of np^2
 #'
-#' @references 
+#' @references
 #' Tuzhilina, E., Tozzi, L., & Hastie, T. (2023). Canonical correlation analysis in high dimensions with structured regularization. Statistical modelling, 23(3), 203-227.
+#'
+#' @return \code{fastcca} object
 #'
 #' @examples
 #' pop <- LifeCycleSavings[, 2:3]
 #' oec <- LifeCycleSavings[, -(2:3)]
-#' fastcca(pop, oec)
 #'
+#' decorrelate:::fastcca(pop, oec)
+#' #
 #' @importFrom Rfast standardise
-#' @export
+# @export
 fastcca <- function(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL) {
   if (!is.matrix(X)) {
     X <- as.matrix(X)

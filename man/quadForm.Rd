@@ -13,6 +13,9 @@ quadForm(ecl, A, alpha = -1/2)
 
 \item{alpha}{default = -1/2.  Exponent of eigen-values}
 }
+\value{
+scalar value
+}
 \description{
 Evaluate quadratic form
 }

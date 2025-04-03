@@ -2,6 +2,5 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 dmult_ <- function(m, v, dleft) {
-    .Call('_decorrelate_dmult_', PACKAGE = 'decorrelate', m, v, dleft)
+  .Call("_decorrelate_dmult_", PACKAGE = "decorrelate", m, v, dleft)
 }
-

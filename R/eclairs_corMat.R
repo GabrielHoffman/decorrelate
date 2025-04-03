@@ -119,9 +119,9 @@ eclairs_corMat <- function(C, n, k = min(n, nrow(C)), lambda = NULL) {
   )
 
   ecl <- new("eclairs", ecl)
-  
+
   # estimate lambda and nu values
-  res <- getShrinkageParams( ecl, lambda = lambda)
+  res <- getShrinkageParams(ecl, lambda = lambda)
   ecl$lambda <- res$lambda
   ecl$nu <- res$nu
   ecl$logLik <- res$logLik

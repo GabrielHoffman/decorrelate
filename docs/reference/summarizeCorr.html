@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,12 +91,12 @@
 <p><code>averageCorr()</code>: The average correlation is computed by summing the off-diagonal values in the correlation matrix. The sum of all elements in a matrix is \(g = \sum_{i,j} C_{i,j} = 1^T C 1 \), where \(1\) is a vector of \(p\) elements with all entries 1. This last term is a quadratic form of the correlation matrix that can be computed efficiently using the SVD and shrinkage parameter from <code><a href="eclairs.html">eclairs()</a></code>.  Given the value of \(g\), the average is computed by subtracting the diagonal values and dividing by the number of off-diagonal values: \((g - p) / (p(p-1))\).</p>
 <p><code>averageCorrSq()</code>: The average squared correlation is computed using only the eigen-values. Surprisingly, this is a function of the variance of the eigen-values.  The is reviewed by Watanabe (2022) and Durand and Le Roux (2017).  Letting \(\lambda_i\) be the \(i^{th}\) sample or shrunk eigen-value, and \(\tilde{\lambda}\) be the mean eigen-value, then \(\sum_i (\lambda_i - \tilde{\lambda})^2 / p(p-1)\tilde{\lambda}^2\).</p>
 <p><code>sumInverseCorr()</code>: The 'effective number of independent features' is computed by summing the entires of the inverse covariance matrix.  This has the form \(\sum_{i,j} C^{-1}_{i,j} = 1^T C^{-1} 1\). This last term is a quadratic form of the correlation matrix that can be computed efficiently using the SVD and shrinkage parameter from <code><a href="eclairs.html">eclairs()</a></code> as described above.</p>
-<p><code>effVariance()</code>: Compute a metric of the amount of variation represented by a correlation (or covariance) matrix that is comparable across matrices of difference sizes. Proposed by Peña and Rodrı́guez (2003), the 'effective variance' is \(|C|^\frac{1}{p}\) where \(C\) is a correlation (or covariance matrix) between \(p\) variables. The effective variance is the mean of the log eigen-values.</p>
+<p><code>effVariance()</code>: Compute a metric of the amount of variation represented by a correlation (or covariance) matrix that is comparable across matrices of difference sizes. Proposed by Peña and Rodriguez (2003), the 'effective variance' is \(|C|^\frac{1}{p}\) where \(C\) is a correlation (or covariance matrix) between \(p\) variables. The effective variance is the mean of the log eigen-values.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Durand, J. L., &amp; Le Roux, B. (2017). Linkage index of variables and its relationship with variance of eigenvalues in PCA and MCA. Statistica Applicata-Italian Journal of Applied Statistics, (2-3), 123-135.</p>
-<p>Peña, D., &amp; Rodrı́guez, J. (2003). Descriptive measures of multivariate scatter and linear dependence. Journal of Multivariate Analysis, 85(2), 361-374.</p>
+<p>Peña, D., &amp; Rodriguez, J. (2003). Descriptive measures of multivariate scatter and linear dependence. Journal of Multivariate Analysis, 85(2), 361-374.</p>
 <p>Watanabe, J. (2022). Statistics of eigenvalue dispersion indices: Quantifying the magnitude of phenotypic integration. Evolution, 76(1), 4-28.</p>
     </div>
 
@@ -129,7 +129,7 @@
 <span class="r-in"><span><span class="co"># Sum elements in inverse correlation matrix</span></span></span>
 <span class="r-in"><span><span class="co"># Gives the effective number of independent features</span></span></span>
 <span class="r-in"><span><span class="fu">sumInverseCorr</span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 667.0582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 39.78366</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Effective variance</span></span></span>
 <span class="r-in"><span><span class="fu">effVariance</span><span class="op">(</span><span class="va">ecl</span><span class="op">)</span></span></span>

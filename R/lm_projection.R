@@ -63,7 +63,3 @@ lm.test <- function(obj, A, two.sided = TRUE) {
   rownames(res) <- paste0("A", colnames(A))
   as.matrix(res)
 }
-
-
-
-

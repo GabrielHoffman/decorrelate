@@ -49,11 +49,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-Data whitening is a widely used preprocessing step to remove correlation structure since statistical models often assume independence [(Kessy, et al. 2017)](https://doi.org/10.1080/00031305.2016.1277159).  The typical procedures transforms the observed data by an inverse square root of the sample correlation matrix (**Figure 1**).  For low dimension data (i.e. $n > p$), this transformation produces transformed data with an identity sample covariance matrix.  This procedure assumes either that the true covariance matrix is know, or is well estimated by the sample covariance matrix. Yet the use of the sample covariance matrix for this transformation can be problematic since **1)** the complexity is $\mathcal{O}(p^3)$ and **2)** it is not applicable to the high dimensional (i.e. $n \ll p$) case since the sample covariance matrix is no longer full rank.
+Data whitening is a widely used preprocessing step to remove correlation structure since statistical models often assume independence [(Kessy, et al. 2018)](https://doi.org/10.1080/00031305.2016.1277159).  The typical procedures transforms the observed data by an inverse square root of the sample correlation matrix (**Figure 1**).  For low dimension data (i.e. $n > p$), this transformation produces transformed data with an identity sample covariance matrix.  This procedure assumes either that the true covariance matrix is know, or is well estimated by the sample covariance matrix. Yet the use of the sample covariance matrix for this transformation can be problematic since **1)** the complexity is $\mathcal{O}(p^3)$ and **2)** it is not applicable to the high dimensional (i.e. $n \ll p$) case since the sample covariance matrix is no longer full rank.
 
 Here we use a probabilistic model of the observed data to apply a whitening transformation.  Our Gaussian Inverse Wishart Empirical Bayes (GIW-EB) **1)** model substantially reduces computational complexity, and **2)** regularizes the eigen-values of the sample covariance matrix to improve out-of-sample performance.
 
-```{r run.examples, fig.height=2.5, fig.width=9, fig.cap ="**Figure 1: Intuition for data whitening transformation**. Given the singular value decomposition of $Y/\\sqrt{n}$ after centering columns is $UDV^T$, the steps in the transformation are: **A)** Original data, **B)** Data rotated along principal components, **C)** Data rotated and scaled, **D)** Data rotated, scaled and rotated back to original axes.", echo=FALSE}
+```{r run.examples, fig.height=2.5, fig.width=9, fig.cap ="**Figure 1: Intuition for data whitening transformation**. Given the singular value decomposition of $Y/\\sqrt{n}$ after centering columns is $UDV^T$, the steps in the transformation are: **A)** Original data, **B)** Data rotated along principal components, **C)** Data rotated and scaled, **D)** Data rotated, scaled and rotated back to original axes. Green arrows indicate principal axes and lengths indicate eigen-values.", echo=FALSE}
 library(decorrelate)
 library(mvtnorm)
 library(ggplot2)
@@ -138,7 +138,7 @@ Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
 rownames(Y) <- paste0("sample_", 1:n)
 colnames(Y) <- paste0("gene_", 1:p)
 
-# eclairs decomposition implements GIW-EB method
+# eclairs decomposition implements GIW-EB method:
 # *E*stimate *c*ovariance/correlation with *l*ow *r*ank and *s*hrinkage
 ecl <- eclairs(Y)
 
@@ -150,7 +150,7 @@ Y_whitened <- decorrelate(Y, ecl)
 Y_whitened2 <- whiten(Y)
 ```
 
-Here plot A) the eigen-values of the covariance matrix before and after shrinkage. B) The correlation of the observed and C) whitened data.
+Here plot **A**) the eigen-values of the covariance matrix before and after shrinkage. **B**) The correlation of the observed and **C**) whitened data.
 ```{r plots, fig.height=3.2, fig.width=9, cache=TRUE}
 par(mfrow = c(1, 3))
 
@@ -236,13 +236,14 @@ kappa(ecl)
 
 
 ## Removing correlation vs covariance
-By default `eclairs()` computes the covariance between columns, but the correlation can be computed using `compute = 'correlation'`.  
+By default `eclairs()` computes the _covariance_ between columns by using the default `compute = "covariance"`. Running `decorrelate()` using this removes the covariance between columns.  Setting `compute = "correlation"`, evaluates and then removes correlation between columns while retaining the variance.      
+
 
 ```{r examples3}
 library(clusterGeneration)
 
 # generate covariance matrix, where the diagonals (i.e. variances) vary
-Sigma <- genPositiveDefMat(p)$Sigma
+Sigma <- genPositiveDefMat(p, rangeVar=c(1, 1e6))$Sigma
 
 Y <- rmvnorm(n, rep(0, p), sigma = Sigma)
 

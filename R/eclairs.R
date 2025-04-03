@@ -171,10 +171,10 @@ setMethod("getCor", c(ecl = "eclairs"), function(
 
   # reconstruct correlation matrix
   # C <- ecl$U %*% ((ecl$dSq * (1 - lambda)) * t(ecl$U)) +
-    # diag(ecl$nu * lambda, ecl$p)
+  # diag(ecl$nu * lambda, ecl$p)
 
-  A <- with(ecl, dmult(U[,seq(k),drop=FALSE], sqrt(dSq[seq(k)]), "right"))
-  C <- (1 - lambda)*tcrossprod(A)
+  A <- with(ecl, dmult(U[, seq(k), drop = FALSE], sqrt(dSq[seq(k)]), "right"))
+  C <- (1 - lambda) * tcrossprod(A)
   diag(C) <- diag(C) + ecl$nu * lambda
 
   if (method == "covariance" & !all(ecl$sigma == 1)) {
@@ -291,15 +291,17 @@ eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"
   if (k < min(p, n) / 3) {
     dcmp <- irlba(X, k)
   } else {
-    dcmp <- tryCatch({
-      svd(X)
+    dcmp <- tryCatch(
+      {
+        svd(X)
       },
-      error = function(e){
-      # very rarely, svd() above can fail
-      # fall back on interative 
-      k <<- min(c(k, dim(X)-1))
-      suppressWarnings(irlba(X, k ))
-      })
+      error = function(e) {
+        # very rarely, svd() above can fail
+        # fall back on interative
+        k <<- min(c(k, dim(X) - 1))
+        suppressWarnings(irlba(X, k))
+      }
+    )
 
     # if k < min(n,p) truncate spectrum
     if (k < length(dcmp$d)) {
@@ -339,7 +341,7 @@ eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"
   ecl <- new("eclairs", ecl)
 
   # estimate lambda and nu values
-  res <- getShrinkageParams( ecl, k, lambda = lambda)
+  res <- getShrinkageParams(ecl, k, lambda = lambda)
   ecl$lambda <- res$lambda
   ecl$nu <- res$nu
   ecl$logLik <- res$logLik
@@ -382,6 +384,8 @@ sign0 <- function(x) {
 #' @param x eclairs object
 #' @param y extra argument, not used
 #' @param ... additional arguments
+#'
+#' @returns plot
 #'
 #' @importFrom graphics points legend arrows par
 #' @export
@@ -436,5 +440,3 @@ setMethod("plot", "eclairs", function(x, y, ...) {
     arrows(xvals[1], yvals[1], xvals[2], yvals[2], length = 0.1, col = col)
   }
 })
-
-

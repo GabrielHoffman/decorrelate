@@ -32,6 +32,7 @@ Other regularized CCA adds lambda to covariance like Ridge. Here it is a mixture
 \examples{
 pop <- LifeCycleSavings[, 2:3]
 oec <- LifeCycleSavings[, -(2:3)]
-fastcca(pop, oec)
 
+decorrelate:::cca(pop, oec)
+#
 }

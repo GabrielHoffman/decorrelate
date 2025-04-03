@@ -34,13 +34,13 @@ Summarize correlation matrix as a scalar scalar value, given its SVD and shrinka
 \details{
 \code{tr()}: trace of the matrix. Sum of diagonals is the same as the sum of the eigen-values.
 
-\code{averageCorr()}: The average correlation is computed by summing the off-diagonal values in the correlation matrix. The sum of all elements in a matrix is \eqn{g = \sum_{i,j} C_{i,j} = 1^T C 1 }, where \eqn{1} is a vector of \eqn{p} elements with all entries 1. This last term is a quadratic form of the correlation matrix that can be computed efficiently using the SVD and shrinkage parameter from \code{eclairs()}.  Given the value of \eqn{g}, the average is computed by subtracting the diagonal values and dividing by the number of off-diagonal values: \eqn{(g - p) / (p(p-1))}. 
+\code{averageCorr()}: The average correlation is computed by summing the off-diagonal values in the correlation matrix. The sum of all elements in a matrix is \eqn{g = \sum_{i,j} C_{i,j} = 1^T C 1 }, where \eqn{1} is a vector of \eqn{p} elements with all entries 1. This last term is a quadratic form of the correlation matrix that can be computed efficiently using the SVD and shrinkage parameter from \code{eclairs()}.  Given the value of \eqn{g}, the average is computed by subtracting the diagonal values and dividing by the number of off-diagonal values: \eqn{(g - p) / (p(p-1))}.
 
 \code{averageCorrSq()}: The average squared correlation is computed using only the eigen-values. Surprisingly, this is a function of the variance of the eigen-values.  The is reviewed by Watanabe (2022) and Durand and Le Roux (2017).  Letting \eqn{\lambda_i} be the \eqn{i^{th}} sample or shrunk eigen-value, and \eqn{\tilde{\lambda}} be the mean eigen-value, then \eqn{\sum_i (\lambda_i - \tilde{\lambda})^2 / p(p-1)\tilde{\lambda}^2}.
 
 \code{sumInverseCorr()}: The 'effective number of independent features' is computed by summing the entires of the inverse covariance matrix.  This has the form \eqn{\sum_{i,j} C^{-1}_{i,j} = 1^T C^{-1} 1}. This last term is a quadratic form of the correlation matrix that can be computed efficiently using the SVD and shrinkage parameter from \code{eclairs()} as described above.
 
-\code{effVariance()}: Compute a metric of the amount of variation represented by a correlation (or covariance) matrix that is comparable across matrices of difference sizes. Proposed by Peña and Rodrı́guez (2003), the 'effective variance' is \eqn{|C|^\frac{1}{p}} where \eqn{C} is a correlation (or covariance matrix) between \eqn{p} variables. The effective variance is the mean of the log eigen-values.
+\code{effVariance()}: Compute a metric of the amount of variation represented by a correlation (or covariance) matrix that is comparable across matrices of difference sizes. Proposed by Peña and Rodriguez (2003), the 'effective variance' is \eqn{|C|^\frac{1}{p}} where \eqn{C} is a correlation (or covariance matrix) between \eqn{p} variables. The effective variance is the mean of the log eigen-values.
 }
 \examples{
 library(Rfast)
@@ -76,7 +76,7 @@ effVariance(ecl)
 \references{
 Durand, J. L., & Le Roux, B. (2017). Linkage index of variables and its relationship with variance of eigenvalues in PCA and MCA. Statistica Applicata-Italian Journal of Applied Statistics, (2-3), 123-135.
 
-Peña, D., & Rodrı́guez, J. (2003). Descriptive measures of multivariate scatter and linear dependence. Journal of Multivariate Analysis, 85(2), 361-374.
+Peña, D., & Rodriguez, J. (2003). Descriptive measures of multivariate scatter and linear dependence. Journal of Multivariate Analysis, 85(2), 361-374.
 
 Watanabe, J. (2022). Statistics of eigenvalue dispersion indices: Quantifying the magnitude of phenotypic integration. Evolution, 76(1), 4-28.
 }

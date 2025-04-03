@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,8 +72,8 @@
                         <h4 data-toc-skip class="author">Developed by <a href="http://gabrielhoffman.github.io/" class="external-link">Gabriel Hoffman</a>
 </h4>
             
-            <h4 data-toc-skip class="date">Run on 2025-03-20
-16:29:41.375605</h4>
+            <h4 data-toc-skip class="date">Run on 2025-04-02
+21:08:16.225134</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/GabrielHoffman/decorrelate/blob/HEAD/vignettes/decorrelate.Rmd" class="external-link"><code>vignettes/decorrelate.Rmd</code></a></small>
       <div class="d-none name"><code>decorrelate.Rmd</code></div>
@@ -97,7 +97,7 @@ text-align: justify}
 <p>Data whitening is a widely used preprocessing step to remove
 correlation structure since statistical models often assume independence
 <a href="https://doi.org/10.1080/00031305.2016.1277159" class="external-link">(Kessy, et
-al. 2017)</a>. The typical procedures transforms the observed data by an
+al. 2018)</a>. The typical procedures transforms the observed data by an
 inverse square root of the sample correlation matrix (<strong>Figure
 1</strong>). For low dimension data (i.e. <span class="math inline">\(n
 &gt; p\)</span>), this transformation produces transformed data with an
@@ -115,14 +115,15 @@ whitening transformation. Our Gaussian Inverse Wishart Empirical Bayes
 complexity, and <strong>2)</strong> regularizes the eigen-values of the
 sample covariance matrix to improve out-of-sample performance.</p>
 <div class="figure">
-<img src="decorrelate_files/figure-html/run.examples-1.png" alt="**Figure 1: Intuition for data whitening transformation**. Given the singular value decomposition of $Y/\sqrt{n}$ after centering columns is $UDV^T$, the steps in the transformation are: **A)** Original data, **B)** Data rotated along principal components, **C)** Data rotated and scaled, **D)** Data rotated, scaled and rotated back to original axes." width="864"><p class="caption">
+<img src="decorrelate_files/figure-html/run.examples-1.png" alt="**Figure 1: Intuition for data whitening transformation**. Given the singular value decomposition of $Y/\sqrt{n}$ after centering columns is $UDV^T$, the steps in the transformation are: **A)** Original data, **B)** Data rotated along principal components, **C)** Data rotated and scaled, **D)** Data rotated, scaled and rotated back to original axes. Green arrows indicate principal axes and lengths indicate eigen-values." width="864"><p class="caption">
 <strong>Figure 1: Intuition for data whitening transformation</strong>.
 Given the singular value decomposition of <span class="math inline">\(Y/\sqrt{n}\)</span> after centering columns is
 <span class="math inline">\(UDV^T\)</span>, the steps in the
 transformation are: <strong>A)</strong> Original data,
 <strong>B)</strong> Data rotated along principal components,
 <strong>C)</strong> Data rotated and scaled, <strong>D)</strong> Data
-rotated, scaled and rotated back to original axes.
+rotated, scaled and rotated back to original axes. Green arrows indicate
+principal axes and lengths indicate eigen-values.
 </p>
 </div>
 <div class="section level2">
@@ -143,7 +144,7 @@ rotated, scaled and rotated back to original axes.
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"sample_"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"gene_"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># eclairs decomposition implements GIW-EB method *E*stimate</span></span>
+<span><span class="co"># eclairs decomposition implements GIW-EB method: *E*stimate</span></span>
 <span><span class="co"># *c*ovariance/correlation with *l*ow *r*ank and *s*hrinkage</span></span>
 <span><span class="va">ecl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/eclairs.html">eclairs</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span>
 <span></span>
@@ -153,9 +154,9 @@ rotated, scaled and rotated back to original axes.
 <span><span class="co"># the same whitening can be performed with one command where the eigen-value</span></span>
 <span><span class="co"># shrinkage is performed internally</span></span>
 <span><span class="va">Y_whitened2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/whiten.html">whiten</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span></code></pre></div>
-<p>Here plot A) the eigen-values of the covariance matrix before and
-after shrinkage. B) The correlation of the observed and C) whitened
-data.</p>
+<p>Here plot <strong>A</strong>) the eigen-values of the covariance
+matrix before and after shrinkage. <strong>B</strong>) The correlation
+of the observed and <strong>C</strong>) whitened data.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -255,20 +256,23 @@ smallest eigen-value) of the correlation/covariance matrix from the
 <div class="section level3">
 <h3 id="removing-correlation-vs-covariance">Removing correlation vs covariance<a class="anchor" aria-label="anchor" href="#removing-correlation-vs-covariance"></a>
 </h3>
-<p>By default <code><a href="../reference/eclairs.html">eclairs()</a></code> computes the covariance between
-columns, but the correlation can be computed using
-<code>compute = 'correlation'</code>.</p>
+<p>By default <code><a href="../reference/eclairs.html">eclairs()</a></code> computes the <em>covariance</em>
+between columns by using the default
+<code>compute = "covariance"</code>. Running <code><a href="../reference/decorrelate.html">decorrelate()</a></code>
+using this removes the covariance between columns. Setting
+<code>compute = "correlation"</code>, evaluates and then removes
+correlation between columns while retaining the variance.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">clusterGeneration</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># generate covariance matrix, where the diagonals (i.e. variances) vary</span></span>
-<span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/clusterGeneration/man/genPositiveDefMat.html" class="external-link">genPositiveDefMat</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">$</span><span class="va">Sigma</span></span>
+<span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/clusterGeneration/man/genPositiveDefMat.html" class="external-link">genPositiveDefMat</a></span><span class="op">(</span><span class="va">p</span>, rangeVar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1e+06</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">Sigma</span></span>
 <span></span>
 <span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rfast/man/rmvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">p</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># examine variances of the first 5 variables</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">Y</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 5.383555 2.889871 1.044287 3.873412 1.393928</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 5.082884 2.853566 1.083664 3.687911 1.491565</span></span></code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># transform removes covariance between columns so variance of transformed</span></span>
 <span><span class="co"># features are *approximately* equal</span></span>
@@ -277,7 +281,7 @@ columns, but the correlation can be computed using
 <span></span>
 <span><span class="co"># variance are *approximately* equal</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">Z1</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.8936254 0.7003432 0.3485305 0.8255365 0.4277328</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.9830960 0.9939579 0.9924317 0.9939929 0.9945367</span></span></code></pre>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># transform removes **correlation** between columns but variables are not</span></span>
 <span><span class="co"># scaled</span></span>
@@ -286,7 +290,7 @@ columns, but the correlation can be computed using
 <span></span>
 <span><span class="co"># variances are not standardized</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">Z2</span>, <span class="fl">2</span>, <span class="va">var</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 5.338500 2.876451 1.036761 3.858496 1.383403</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 5.012871 2.830468 1.066778 3.661699 1.476049</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">

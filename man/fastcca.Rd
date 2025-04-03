@@ -17,6 +17,9 @@ fastcca(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL)
 
 \item{lambda.y}{optional shrinkage parameter for estimating covariance of Y. If NULL, estimate from data.}
 }
+\value{
+\code{fastcca} object
+}
 \description{
 Fast Canonical correlation analysis that is scalable to high dimensional data.  Uses covariance shrinkage and algorithmic speed ups to be linear time in p when p > n.
 }
@@ -30,8 +33,9 @@ Uses \code{eclairs()} and empirical Bayes covariance regularization, and applies
 \examples{
 pop <- LifeCycleSavings[, 2:3]
 oec <- LifeCycleSavings[, -(2:3)]
-fastcca(pop, oec)
 
+decorrelate:::fastcca(pop, oec)
+#
 }
 \references{
 Tuzhilina, E., Tozzi, L., & Hastie, T. (2023). Canonical correlation analysis in high dimensions with structured regularization. Statistical modelling, 23(3), 203-227.
