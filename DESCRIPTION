@@ -12,16 +12,14 @@ Authors@R:
 Description: Data whitening is a widely used preprocessing step to remove correlation structure since statistical models often assume independence. Here we use a probabilistic model of the observed data to apply a whitening transformation. Our Gaussian Inverse Wishart Empirical Bayes model substantially reduces computational complexity, and regularizes the eigen-values of the sample covariance matrix to improve out-of-sample performance.
 License: Artistic-2.0
 Encoding: UTF-8
-URL: gabrielhoffman.github.oi/decorrelate, https://github.com/GabrielHoffman/decorrelate
+URL: gabrielhoffman.github.io/decorrelate
 BugReports: https://github.com/GabrielHoffman/decorrelate/issues
 Suggests:
-    BiocStyle,
     knitr,
     pander,
     whitening,
     CCA,
     yacca,
-    BiocGenerics,
     mvtnorm,
     ggplot2, 
     cowplot,
@@ -30,18 +28,6 @@ Suggests:
     latex2exp,
     clusterGeneration,
     rmarkdown
-biocViews: RNASeq,
-    GeneExpression,
-    GeneSetEnrichment,
-    DifferentialExpression,
-    BatchEffect,
-    QualityControl,
-    Regression,
-    Epigenetics,
-    FunctionalGenomics,
-    Transcriptomics,
-    Normalization,
-    Software
 Depends:
     R (>= 4.2.0),
     methods
