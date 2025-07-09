@@ -1,3 +1,7 @@
+# decorrelate 0.1.6
+* July 9, 2025
+* submit to CRAN
+
 # decorrelate 0.1.5
 * April 2, 2025
 * update docs

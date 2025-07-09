@@ -1,10 +1,9 @@
-pandoc: 3.6.3
-pkgdown: 2.0.9
+pandoc: 3.7.0.2
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   decorrelate: decorrelate.html
-last_built: 2025-04-03T01:07Z
+last_built: 2025-07-09T17:14Z
 urls:
   reference: http://gabrielhoffman.github.io/decorrelate/reference
   article: http://gabrielhoffman.github.io/decorrelate/articles
-

@@ -24,6 +24,7 @@
 #' decorrelate:::cca(pop, oec)
 #' #
 #' @importFrom irlba irlba
+#' @keywords internal
 # @export
 cca <- function(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL) {
   if (!is.matrix(X)) {

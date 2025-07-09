@@ -1,8 +1,8 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-html$
 ^vignettes/GTEx$
 ^README\.Rmd$
 vignettes/.*_cache
 vignettes/.*_files
+_stash$

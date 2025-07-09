@@ -36,3 +36,4 @@ oec <- LifeCycleSavings[, -(2:3)]
 decorrelate:::cca(pop, oec)
 #
 }
+\keyword{internal}

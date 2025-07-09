@@ -76,6 +76,7 @@ setMethod("show", "fastcca", function(object) {
 #' decorrelate:::fastcca(pop, oec)
 #' #
 #' @importFrom Rfast standardise
+#' @keywords internal
 # @export
 fastcca <- function(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL) {
   if (!is.matrix(X)) {

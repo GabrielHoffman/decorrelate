@@ -40,3 +40,4 @@ decorrelate:::fastcca(pop, oec)
 \references{
 Tuzhilina, E., Tozzi, L., & Hastie, T. (2023). Canonical correlation analysis in high dimensions with structured regularization. Statistical modelling, 23(3), 203-227.
 }
+\keyword{internal}

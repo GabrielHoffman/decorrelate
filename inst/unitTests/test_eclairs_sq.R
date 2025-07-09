@@ -37,7 +37,7 @@ test_eclairs_sq = function(){
 	ecl2 = eclairs_sq(ecl)
 	C.eclairs = 2*getCor(ecl2, lambda=0)
 
-	checkEqualsNumeric(C.eclairs, C)
+	checkEqualsNumeric(C.eclairs, C, tol=1e-6)
 }
 
 

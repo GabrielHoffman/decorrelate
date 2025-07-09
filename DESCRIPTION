@@ -1,8 +1,8 @@
 Package: decorrelate
 Type: Package
 Title: Decorrelation Projection Scalable to High Dimensional Data using Estimated Correlation with Low Rank and Shrinkage
-Version: 0.1.5
-Date: 2025-04-02
+Version: 0.1.6
+Date: 2025-06-09
 Authors@R: 
   c(person(given = "Gabriel",
            family = "Hoffman",
