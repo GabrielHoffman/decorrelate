@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,25 +82,6 @@
     <p>Tuzhilina, E., Tozzi, L., &amp; Hastie, T. (2023). Canonical correlation analysis in high dimensions with structured regularization. Statistical modelling, 23(3), 203-227.</p>
     </div>
 
-    <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="va">LifeCycleSavings</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></span>
-<span class="r-in"><span><span class="va">oec</span> <span class="op">&lt;-</span> <span class="va">LifeCycleSavings</span><span class="op">[</span>, <span class="op">-</span><span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">]</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">decorrelate</span><span class="fu">:::</span><span class="fu">fastcca</span><span class="op">(</span><span class="va">pop</span>, <span class="va">oec</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Fast regularized canonical correlation analysis</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Original data rows: 50 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Original data cols: 2, 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Num components:     2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Cor:                -0.825 0.365 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   rho.mod:            0.821 0.338 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Cramer's V:         0.821 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   lambda.x:           0.0123 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   lambda.y:           0.665 </span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-</code></pre></div>
-    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

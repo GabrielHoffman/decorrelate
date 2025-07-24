@@ -6,10 +6,11 @@
 \usage{
 eclairs(
   X,
-  k,
+  k = min(n, p),
   lambda = NULL,
   compute = c("covariance", "correlation"),
-  n.samples = nrow(X)
+  n.samples = nrow(X),
+  svd.method = c("svd", "irlba", "pcaone")
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ eclairs(
 \item{compute}{evaluate either the \code{"covariance"} or \code{"correlation"} of \code{X}}
 
 \item{n.samples}{number of samples data is from.  Usually \code{nrow(X)}, but can be other values in special cases.}
+
+\item{svd.method}{SVD algorithm string "svd", "irlba", or "pcaone"}
 }
 \value{
 \link{eclairs} object storing:

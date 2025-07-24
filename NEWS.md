@@ -1,3 +1,10 @@
+# decorrelate 0.1.7
+* July 23, 2025
+* add `run_svd()` with multiple SVD algorithms
+ * use in `eclairs()`
+* add `fastcca2()`
+
+
 # decorrelate 0.1.6
 * July 9, 2025
 * submit to CRAN

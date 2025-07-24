@@ -128,19 +128,6 @@ sumInverseCorr <- function(ecl, method = c("EB", "MLE"), absolute = TRUE) {
     ecl$lambda <- 0
   }
 
-  # if( absolute ){
-  #   # direction stores the sign of weither each column in X
-  #   # is increasing (1) or decreasing (-1)
-  #   # Scaling X by a vector of indicators creates
-  #   # a correlation matrix with all positive entries
-  #   # This is the absolute value of the correlation matrix
-  #   # BUT, direction is not ensure to create a positive
-  #   # correlation matrix
-  #   one <- ecl$direction
-  # }else{
-  #   one <- rep(1, ecl$p)
-  # }
-
   one <- rep(1, ecl$p)
 
   value <- quadForm(ecl, one)

@@ -1,8 +1,8 @@
 Package: decorrelate
 Type: Package
 Title: Decorrelation Projection Scalable to High Dimensional Data
-Version: 0.1.6.4
-Date: 2025-06-18
+Version: 0.1.7
+Date: 2025-06-23
 Authors@R: 
   c(person(given = "Gabriel",
            family = "Hoffman",
@@ -34,6 +34,7 @@ Depends:
 Imports:
     Rfast,
     irlba,
+    pcaone,
     graphics,
     Rcpp,
     CholWishart,

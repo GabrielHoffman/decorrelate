@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">decorrelate</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -164,13 +164,13 @@
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">lm_each_eclairs</span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">v1</span> <span class="op">+</span> <span class="va">v2</span>, <span class="va">data</span>, <span class="va">X</span>, <span class="va">ecl</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                beta           se      tstat      pvalue</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_1  2.887431e+13 1.563537e+14  0.1846730 0.853676462</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_2 -1.659811e+14 6.478078e+14 -0.2562197 0.798049901</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_3 -2.181485e-01 7.886980e-02 -2.7659318 0.006218786</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_4 -8.510124e-02 8.776742e-02 -0.9696222 0.333429845</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_5  1.186028e-02 7.372858e-02  0.1608641 0.872366104</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_6 -6.625690e-02 7.768578e-02 -0.8528833 0.394765035</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                beta           se       tstat     pvalue</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_1 -1.650310e+13 1.656970e+14 -0.09959809 0.92076521</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_2  8.305168e+13 6.865661e+14  0.12096677 0.90384128</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_3  1.913700e-01 8.408944e-02  2.27579150 0.02393987</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_4 -5.504664e-02 9.314628e-02 -0.59096978 0.55522154</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_5  8.806717e-02 7.788111e-02  1.13078984 0.25952533</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_6  1.382841e-01 8.188201e-02  1.68882095 0.09284398</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Analysis after non-linear transform</span></span></span>
 <span class="r-in"><span><span class="co">#------------------------------------</span></span></span>
@@ -186,13 +186,13 @@
 <span class="r-in"><span><span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu">lm_each_eclairs</span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">~</span> <span class="va">v1</span> <span class="op">+</span> <span class="va">v2</span>, <span class="va">data</span>, <span class="va">X</span>, <span class="va">ecl_transform</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                beta           se      tstat      pvalue</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_1  2.887431e+13 1.563537e+14  0.1846730 0.853676462</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_2 -1.659811e+14 6.478078e+14 -0.2562197 0.798049901</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_3 -2.181485e-01 7.886980e-02 -2.7659318 0.006218786</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_4 -8.510124e-02 8.776742e-02 -0.9696222 0.333429845</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_5  1.186028e-02 7.372858e-02  0.1608641 0.872366104</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set_6 -6.625690e-02 7.768578e-02 -0.8528833 0.394765035</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                beta           se       tstat     pvalue</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_1 -1.650310e+13 1.656970e+14 -0.09959809 0.92076521</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_2  8.305168e+13 6.865661e+14  0.12096677 0.90384128</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_3  1.913700e-01 8.408944e-02  2.27579150 0.02393987</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_4 -5.504664e-02 9.314628e-02 -0.59096978 0.55522154</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_5  8.806717e-02 7.788111e-02  1.13078984 0.25952533</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set_6  1.382841e-01 8.188201e-02  1.68882095 0.09284398</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

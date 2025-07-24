@@ -25,6 +25,7 @@
 <url><loc>http://gabrielhoffman.github.io/decorrelate/reference/estimate_lambda_eb.html</loc></url>
 <url><loc>http://gabrielhoffman.github.io/decorrelate/reference/fastcca-class.html</loc></url>
 <url><loc>http://gabrielhoffman.github.io/decorrelate/reference/fastcca.html</loc></url>
+<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/fastcca2.html</loc></url>
 <url><loc>http://gabrielhoffman.github.io/decorrelate/reference/getCov.html</loc></url>
 <url><loc>http://gabrielhoffman.github.io/decorrelate/reference/getShrinkageParams.html</loc></url>
 <url><loc>http://gabrielhoffman.github.io/decorrelate/reference/getWhiteningMatrix.html</loc></url>
@@ -41,6 +42,7 @@
 <url><loc>http://gabrielhoffman.github.io/decorrelate/reference/quadForm.html</loc></url>
 <url><loc>http://gabrielhoffman.github.io/decorrelate/reference/reform_decomp.html</loc></url>
 <url><loc>http://gabrielhoffman.github.io/decorrelate/reference/rmvnorm_eclairs.html</loc></url>
+<url><loc>http://gabrielhoffman.github.io/decorrelate/reference/run_svd.html</loc></url>
 <url><loc>http://gabrielhoffman.github.io/decorrelate/reference/series_start_total.html</loc></url>
 <url><loc>http://gabrielhoffman.github.io/decorrelate/reference/summarizeCorr.html</loc></url>
 <url><loc>http://gabrielhoffman.github.io/decorrelate/reference/sv_threshold.html</loc></url>

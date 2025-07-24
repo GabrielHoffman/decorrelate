@@ -79,6 +79,8 @@ setMethod("show", "eclairs", function(object) {
     "  logLik:            ", format(object$logLik, digits = 1, scientific = FALSE),
     "\n"
   )
+
+  cat("  Method:            ", object$method, "\n")
 })
 
 
@@ -200,6 +202,7 @@ setMethod("getCor", c(ecl = "eclairs"), function(
 #' @param lambda shrinkage parameter. If not specified, it is estimated from the data.
 #' @param compute evaluate either the \code{"covariance"} or \code{"correlation"} of \code{X}
 #' @param n.samples number of samples data is from.  Usually \code{nrow(X)}, but can be other values in special cases.
+#' @param svd.method SVD algorithm string "svd", "irlba", or "pcaone" 
 #'
 #' @return \link{eclairs} object storing:
 #' \describe{
@@ -250,16 +253,13 @@ setMethod("getCor", c(ecl = "eclairs"), function(
 #' @importFrom stats cor
 #'
 #' @export
-eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"), n.samples = nrow(X)) {
-  stopifnot(is.matrix(X))
+eclairs <- function(X, k = min(n, p), lambda = NULL, compute = c("covariance", "correlation"), n.samples = nrow(X), svd.method = c("svd", "irlba", "pcaone")) {
+
+  svd.method <- match.arg(svd.method)
   compute <- match.arg(compute)
 
-  # check value of lambda
-  if (!missing(lambda) & !is.null(lambda)) {
-    if (lambda < 0 || lambda > 1) {
-      stop("lambda must be in (0,1)")
-    }
-  }
+  stopifnot(is.matrix(X))
+  stopifnot("lambda must be in (0,1)" = (lambda >= 0) & (lambda <=1))
 
   n <- nrow(X)
   p <- ncol(X)
@@ -280,49 +280,21 @@ eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"
     sigma[] <- 1
   }
 
-  if (missing(k)) {
-    k <- min(n, p)
-  } else {
-    # k cannot exceed n or p
-    k <- min(c(k, p, n))
+  # k cannot exceed n or p
+  k <- min(c(k, p, n))
+
+  # if "svd" selected, but k indicates partial SVD
+  # then use irlba
+  if (k < min(p, n) / 3 & svd.method == "svd") {
+    svd.method = "irlba"
   }
 
-  # SVD of X to get low rank estimate of Sigma
-  if (k < min(p, n) / 3) {
-    dcmp <- irlba(X, k)
-  } else {
-    dcmp <- tryCatch(
-      {
-        svd(X)
-      },
-      error = function(e) {
-        # very rarely, svd() above can fail
-        # fall back on interative
-        k <<- min(c(k, dim(X) - 1))
-        suppressWarnings(irlba(X, k))
-      }
-    )
-
-    # if k < min(n,p) truncate spectrum
-    if (k < length(dcmp$d)) {
-      dcmp$u <- dcmp$u[, seq_len(k), drop = FALSE]
-      dcmp$v <- dcmp$v[, seq_len(k), drop = FALSE]
-      dcmp$d <- dcmp$d[seq_len(k)]
-    }
-  }
-
-  # Modify sign of dcmp$v and dcmp$u so principal components are consistant
-  # This is motivated by whitening:::makePositivDiagonal() but here adjust
-  # both U and V so reconstructed data is correct
-  values <- sign0(diag(dcmp$v))
-
-  # faster version
-  dcmp$v <- eachrow(dcmp$v, values, "*")
-  dcmp$u <- eachrow(dcmp$u, values, "*")
+  # SVD
+  dcmp = run_svd(X, k, svd.method) 
 
   ecl <- list(
     U = dcmp$v,
-    dSq = dcmp$d^2,
+    dSq = dcmp$d[seq(k)]^2,
     V = dcmp$u,
     lambda = NA,
     logLik = NA,
@@ -333,9 +305,7 @@ eclairs <- function(X, k, lambda = NULL, compute = c("covariance", "correlation"
     k = k,
     rownames = rn,
     colnames = cn,
-    # compute is each column in X is increasing or decreasing
-    direction = sign(c(cor(X, seq(nrow(X))))),
-    method = "svd",
+    method = svd.method,
     call = match.call()
   )
   ecl <- new("eclairs", ecl)

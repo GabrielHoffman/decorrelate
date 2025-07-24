@@ -34,14 +34,13 @@ setMethod("show", "fastcca", function(object) {
 
   k <- min(3, x$n.comp)
 
-  cat("  Original data rows:", x$dims["n1"], "\n")
+  cat("  Original data rows:", x$dims["n"], "\n")
   cat("  Original data cols: ", x$dims["p1"], ", ", x$dims["p2"], "\n", sep = "")
   cat("  Num components:    ", x$n.comp, "\n")
-  cat("  Cor:               ", round(x$cor[seq_len(k)], digits = 3), "...\n")
+  # cat("  Cor:               ", round(x$cor[seq_len(k)], digits = 3), "...\n")
   cat("  rho.mod:           ", round(x$rho.mod[seq_len(k)], digits = 3), "...\n")
   cat("  Cramer's V:        ", round(x$cramer.V, digits = 3), "\n")
-  cat("  lambda.x:          ", format(x$lambdas["x"], digits = 3), "\n")
-  cat("  lambda.y:          ", format(x$lambdas["y"], digits = 3), "\n")
+  cat("  lambda:            ", format(x$lambdas, digits = 3), "\n")
 })
 
 
@@ -180,8 +179,8 @@ fastcca <- function(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = N
     n.comp = n.comp, rho.mod = rho.mod, cor = rho, cramer.V = cramer.V,
     x.coefs = x.coefs, x.vars = x.vars, x.ri = ri.x, y.coefs = y.coefs, y.vars = y.vars,
     y.ri = ri.y, lambdas = c(x = X.tr$lambda, y = Y.tr$lambda), dims = c(
-      n1 = n1,
-      n2 = n2, p1 = p1, p2 = p2
+      n = n1,
+      p1 = p1, p2 = p2
     )
   )
 
