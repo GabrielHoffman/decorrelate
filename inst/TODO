@@ -1,0 +1,330 @@
+
+
+
+July 24, 2025
+ 1) Put math from latex into fastcaa() @details
+ 	/Users/gabrielhoffman/Library/CloudStorage/Dropbox/projects/ADT/cca_v2/cca.pdf
+ 2) copy fastcca() from devel to master
+ 	remove k, k.x, k.y, run_svd()
+ 	master should have only vanilla SVD
+ 3) fastcca() should be generic that takes either 
+ 				X, Y is matrix
+ 				ecl.x, ecl.y as ecliars
+ 				or dcmp.x, dcmp.y as SVD list
+ 				In last 2 cases, compute x.vars from SVD not X:
+ 					x.vars <- with(ecl.x, dmult(V, sqrt(dSq), "right") %*% crossprod(U, x.coefs)) 
+ 					This is much faster then evaluating V %*% t(U) to reconstuct X
+
+
+
+
+May 5,
+	decorrelate::cca() and decorrelate::fastcca() are tested against others
+	Using only correlation, there is a speed up like in RCCA
+	but using covariance, just do
+		ecl.x <- eclairs(scale(X), compute = "cov")
+		ecl.y <- eclairs(scale(Y), compute = "cov")
+
+		X.decorr = decorrelate(scale(X), ecl.x, lambda=0)
+		Y.decorr = decorrelate(scale(Y), ecl.y, lambda=0)
+
+		# close to the same, why not?
+		res1 = svd(cor(X.decorr, Y.decorr))
+
+		Since terms don't cancel out anymore.
+		Is time different than RCCA?
+
+		see crossprod.R
+
+April 15, 
+	- faster CCA
+	- use dmult() to multiply by diagonal matrix 
+	  by scaling rows or columns
+	- make sure sigma term is handled in _ALL_ cases, like fastcca2()
+
+
+Feb 27, 2024
+	- fastcca() and cca() are only consistance with standard CCA when column SD's are set to 1
+	- need to scale by sigma somewhere
+	- cov_transform() produces covariance following transform via monto-carla sampling
+	- use __delta method__ instead
+
+
+
+Feb 16, 2024
+	can used z directly instead of computing SVD 
+		of scaled matrix
+
+Jan 31, 2024
+	store z separately and apply to Table 1 summary statistics
+
+Add Maholanobis  from decorrelate_analysis/mahalanobis.Rmd
+
+
+Nov 4, 2023
+	reproduce standard CCA with lambda = 0
+	covariance: factor out variances to only shrink correlation
+
+
+Oct 6, 2023
+	Fast way to drop a small number of features?
+		For z-score imputation
+
+
+Sept 19, 2023
+	PNAS, American Statistician, JASA, JSS?
+	What is fastcca() vs cca()
+
+Oct 17, 2022
+	Simplify dependencies in testing
+		especially for CCA
+	consider moving fastcca to another package
+	fastcca: simplify results	
+
+
+
+
+
+Sept 21, 2021
+	get Rsq to be estimates of the out-of-sample prediction correlattion
+		like for regression
+	how many degrees of freedom are used in coef estiamtes	
+
+	rho = sig_12 / (sig_11 * sig_22)
+
+	get effective degrees of freedom of CCA prediction
+	doi: 10.1093/biomet/asu067
+	834 Biometrical Journal 57 (2015) 5, 834–851 DOI: 10.1002/bimj.201400226
+
+	redundancy index is sum of square loadings times squared canonical correlation??
+
+
+
+
+Sept 16, 2021
+	I tried to extend to partion SVD using fastcchd, but I couldnt get it to work
+
+	in fastcca() make sure that estimated correlation are correct
+
+
+
+Papers:
+	https://openreview.net/pdf?id=4sCyjwaVtZ9
+	https://www-users.cs.umn.edu/~saad/PDF/ys-2013-6.pdf
+	https://arxiv.org/pdf/1904.03441.pdf
+
+
+DONE: see eclairs(...,fastLambda=TRUE)
+1) Estimate lambda faster using only dSq, n, p?
+	No, estimation of lambda uses *unbiased* method
+
+2) Better description of decorralate
+	#'' FIX NOTATION HERE:
+
+3)	SVD recycle
+	better warmStart with ilrba
+	https://github.com/bwlewis/irlba/issues/58
+
+	Use PRIMME::svds to do iterative SVD with warm start
+
+DONE: 4) simulate multivariate normal using eclairs
+
+DONE: 5) Parametric boostrap to get SVD of log(t^2)
+
+DONE: 6) Currently eclairs only shrinks to target identity matrix.
+	Expandt to covariance matrix with constant variance nu.
+
+DONE: see decorrelate.Rmd
+	7) Show effect of lambda on transformation	
+
+show time versus dimension curve for eclair + decorrelate compared to naive method.
+
+DONE: Additional testing on lm_eclairs(), add unit tests
+
+DONE: added lm_eclairs()
+
+	Joint analysis to score annotations
+		joint_lm_eclairs = function(formula, data){
+
+			fit = lm(y.transform ~ ., data)
+
+			or use mr.ash or vrbs?
+			
+		}
+
+decorrelate() working on transposed data
+	check dimension of X vs U and report error
+
+DONE
+lm_eclairs() and lm_each_eclairs()
+	This function fit a linear regression to the transformed response, and transformed design matrix.  Note that the design matrix, not just the data.frame of variables is transformed so that 1) factors are transformed and 2) the intercept term is transformed.  
+
+DONE
+	eclairs_reform() to compute SVD after dropping features
+
+
+DONE
+This spends a substantial amount of time in t() within mult_eclairs()
+Need a faster way to handle this, since transpose=TRUE is a bottneck
+	
+	X = matrnorm(p, 10000)
+	colnames(X) = paste0('set_', 1:ncol(X))
+
+	system.time({
+	res <- lm_each_eclairs(y ~ v1 + v2, data, X, ecl )
+	})
+
+	sweep, mapply, Rfast each, X %*% diag(), X %*% Diagonal()
+
+DONE
+	assign sign consistancy with in eclairs() and reform_decomp()
+
+TEST: 
+	implement eigenMT method:
+	https://www.cell.com/ajhg/fulltext/S0002-9297(15)00492-9
+
+
+
+a special case is identical to whiten
+	ecl <- eclairs(Y, compute="covariance", lambda=0)
+	Z1 <- decorrelate(Y, ecl)
+	Z2 = whiten(Y)
+	checkEqualsNumeric(Z1, Z2)
+
+implicit whitening matrix
+shrinkage
+compute="correlation" rotates but keeps scale
+
+
+eclairs *estimates* \Sigma by shrinking to target matrix
+decorrelate _samples_ in lasso
+decorrelate _features_ in lasso
+
+
+X = matrnorm(p, 100000)
+	
+dcmp1 = svd(X)
+
+ecl <- eclairs(X, fastLambda=FALSE)
+ecl 
+
+dcmp2 = svd(decorrelate(X, ecl))
+plot(dcmp1$d, dcmp2$d)
+
+
+X[1:3, 1:3]
+decorrelate(X, ecl)[1:3, 1:3]
+
+GPCA/ERGPCA
+	get this to work with covarianc is known: ORACLE
+
+
+May 26, 2021
+	iterative application of eclairs/decorrelate does not work because
+		after first transformation, eigen-values are almost equal so
+		lambda is almost one.  This means that the transformation puts
+		most of the weight on the identity prior and doesn't do much.
+
+	There should be a way to adjust the sample eigen-values following Gavish
+		and then use the new values in the transformation.
+		Either hard thresholding or nonlinear shrinkage
+
+	covariance estimation is usually based on 
+		sparsity or low rank
+
+Decorrelation by Orthoginak transformation
+https://cran.r-project.org/web/packages/dotgen/index.html		
+
+Also???
+https://r-forge.r-project.org/scm/viewvc.php/*checkout*/www/article.pdf?root=correg
+
+
+Compare to pseudoinverse whitening?
+
+
+SPLD
+	only does signed
+	only considers a single annotation at a time
+		instead of jointly using a baseline model
+	Uses bootstrap by flipping signs of chunks of annotations
+		to get standard errors
+	Uses regression coefficients, correlations instead of t-statistics?????
+
+Boostrap uncertainly around estimating lambda
+
+Alz risk variants are enriched in SP1 binding sites.
+	Do they improve or disrupt (predicted) TF binding
+
+
+
+DONE - June 3, 2021
+	use adjclust, but make it faster
+	I wrote rcpp code that is sparse, memory efficient
+	But it can still use a lot of memory and can be faster.
+	more of the process can be kept in rcpp: 
+		rowCumsums, and colCumsums can be run in rcpp _in place_ and with OpenMP
+		
+
+Apply decorrelate in blocks:
+		
+	# GEH: June 1, 2021
+	# Create local LD
+	# Create separate clusters
+	# eclairs decomp on each clusters
+	# run decorrelate on list of eclairs decomp
+
+
+Current:
+	Use inverse of posterior expected covariance
+	Try using posterior expected precision directly
+		modify mult_eclairs() so that alpha and beta are specified differently
+
+	But notice that prec_hat = (delta+n)/(delta+n-p-1)* Sigma_hat^{-1}
+	How to use scaling Precision vs Inverse Covariance: 
+		prec_scale = with(ecl, (delta+n)/(delta+n-p-1))
+
+
+
+
+	After applying approximately decorrelating transformation, estimate
+		heritability
+		pi1, 
+		non-centrality parameter -> heritability
+		inflation due to population structure
+		how to deam with MAF bins
+		PRS by ridge regression
+		coheritability
+		genomic annotation enrichment
+			signed (t-stat) and unsigned (chisq)
+		genomic annotation enrichment with co-heritability
+			t_1*t_2
+
+July 21, 2021
+	Use other methods to estimate lambda
+		since EB give too small values with small n
+	 mvIC:::shrinkcovmat.equal_lambda(t(Y))
+	 CovTools
+	 	just estimate lambda, not covariance
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
