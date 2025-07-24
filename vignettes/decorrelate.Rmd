@@ -152,7 +152,7 @@ Y_whitened2 <- whiten(Y)
 
 Here plot **A**) the eigen-values of the covariance matrix before and after shrinkage. **B**) The correlation of the observed and **C**) whitened data.
 ```{r plots, fig.height=3.2, fig.width=9, cache=TRUE}
-par(mfrow = c(1, 3))
+oldpar <- par(mfrow = c(1, 3))
 
 # plot shrinkage of eigen-values
 plot(ecl)
@@ -162,6 +162,7 @@ image(cor(Y), axes = FALSE, main = "Correlation of observed data")
 
 # decorrelate data using eclairs decomposition
 image(cor(Y_whitened), axes = FALSE, main = "Correlation of whitened data")
+par(oldpar)
 ```
 
 # Advanced usage
@@ -214,13 +215,14 @@ Y_whitened <- decorrelate(Y, ecl)
 ```
 
 ```{r plots2, fig.height=3.2, fig.width=9, echo=FALSE}
-par(mfrow = c(1, 3))
+oldpar <- par(mfrow = c(1, 3))
 
 # plot shrinkage of eigen-values
 plot(ecl)
 
 # decorrelate data using eclairs decomposition
 image(cor(Y_whitened), axes = FALSE, main = "Correlation of whitened data")
+par(oldpar)
 ```
 
 In this case, the low rank whitening produces transformed features that are approximately independent.  The approximation improves as the rank increases.

@@ -90,29 +90,6 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RfastOfficial/Rfast" class="external-link">Rfast</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: Rcpp</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: zigg</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: RcppParallel</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘RcppParallel’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:Rcpp’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     LdFlags</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Rfast: 2.1.5.1</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  ___ __ __ __ __    __ __ __ __ __ _             _               __ __ __ __ __     __ __ __ __ __ __   </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> |  __ __ __ __  |  |  __ __ __ __ _/            / \             |  __ __ __ __ /   /__ __ _   _ __ __\  </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> | |           | |  | |                         / _ \            | |                        / /          </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> | |           | |  | |                        / / \ \           | |                       / /          </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> | |           | |  | |                       / /   \ \          | |                      / /          </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> | |__ __ __ __| |  | |__ __ __ __           / /     \ \         | |__ __ __ __ _        / /__/\          </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> |    __ __ __ __|  |  __ __ __ __|         / /__ _ __\ \        |_ __ __ __ _   |      / ___  /           </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> |   \              | |                    / _ _ _ _ _ _ \                     | |      \/  / /       </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> | |\ \             | |                   / /           \ \                    | |         / /          </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> | | \ \            | |                  / /             \ \                   | |        / /          </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> | |  \ \           | |                 / /               \ \                  | |       / /          </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> | |   \ \__ __ _   | |                / /                 \ \     _ __ __ __ _| |      / /          </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> |_|    \__ __ __\  |_|               /_/                   \_\   /_ __ __ __ ___|      \/             team</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">800</span> <span class="co"># number of samples</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">200</span> <span class="co"># number of features</span></span></span>
@@ -133,7 +110,7 @@
 <span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="fl">1e-3</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># number of bootstrap samples</span></span></span>
-<span class="r-in"><span><span class="va">n_boot</span> <span class="op">&lt;-</span> <span class="fl">50000</span></span></span>
+<span class="r-in"><span><span class="va">n_boot</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Evaluate eclairs decomposition on boostrap samples</span></span></span>
 <span class="r-in"><span><span class="va">ecl2</span> <span class="op">&lt;-</span> <span class="fu">cov_transform</span><span class="op">(</span><span class="va">ecl</span>, f <span class="op">=</span> <span class="va">f</span>, <span class="va">n_boot</span>, lambda <span class="op">=</span> <span class="fl">1e-4</span><span class="op">)</span></span></span>
@@ -150,7 +127,7 @@
 <span class="r-in"><span><span class="co"># Evaluate differences</span></span></span>
 <span class="r-in"><span><span class="co"># small differences are due to Monte Carlo error from boostrap sampling</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">C1</span> <span class="op">-</span> <span class="va">C2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.1174916  0.1155881</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.2848793  0.2271215</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot entries from two covariance estimates</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>pty <span class="op">=</span> <span class="st">"s"</span><span class="op">)</span></span></span>
@@ -177,7 +154,7 @@
 <span class="r-in"><span><span class="co"># Evaluate differences</span></span></span>
 <span class="r-in"><span><span class="co"># small differences are due to Monte Carlo error from boostrap sampling</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">C1</span> <span class="op">-</span> <span class="va">C2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.02505992  0.02403754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.05196113  0.05090019</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot entries from two correlation estimates</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>pty <span class="op">=</span> <span class="st">"s"</span><span class="op">)</span></span></span>

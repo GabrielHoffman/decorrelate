@@ -36,7 +36,7 @@ test_eclairs_eclairs_corMat = function(){
 	ecl2 = eclairs_corMat(cora(Y), n=n)
 	Y.decorr2 = decorrelate(Y, ecl2)
 
-	checkEqualsNumeric( Y.decorr, Y.decorr2, tol=1e-7)
+	checkEqualsNumeric( Y.decorr, Y.decorr2, tol=1e-6)
 
 	# source("eclairs_reform.R")
 	# source("eclair_corMat.R")

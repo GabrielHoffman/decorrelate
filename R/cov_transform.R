@@ -43,7 +43,7 @@
 #' f <- function(x) log(x^2 + 1e-3)
 #'
 #' # number of bootstrap samples
-#' n_boot <- 50000
+#' n_boot <- 5000
 #'
 #' # Evaluate eclairs decomposition on boostrap samples
 #' ecl2 <- cov_transform(ecl, f = f, n_boot, lambda = 1e-4)
@@ -66,7 +66,6 @@
 #' plot(C1, C2, main = "Concordance between covariances")
 #' abline(0, 1, col = "red")
 #'
-#'
 #' # Same above but compute eclairs for correlation matrix
 #' #-------------------------------------------------------
 #'
@@ -87,10 +86,11 @@
 #' range(C1 - C2)
 #'
 #' # Plot entries from two correlation estimates
-#' par(pty = "s")
+#' oldpar <- par(pty = "s")
 #' plot(C1, C2, main = "Correlation between covariances")
 #' abline(0, 1, col = "red")
 #'
+#' par(oldpar)
 #' @export
 cov_transform <- function(ecl, f, n.boot, lambda = NULL, compute = c(
                             "covariance",

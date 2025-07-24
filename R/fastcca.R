@@ -69,12 +69,12 @@ setMethod("show", "fastcca", function(object) {
 #'
 #' @return \code{fastcca} object
 #'
-#' @examples
-#' pop <- LifeCycleSavings[, 2:3]
-#' oec <- LifeCycleSavings[, -(2:3)]
-#'
-#' decorrelate:::fastcca(pop, oec)
-#' #
+# @examples
+# pop <- LifeCycleSavings[, 2:3]
+# oec <- LifeCycleSavings[, -(2:3)]
+#
+# decorrelate:::fastcca(pop, oec)
+#
 #' @importFrom Rfast standardise
 #' @keywords internal
 # @export

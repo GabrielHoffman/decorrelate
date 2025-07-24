@@ -1,18 +1,18 @@
 Package: decorrelate
 Type: Package
-Title: Decorrelation Projection Scalable to High Dimensional Data using Estimated Correlation with Low Rank and Shrinkage
-Version: 0.1.6
-Date: 2025-06-09
+Title: Decorrelation Projection Scalable to High Dimensional Data
+Version: 0.1.6.4
+Date: 2025-06-18
 Authors@R: 
   c(person(given = "Gabriel",
            family = "Hoffman",
            role = c("aut", "cre"),
            email = "gabriel.hoffman@mssm.edu",
            comment = c(ORCID = "0000-0002-0957-0224")))
-Description: Data whitening is a widely used preprocessing step to remove correlation structure since statistical models often assume independence. Here we use a probabilistic model of the observed data to apply a whitening transformation. Our Gaussian Inverse Wishart Empirical Bayes model substantially reduces computational complexity, and regularizes the eigen-values of the sample covariance matrix to improve out-of-sample performance.
+Description: Data whitening is a widely used preprocessing step to remove correlation structure since statistical models often assume independence. Here we use a probabilistic model of the observed data to apply a whitening transformation. This Gaussian Inverse Wishart Empirical Bayes model substantially reduces computational complexity, and regularizes the eigen-values of the sample covariance matrix to improve out-of-sample performance.
 License: Artistic-2.0
 Encoding: UTF-8
-URL: gabrielhoffman.github.io/decorrelate
+URL: https://gabrielhoffman.github.io/decorrelate/
 BugReports: https://github.com/GabrielHoffman/decorrelate/issues
 Suggests:
     knitr,

@@ -17,12 +17,12 @@
 #' Avoids computation of \eqn{\Sigma_{xx}^{-\frac{1}{2}}} by using eclairs.  Avoids cov(X,Y) by framing this as a matrix product that can be distributed. Uses low rank SVD.
 #' Other regularized CCA adds lambda to covariance like Ridge. Here it is a mixture
 #'
-#' @examples
-#' pop <- LifeCycleSavings[, 2:3]
-#' oec <- LifeCycleSavings[, -(2:3)]
-#'
-#' decorrelate:::cca(pop, oec)
-#' #
+# @examples
+# pop <- LifeCycleSavings[, 2:3]
+# oec <- LifeCycleSavings[, -(2:3)]
+#
+# decorrelate:::cca(pop, oec)
+#
 #' @importFrom irlba irlba
 #' @keywords internal
 # @export
