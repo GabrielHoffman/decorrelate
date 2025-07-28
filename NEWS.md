@@ -2,7 +2,8 @@
 * July 23, 2025
 * add `run_svd()` with multiple SVD algorithms
  * use in `eclairs()`
-* add `fastcca2()`
+* add faster version of `fastcca()`
+* handle rare exception where `svd()` fails
 
 
 # decorrelate 0.1.6

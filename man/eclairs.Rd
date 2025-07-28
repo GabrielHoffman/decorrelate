@@ -6,7 +6,7 @@
 \usage{
 eclairs(
   X,
-  k = min(n, p),
+  k = min(dim(X)),
   lambda = NULL,
   compute = c("covariance", "correlation"),
   n.samples = nrow(X),

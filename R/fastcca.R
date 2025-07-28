@@ -1,3 +1,45 @@
+# July 24, 2025
+
+#' Class fastcca
+#'
+#' Class \code{fastcca}
+#'
+#' @details Object storing:
+#' \describe{
+#'  \item{n.comp: }{number of canonical components}
+#'  \item{cors: }{canonical correlations}
+#'  \item{x.coefs: }{canonical coefficients for X}
+#'  \item{x.vars: }{canonical variates for X}
+#'  \item{y.coefs: }{canonical coefficients for Y}
+#'  \item{y.vars: }{canonical variates for Y}
+#'  \item{lambdas: }{shrinkage parameters from \code{eclairs}}
+#' }
+#' @name fastcca-class
+#' @rdname fastcca-class
+#' @exportClass fastcca
+setClass("fastcca", contains = "list")
+
+
+setMethod("print", "fastcca", function(x) {
+  show(x)
+})
+
+
+setMethod("show", "fastcca", function(object) {
+  x <- object
+
+  cat("       Fast regularized canonical correlation analysis\n\n")
+
+  k <- min(3, x$n.comp)
+
+  cat("  Original data rows:", x$dims["n"], "\n")
+  cat("  Original data cols: ", x$dims["p1"], ", ", x$dims["p2"], "\n", sep = "")
+  cat("  Num components:    ", x$n.comp, "\n")
+  cat("  Cor:               ", round(x$cor[seq_len(k)], digits = 3), "...\n")
+  cat("  rho.mod:           ", round(x$rho.mod[seq_len(k)], digits = 3), "...\n")
+  cat("  Cramer's V:        ", round(x$cramer.V, digits = 3), "\n")
+  cat("  lambda:            ", format(x$lambdas, digits = 3), "\n")
+})
 
 
 #' Fast canonical correlation analysis
@@ -7,17 +49,21 @@
 #' @param X first matrix (n x p1)
 #' @param Y first matrix (n x p2)
 #' @param k number of canonical components to return
-#' @param lambda.x optional shrinkage parameter for estimating covariance of X. If NULL, estimate from data.
-#' @param lambda.y optional shrinkage parameter for estimating covariance of Y. If NULL, estimate from data.
+#' @param k.x number of singular vectors of X to use
+#' @param k.y number of singular vectors of Y to use
+#' @param lambda.x shrinkage parameter for X. If \code{NULL}, estimate from data
+#' @param lambda.y shrinkage parameter for Y. If \code{NULL}, estimate from data
+#' @param svd.method SVD algorithm string "svd", "irlba", or "pcaone" 
 #'
 #' @examples
 #' pop <- LifeCycleSavings[, 2:3]
 #' oec <- LifeCycleSavings[, -(2:3)]
 #'
-#' fastcca2(pop, oec)
+#' fastcca(pop, oec)
 #'
+#' @importFrom Rfast cora colsums
 #' @export
-fastcca2 = function(X, Y, k = NULL, k.x=min(dim(X)), k.y=min(dim(Y)), lambda.x=NULL, lambda.y=NULL, svd.method = c("svd", "irlba", "pcaone") ){
+fastcca = function(X, Y, k = NULL, k.x=min(dim(X)), k.y=min(dim(Y)), lambda.x=NULL, lambda.y=NULL, svd.method = c("svd", "irlba", "pcaone") ){
 
   # checks
   stopifnot("k must be positive" = k > 0)
@@ -58,8 +104,8 @@ fastcca2 = function(X, Y, k = NULL, k.x=min(dim(X)), k.y=min(dim(Y)), lambda.x=N
   gamma_y <- with(ecl.y, sqrt(dSq/((1-lambda)*dSq + lambda*nu)))
 
   # cross-product
-  Sig <- crossprod(dmult(ecl.x$V, gamma_x, "right"), 
-                  dmult(ecl.y$V, gamma_y, "right"))
+  Sig <- crossprod( dmult(ecl.x$V, gamma_x, "right"), 
+                    dmult(ecl.y$V, gamma_y, "right"))
 
   if( is.null(k) ){
     k <- min(dim(Sig))
@@ -68,42 +114,48 @@ fastcca2 = function(X, Y, k = NULL, k.x=min(dim(X)), k.y=min(dim(Y)), lambda.x=N
   # if "svd" selected, but k indicates partial SVD
   # then use irlba
   if(k < min(dim(Sig)) / 3 & svd.method == "svd"){
-    svd.method = "irlba"
+    svd.method <- "irlba"
   }
 
   # SVD of cross-product
-  dcmp = run_svd(Sig, k, svd.method) 
+  dcmp <- run_svd(Sig, k, svd.method) 
 
   # Compute coefs
   # Note that coefs are not unique, 
   # but latent variables are???
   ax <- with(ecl.x, 1/sqrt(dSq * (1 - lambda) + lambda * nu))
   x.coefs <- dmult(ecl.x$U, ax, "right") %*% dcmp$u
+  rownames(x.coefs) <- colnames(X)
+  colnames(x.coefs) <- paste0("comp_", seq(k))
 
   ay <- with(ecl.y, 1/sqrt(dSq * (1 - lambda) + lambda * nu))
   y.coefs <- dmult(ecl.y$U, ay, "right") %*% dcmp$v
+  rownames(y.coefs) <- colnames(Y)
+  colnames(y.coefs) <- paste0("comp_", seq(k))
 
   # Compute latent variables
   x.vars <- X_scaled %*% x.coefs
-  rownames(x.vars) <- rownames(X)
-
   y.vars <- Y_scaled %*% y.coefs
-  rownames(y.vars) <- rownames(Y)
 
-  rho.mod = dcmp$d
+  # rho <- diag(cor(x.vars, y.vars))[seq(k)]
+  # Faster way to eval diag of correlation
+  rho <- colsums(.standardise(x.vars) * .standardise(y.vars)) / (nrow(X)-1)
+  names(rho) <- paste("comp", seq(k), sep = "")
+
+  rho.mod <- dcmp$d
 
   res = list( 
         dims = c(n=nrow(X), p1 = ncol(X), p2 = ncol(Y)),
         n.comp = k,
+        rho.mod = rho.mod,
+        cor = rho, 
         # Cramer's V-statistic for CCA
         cramer.V = sqrt(mean(rho.mod^2)),
         lambdas = c(x = ecl.x$lambda, y = ecl.y$lambda),
         x.coefs = x.coefs, 
         y.coefs = y.coefs, 
-        rho.mod = rho.mod,
         x.vars = x.vars, 
         y.vars = y.vars)
 
   new("fastcca", res)
-
 }

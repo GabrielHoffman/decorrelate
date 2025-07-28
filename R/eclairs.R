@@ -253,7 +253,7 @@ setMethod("getCor", c(ecl = "eclairs"), function(
 #' @importFrom stats cor
 #'
 #' @export
-eclairs <- function(X, k = min(n, p), lambda = NULL, compute = c("covariance", "correlation"), n.samples = nrow(X), svd.method = c("svd", "irlba", "pcaone")) {
+eclairs <- function(X, k = min(dim(X)), lambda = NULL, compute = c("covariance", "correlation"), n.samples = nrow(X), svd.method = c("svd", "irlba", "pcaone")) {
 
   svd.method <- match.arg(svd.method)
   compute <- match.arg(compute)
@@ -290,7 +290,10 @@ eclairs <- function(X, k = min(n, p), lambda = NULL, compute = c("covariance", "
   }
 
   # SVD
-  dcmp = run_svd(X, k, svd.method) 
+  # in rare exceptions,
+  # resulting k can be 1 smaller than requested
+  dcmp <- run_svd(X, k, svd.method) 
+  k <- dcmp$k
 
   ecl <- list(
     U = dcmp$v,

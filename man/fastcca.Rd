@@ -4,7 +4,16 @@
 \alias{fastcca}
 \title{Fast canonical correlation analysis}
 \usage{
-fastcca(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL)
+fastcca(
+  X,
+  Y,
+  k = NULL,
+  k.x = min(dim(X)),
+  k.y = min(dim(Y)),
+  lambda.x = NULL,
+  lambda.y = NULL,
+  svd.method = c("svd", "irlba", "pcaone")
+)
 }
 \arguments{
 \item{X}{first matrix (n x p1)}
@@ -13,24 +22,23 @@ fastcca(X, Y, k = min(dim(X), dim(Y)), lambda.x = NULL, lambda.y = NULL)
 
 \item{k}{number of canonical components to return}
 
-\item{lambda.x}{optional shrinkage parameter for estimating covariance of X. If NULL, estimate from data.}
+\item{k.x}{number of singular vectors of X to use}
 
-\item{lambda.y}{optional shrinkage parameter for estimating covariance of Y. If NULL, estimate from data.}
-}
-\value{
-\code{fastcca} object
+\item{k.y}{number of singular vectors of Y to use}
+
+\item{lambda.x}{shrinkage parameter for X. If \code{NULL}, estimate from data}
+
+\item{lambda.y}{shrinkage parameter for Y. If \code{NULL}, estimate from data}
+
+\item{svd.method}{SVD algorithm string "svd", "irlba", or "pcaone"}
 }
 \description{
 Fast Canonical correlation analysis that is scalable to high dimensional data.  Uses covariance shrinkage and algorithmic speed ups to be linear time in p when p > n.
 }
-\details{
-summary statistics of CCA
+\examples{
+pop <- LifeCycleSavings[, 2:3]
+oec <- LifeCycleSavings[, -(2:3)]
 
-Results from standard CCA are based on the SVD of \eqn{\Sigma_{xx}^{-\frac{1}{2}} \Sigma_{xy} \Sigma_{yy}^{-\frac{1}{2}}}.
+fastcca(pop, oec)
 
-Uses \code{eclairs()} and empirical Bayes covariance regularization, and applies speed up of RCCA (Tuzhilina, et al. 2023) to perform CCA on n PCs and instead of p features.  Memory usage is \eqn{\mathcal{O}(np)} instead of \eqn{\mathcal{O}(p^2)}.  Computation is \eqn{\mathcal{O}(n^2p)} instead of \eqn{\mathcal{O}(p^3)} or \eqn{\mathcal{O}(np^2)}
 }
-\references{
-Tuzhilina, E., Tozzi, L., & Hastie, T. (2023). Canonical correlation analysis in high dimensions with structured regularization. Statistical modelling, 23(3), 203-227.
-}
-\keyword{internal}

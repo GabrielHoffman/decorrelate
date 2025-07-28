@@ -2,6 +2,9 @@
 
 
 July 24, 2025
+
+	Check accuracy of cor, rho.mod, cramer.V
+
  1) Put math from latex into fastcaa() @details
  	/Users/gabrielhoffman/Library/CloudStorage/Dropbox/projects/ADT/cca_v2/cca.pdf
  2) copy fastcca() from devel to master
@@ -13,8 +16,17 @@ July 24, 2025
  				or dcmp.x, dcmp.y as SVD list
  				In last 2 cases, compute x.vars from SVD not X:
  					x.vars <- with(ecl.x, dmult(V, sqrt(dSq), "right") %*% crossprod(U, x.coefs)) 
- 					This is much faster then evaluating V %*% t(U) to reconstuct X
+ 					This is much faster then evaluating V %*% t(U) to reconstuct X.  
+ 					scale by n here?
+ 	Note that the cross-correlation is not shrunk
 
+ 	a) fastcaa algorithm and scaling with svd, irlba
+ 			EB shrinkage estimating, needs just SVD of X and Y
+ 			algorithm needs crossprod of PCs
+ 			O(r k^2) instead of O(p^3)
+
+
+ 	b) 3+ way and partial SVD
 
 
 

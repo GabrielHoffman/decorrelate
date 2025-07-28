@@ -40,7 +40,16 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fastcca</span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span>, k <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span>, lambda.x <span class="op">=</span> <span class="cn">NULL</span>, lambda.y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fastcca</span><span class="op">(</span></span>
+<span>  <span class="va">X</span>,</span>
+<span>  <span class="va">Y</span>,</span>
+<span>  k <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  k.x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  k.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  lambda.x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  lambda.y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  svd.method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"svd"</span>, <span class="st">"irlba"</span>, <span class="st">"pcaone"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -59,29 +68,45 @@
 <dd><p>number of canonical components to return</p></dd>
 
 
+<dt id="arg-k-x">k.x<a class="anchor" aria-label="anchor" href="#arg-k-x"></a></dt>
+<dd><p>number of singular vectors of X to use</p></dd>
+
+
+<dt id="arg-k-y">k.y<a class="anchor" aria-label="anchor" href="#arg-k-y"></a></dt>
+<dd><p>number of singular vectors of Y to use</p></dd>
+
+
 <dt id="arg-lambda-x">lambda.x<a class="anchor" aria-label="anchor" href="#arg-lambda-x"></a></dt>
-<dd><p>optional shrinkage parameter for estimating covariance of X. If NULL, estimate from data.</p></dd>
+<dd><p>shrinkage parameter for X. If <code>NULL</code>, estimate from data</p></dd>
 
 
 <dt id="arg-lambda-y">lambda.y<a class="anchor" aria-label="anchor" href="#arg-lambda-y"></a></dt>
-<dd><p>optional shrinkage parameter for estimating covariance of Y. If NULL, estimate from data.</p></dd>
+<dd><p>shrinkage parameter for Y. If <code>NULL</code>, estimate from data</p></dd>
+
+
+<dt id="arg-svd-method">svd.method<a class="anchor" aria-label="anchor" href="#arg-svd-method"></a></dt>
+<dd><p>SVD algorithm string "svd", "irlba", or "pcaone"</p></dd>
 
 </dl></div>
-    <div class="section level2">
-    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><code>fastcca</code> object</p>
-    </div>
-    <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>summary statistics of CCA</p>
-<p>Results from standard CCA are based on the SVD of \(\Sigma_{xx}^{-\frac{1}{2}} \Sigma_{xy} \Sigma_{yy}^{-\frac{1}{2}}\).</p>
-<p>Uses <code><a href="eclairs.html">eclairs()</a></code> and empirical Bayes covariance regularization, and applies speed up of RCCA (Tuzhilina, et al. 2023) to perform CCA on n PCs and instead of p features.  Memory usage is \(\mathcal{O}(np)\) instead of \(\mathcal{O}(p^2)\).  Computation is \(\mathcal{O}(n^2p)\) instead of \(\mathcal{O}(p^3)\) or \(\mathcal{O}(np^2)\)</p>
-    </div>
-    <div class="section level2">
-    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Tuzhilina, E., Tozzi, L., &amp; Hastie, T. (2023). Canonical correlation analysis in high dimensions with structured regularization. Statistical modelling, 23(3), 203-227.</p>
-    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="va">LifeCycleSavings</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">oec</span> <span class="op">&lt;-</span> <span class="va">LifeCycleSavings</span><span class="op">[</span>, <span class="op">-</span><span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">fastcca</span><span class="op">(</span><span class="va">pop</span>, <span class="va">oec</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Fast regularized canonical correlation analysis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Original data rows: 50 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Original data cols: 2, 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Num components:     2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Cor:                0.82 0.353 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   rho.mod:            0.865 0.314 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Cramer's V:         0.65 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   lambda:             0.0123 0.6647 </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

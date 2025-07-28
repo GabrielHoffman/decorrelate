@@ -57,6 +57,7 @@ run_svd = function(X, k = min(dim(X)), method = c("svd", "irlba", "pcaone"),...)
   values <- sign0(diag(dcmp$v))
   dcmp$v <- eachrow(dcmp$v, values, "*")
   dcmp$u <- eachrow(dcmp$u, values, "*")
-
+  dcmp$k <- k
+  
   dcmp 
 }
