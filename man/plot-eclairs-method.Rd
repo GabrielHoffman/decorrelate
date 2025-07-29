@@ -19,3 +19,22 @@ plot
 \description{
 Plot eclairs object
 }
+\examples{
+library(Rfast)
+
+n <- 800 # number of samples
+p <- 200 # number of features
+
+# create correlation matrix
+Sigma <- autocorr.mat(p, .9)
+
+# draw data from correlation matrix Sigma
+Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
+rownames(Y) <- paste0("sample_", seq(n))
+colnames(Y) <- paste0("gene_", seq(p))
+
+# eclairs decomposition: covariance
+ecl <- eclairs(Y, compute = "covariance")
+
+plot(ecl)
+}

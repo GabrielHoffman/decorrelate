@@ -19,3 +19,58 @@ template:
 search:
   exclude: ['news/index.html']
 
+
+reference:
+- title: Core functions
+  contents:
+  - "decorrelate"
+  - "eclairs"
+  - "fastcca"
+  - "plot,eclairs-method"
+  - "predict,fastcca-method"
+  - "run_svd"
+  - "whiten"
+
+- title: Scalar summaries
+  contents:
+  - "logDet"
+  - "kappa,eclairs-method"
+  - "averageCorr"
+
+- title: Classes
+  contents:
+  - "eclairs-class"
+  - "fastcca-class"
+
+- title: Simulating data
+  contents:
+  - "autocorr.mat"
+  - "rmvnorm_eclairs"
+
+- title: Other
+  contents:
+  - "cov_transform"
+  - "eclairs_corMat"
+  - "eclairs_sq"
+  - "getCov"
+  - "lm_each_eclairs"
+  - "lm_eclairs"
+  - "mahalanobisDistance"
+  - "getWhiteningMatrix"
+  - "reform_decomp"
+
+- title: Low level
+  contents:
+  - "dmult"
+  - "getShrinkageParams"
+  - "mult_eclairs"
+  - "optimal_SVHT_coef"
+  - "quadForm"
+  - "sv_threshold"
+
+
+
+
+
+
+

@@ -3,8 +3,8 @@
 * add `run_svd()` with multiple SVD algorithms
  * use in `eclairs()`
 * add faster version of `fastcca()`
+* add `predict()` for `fastcca()` model
 * handle rare exception where `svd()` fails
-
 
 # decorrelate 0.1.6
 * July 9, 2025

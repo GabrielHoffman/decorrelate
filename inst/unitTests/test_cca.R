@@ -1,5 +1,23 @@
 # Sept 9, 2021
 
+
+test_fastcca_predict = function(){
+
+	# perform CCA on the same dataset and X and Y
+	# so prediction recovers the original
+	pop <- LifeCycleSavings[, 2:3]
+
+	# fit CCA
+	fit <- fastcca(pop, pop)
+
+	# predict Y given X
+	y.pred <- predict(fit, X = pop)
+
+	checkEqualsNumeric(y.pred, pop)
+}
+
+
+
 test_cca = function(){
 
 	# devtools::install_github('https://github.com/ElenaTuzhilina/RCCA')

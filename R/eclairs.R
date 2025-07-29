@@ -341,12 +341,15 @@ sign0 <- function(x) {
 # like Rfast::standardise()
 # but returns SD of each column
 .standardise <- function(x) {
-  y <- t(x) - Rfast::colmeans(x)
+  mu <- Rfast::colmeans(x)
+  y <- t(x) - mu
   s <- sqrt(Rfast::rowsums(y^2) / (nrow(x) - 1))
   y <- y / s
   y <- t(y)
 
+  attr(y, "mu") <- mu
   attr(y, "sd") <- s
+  # attr(y, "colnames") <- colnames(x)
   y
 }
 
@@ -359,7 +362,26 @@ sign0 <- function(x) {
 #' @param ... additional arguments
 #'
 #' @returns plot
+#' 
+#' @examples
+#' library(Rfast)
+#' 
+#' n <- 800 # number of samples
+#' p <- 200 # number of features
+#' 
+#' # create correlation matrix
+#' Sigma <- autocorr.mat(p, .9)
+#' 
+#' # draw data from correlation matrix Sigma
+#' Y <- rmvnorm(n, rep(0, p), sigma = Sigma * 5.1, seed = 1)
+#' rownames(Y) <- paste0("sample_", seq(n))
+#' colnames(Y) <- paste0("gene_", seq(p))
+#' 
+#' # eclairs decomposition: covariance
+#' ecl <- eclairs(Y, compute = "covariance")
 #'
+#' plot(ecl)
+#
 #' @importFrom graphics points legend arrows par
 #' @export
 setMethod("plot", "eclairs", function(x, y, ...) {

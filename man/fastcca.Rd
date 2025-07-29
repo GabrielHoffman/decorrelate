@@ -39,6 +39,10 @@ Fast Canonical correlation analysis that is scalable to high dimensional data.  
 pop <- LifeCycleSavings[, 2:3]
 oec <- LifeCycleSavings[, -(2:3)]
 
-fastcca(pop, oec)
+# fit CCA
+fit <- fastcca(pop, oec)
+fit
 
+# predict second dataset given first
+y.pred <- predict(fit, X = pop)
 }

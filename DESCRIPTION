@@ -37,6 +37,7 @@ Imports:
     pcaone,
     graphics,
     Rcpp,
+    MASS,
     CholWishart,
     Matrix,
     utils,

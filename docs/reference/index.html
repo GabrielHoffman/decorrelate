@@ -33,7 +33,112 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="core-functions">Core functions<a class="anchor" aria-label="anchor" href="#core-functions"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="decorrelate.html">decorrelate()</a></code>
+
+        </dt>
+        <dd>Decorrelation projection</dd>
+      </dl><dl><dt>
+
+          <code><a href="eclairs.html">eclairs()</a></code>
+
+        </dt>
+        <dd>Estimate covariance/correlation with low rank and shrinkage</dd>
+      </dl><dl><dt>
+
+          <code><a href="fastcca.html">fastcca()</a></code>
+
+        </dt>
+        <dd>Fast canonical correlation analysis</dd>
+      </dl><dl><dt>
+
+          <code><a href="plot-eclairs-method.html">plot(<i>&lt;eclairs&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Plot eclairs object</dd>
+      </dl><dl><dt>
+
+          <code><a href="predict-fastcca-method.html">predict(<i>&lt;fastcca&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Predict one dataset from another</dd>
+      </dl><dl><dt>
+
+          <code><a href="run_svd.html">run_svd()</a></code>
+
+        </dt>
+        <dd>Compute SVD with selected algorithm</dd>
+      </dl><dl><dt>
+
+          <code><a href="whiten.html">whiten()</a></code>
+
+        </dt>
+        <dd>Decorrelation projection + eclairs</dd>
+      </dl></div><div class="section level2">
+      <h2 id="scalar-summaries">Scalar summaries<a class="anchor" aria-label="anchor" href="#scalar-summaries"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="logDet.html">logDet()</a></code>
+
+        </dt>
+        <dd>Evaluate the log determinant</dd>
+      </dl><dl><dt>
+
+          <code><a href="kappa.html">kappa(<i>&lt;eclairs&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Compute condition number</dd>
+      </dl><dl><dt>
+
+          <code><a href="summarizeCorr.html">averageCorr()</a></code> <code><a href="summarizeCorr.html">averageCorrSq()</a></code> <code><a href="summarizeCorr.html">sumInverseCorr()</a></code> <code><a href="summarizeCorr.html">effVariance()</a></code> <code><a href="summarizeCorr.html">tr()</a></code>
+
+        </dt>
+        <dd>Summarize correlation matrix</dd>
+      </dl></div><div class="section level2">
+      <h2 id="classes">Classes<a class="anchor" aria-label="anchor" href="#classes"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="eclairs-class.html">eclairs-class</a></code>
+
+        </dt>
+        <dd>Class eclairs</dd>
+      </dl><dl><dt>
+
+          <code><a href="fastcca-class.html">fastcca-class</a></code>
+
+        </dt>
+        <dd>Class fastcca</dd>
+      </dl></div><div class="section level2">
+      <h2 id="simulating-data">Simulating data<a class="anchor" aria-label="anchor" href="#simulating-data"></a></h2>
 
 
 
@@ -51,34 +156,27 @@
         <dd>Create auto-correlation matrix</dd>
       </dl><dl><dt>
 
+          <code><a href="rmvnorm_eclairs.html">rmvnorm_eclairs()</a></code>
+
+        </dt>
+        <dd>Draw from multivariate normal and t distributions</dd>
+      </dl></div><div class="section level2">
+      <h2 id="other">Other<a class="anchor" aria-label="anchor" href="#other"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
           <code><a href="cov_transform.html">cov_transform()</a></code>
 
         </dt>
         <dd>Estimate covariance matrix after applying transformation</dd>
-      </dl><dl><dt>
-
-          <code><a href="decorrelate.html">decorrelate()</a></code>
-
-        </dt>
-        <dd>Decorrelation projection</dd>
-      </dl><dl><dt>
-
-          <code><a href="dmult.html">dmult()</a></code>
-
-        </dt>
-        <dd>Multiply by diagonal matrix</dd>
-      </dl><dl><dt>
-
-          <code><a href="eclairs-class.html">eclairs-class</a></code>
-
-        </dt>
-        <dd>Class eclairs</dd>
-      </dl><dl><dt>
-
-          <code><a href="eclairs.html">eclairs()</a></code>
-
-        </dt>
-        <dd>Estimate covariance/correlation with low rank and shrinkage</dd>
       </dl><dl><dt>
 
           <code><a href="eclairs_corMat.html">eclairs_corMat()</a></code>
@@ -93,40 +191,10 @@
         <dd>Compute eclairs decomp of squared correlation matrix</dd>
       </dl><dl><dt>
 
-          <code><a href="fastcca-class.html">fastcca-class</a></code>
-
-        </dt>
-        <dd>Class fastcca</dd>
-      </dl><dl><dt>
-
-          <code><a href="fastcca.html">fastcca()</a></code>
-
-        </dt>
-        <dd>Fast canonical correlation analysis</dd>
-      </dl><dl><dt>
-
           <code><a href="getCov.html">getCov()</a></code> <code><a href="getCov.html">getCor()</a></code>
 
         </dt>
         <dd>Get full covariance/correlation matrix from eclairs</dd>
-      </dl><dl><dt>
-
-          <code><a href="getShrinkageParams.html">getShrinkageParams()</a></code>
-
-        </dt>
-        <dd>Estimate shrinkage parameter by empirical Bayes</dd>
-      </dl><dl><dt>
-
-          <code><a href="getWhiteningMatrix.html">getWhiteningMatrix()</a></code>
-
-        </dt>
-        <dd>Get whitening matrix</dd>
-      </dl><dl><dt>
-
-          <code><a href="kappa.html">kappa(<i>&lt;eclairs&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Compute condition number</dd>
       </dl><dl><dt>
 
           <code><a href="lm_each_eclairs.html">lm_each_eclairs()</a></code>
@@ -141,16 +209,45 @@
         <dd>Fit linear model after decorrelating</dd>
       </dl><dl><dt>
 
-          <code><a href="logDet.html">logDet()</a></code>
-
-        </dt>
-        <dd>Evaluate the log determinant</dd>
-      </dl><dl><dt>
-
           <code><a href="mahalanobisDistance.html">mahalanobisDistance()</a></code>
 
         </dt>
         <dd>Mahalanobis Distance</dd>
+      </dl><dl><dt>
+
+          <code><a href="getWhiteningMatrix.html">getWhiteningMatrix()</a></code>
+
+        </dt>
+        <dd>Get whitening matrix</dd>
+      </dl><dl><dt>
+
+          <code><a href="reform_decomp.html">reform_decomp()</a></code>
+
+        </dt>
+        <dd>Recompute eclairs after dropping features</dd>
+      </dl></div><div class="section level2">
+      <h2 id="low-level">Low level<a class="anchor" aria-label="anchor" href="#low-level"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="dmult.html">dmult()</a></code>
+
+        </dt>
+        <dd>Multiply by diagonal matrix</dd>
+      </dl><dl><dt>
+
+          <code><a href="getShrinkageParams.html">getShrinkageParams()</a></code>
+
+        </dt>
+        <dd>Estimate shrinkage parameter by empirical Bayes</dd>
       </dl><dl><dt>
 
           <code><a href="mult_eclairs.html">mult_eclairs()</a></code>
@@ -165,54 +262,19 @@
         <dd>Optimal Hard Threshold for Singular Values</dd>
       </dl><dl><dt>
 
-          <code><a href="plot-eclairs-method.html">plot(<i>&lt;eclairs&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Plot eclairs object</dd>
-      </dl><dl><dt>
-
           <code><a href="quadForm.html">quadForm()</a></code>
 
         </dt>
         <dd>Evaluate quadratic form</dd>
       </dl><dl><dt>
 
-          <code><a href="reform_decomp.html">reform_decomp()</a></code>
-
-        </dt>
-        <dd>Recompute eclairs after dropping features</dd>
-      </dl><dl><dt>
-
-          <code><a href="rmvnorm_eclairs.html">rmvnorm_eclairs()</a></code>
-
-        </dt>
-        <dd>Draw from multivariate normal and t distributions</dd>
-      </dl><dl><dt>
-
-          <code><a href="run_svd.html">run_svd()</a></code>
-
-        </dt>
-        <dd>Compute SVD with selected algorithm</dd>
-      </dl><dl><dt>
-
-          <code><a href="summarizeCorr.html">averageCorr()</a></code> <code><a href="summarizeCorr.html">averageCorrSq()</a></code> <code><a href="summarizeCorr.html">sumInverseCorr()</a></code> <code><a href="summarizeCorr.html">effVariance()</a></code> <code><a href="summarizeCorr.html">tr()</a></code>
-
-        </dt>
-        <dd>Summarize correlation matrix</dd>
-      </dl><dl><dt>
-
           <code><a href="sv_threshold.html">sv_threshold()</a></code>
 
         </dt>
         <dd>Singular value thresholding</dd>
-      </dl><dl><dt>
-
-          <code><a href="whiten.html">whiten()</a></code>
-
-        </dt>
-        <dd>Decorrelation projection + eclairs</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
