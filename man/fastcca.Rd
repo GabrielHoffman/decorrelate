@@ -8,17 +8,17 @@ fastcca(
   X,
   Y,
   k = NULL,
-  k.x = min(dim(X)),
-  k.y = min(dim(Y)),
+  k.x = NULL,
+  k.y = NULL,
   lambda.x = NULL,
   lambda.y = NULL,
   svd.method = c("svd", "irlba", "pcaone")
 )
 }
 \arguments{
-\item{X}{first matrix (n x p1)}
+\item{X}{\code{matrix}, \code{data.frame}, \code{eclairs} decomposition or \code{list} from \code{svd()}}
 
-\item{Y}{first matrix (n x p2)}
+\item{Y}{\code{matrix}, \code{data.frame}, \code{eclairs} decomposition or \code{list} from \code{svd()}}
 
 \item{k}{number of canonical components to return}
 
@@ -35,6 +35,9 @@ fastcca(
 \description{
 Fast Canonical correlation analysis that is scalable to high dimensional data.  Uses covariance shrinkage and algorithmic speed ups to be linear time in p when p > n.
 }
+\details{
+Objects in \code{X} and \code{Y} are converted to \code{eclairs} decomposition from \code{matrix}, \code{data.frame} or \code{list} from \code{svd()}.  The \code{predict()} function maps from one input to another, except when input object is \code{list} from \code{svd()}.
+}
 \examples{
 pop <- LifeCycleSavings[, 2:3]
 oec <- LifeCycleSavings[, -(2:3)]
@@ -45,4 +48,15 @@ fit
 
 # predict second dataset given first
 y.pred <- predict(fit, X = pop)
+
+# Advanced
+# fastcca() also works with eclairs() objects
+ecl.x <- eclairs(as.matrix(pop))
+ecl.y <- eclairs(as.matrix(oec))
+fit2 = fastcca(ecl.x, ecl.y)
+
+# fastcca() also works mixed types
+fit3 = fastcca(pop, ecl.y)
+
+# it also works with results if svd()
 }

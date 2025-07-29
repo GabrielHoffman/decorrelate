@@ -273,6 +273,7 @@ eclairs <- function(X, k = min(dim(X)), lambda = NULL, compute = c("covariance",
 
   # save standard deviation of input features
   sigma <- attr(X, "sd")
+  mu <- attr(X, "mu")
 
   # if computing the correlation matrix,
   # set the scale of each feature to 1
@@ -293,7 +294,33 @@ eclairs <- function(X, k = min(dim(X)), lambda = NULL, compute = c("covariance",
   # in rare exceptions,
   # resulting k can be 1 smaller than requested
   dcmp <- run_svd(X, k, svd.method) 
-  k <- dcmp$k
+
+  as.eclairs( dcmp, dcmp$k, n, p, svd.method, mu, sigma, rn, cn, lambda)
+}
+
+#' Convert SVD to eclairs
+#' 
+#' Convert SVD to eclairs object
+#' 
+#' @param dcmp SVD object
+#' @param k rank of SVD
+#' @param n number of samples
+#' @param p number of features
+#' @param svd.method method to compute SVD
+#' @param mu per-feature means
+#' @param sigma per-feature variances
+#' @param rn rownames
+#' @param cn column names
+#' @param lambda shrinkage parameter. If not specified, it is estimated from the data.
+#' 
+#' @export
+as.eclairs = function( dcmp, k, n, p, svd.method, mu = rep(0, p), sigma = rep(1,p), rn = NULL, cn = NULL, lambda = NULL){
+ 
+  # Ensure diagonals of v are positive
+  # so PCs are always pointed in the same direction
+  values <- sign0(diag(dcmp$v))
+  dcmp$v <- eachrow(dcmp$v, values, "*")
+  dcmp$u <- eachrow(dcmp$u, values, "*")
 
   ecl <- list(
     U = dcmp$v,
@@ -301,9 +328,10 @@ eclairs <- function(X, k = min(dim(X)), lambda = NULL, compute = c("covariance",
     V = dcmp$u,
     lambda = NA,
     logLik = NA,
+    mu = mu,
     sigma = sigma,
     nu = NA,
-    n = n.samples,
+    n = n,
     p = p,
     k = k,
     rownames = rn,
@@ -321,7 +349,6 @@ eclairs <- function(X, k = min(dim(X)), lambda = NULL, compute = c("covariance",
 
   ecl
 }
-
 
 
 # Like standard sign function, except sign(x) giving 0 is reset to give 1

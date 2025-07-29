@@ -17,6 +17,58 @@ test_fastcca_predict = function(){
 }
 
 
+test_fastcca_inputs = function(){
+
+	library(decorrelate)
+	library(RUnit)
+
+	pop <- LifeCycleSavings[, 2:3]
+	oec <- LifeCycleSavings[, -(2:3)]
+
+	# input: data.frame
+	fit1 <- fastcca(pop, oec)
+	y.pred <- predict(fit1, X = pop)
+
+	# input: list from svd
+	dcmp.x = svd(decorrelate:::.standardise(pop)/sqrt(nrow(pop)-1))
+	dcmp.y = svd(decorrelate:::.standardise(oec)/sqrt(nrow(oec)-1))
+	fit2 <- fastcca(dcmp.x, dcmp.y)
+
+	# input: eclairs decomp
+	ecl.x = eclairs(as.matrix(pop))
+	ecl.y = eclairs(as.matrix(oec))
+	fit3 <- fastcca(ecl.x, ecl.y)
+
+	# compare coefs
+	checkEqualsNumeric( fit1$x.coefs,  fit2$x.coefs, tol=1e-7 )
+	checkEqualsNumeric( fit1$x.coefs,  fit3$x.coefs, tol=1e-7 )
+	checkEqualsNumeric( fit1$y.coefs,  fit2$y.coefs, tol=1e-7 )
+	checkEqualsNumeric( fit1$y.coefs,  fit3$y.coefs, tol=1e-7 )
+
+	# compare latent variables
+	# for SVD latent variables are on different scale,
+	# but have correlation of 1 with results from other inputs
+	d = min(diag(cor(fit1$x.vars, fit2$x.vars)))
+	checkEqualsNumeric( d, 1)
+	checkEqualsNumeric( fit2$x.vars,  fit3$x.vars, tol=1e-7 )
+
+	d = min(diag(cor(fit1$y.vars, fit2$y.vars)))
+	checkEqualsNumeric( d, 1)
+	checkEqualsNumeric( fit2$y.vars,  fit3$y.vars, tol=1e-7 )
+
+	# check predictions
+	x.pred1 <- predict(fit1, Y = oec)
+	x.pred3 <- predict(fit3, Y = oec)
+	checkEqualsNumeric(x.pred1, x.pred3)
+
+	y.pred1 <- predict(fit1, X = pop)
+	y.pred3 <- predict(fit3, X = pop)
+	checkEqualsNumeric(y.pred1, y.pred3)
+
+
+
+}
+
 
 test_cca = function(){
 

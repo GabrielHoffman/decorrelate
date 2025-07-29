@@ -1,10 +1,12 @@
 # decorrelate 0.1.7
 * July 23, 2025
 * add `run_svd()` with multiple SVD algorithms
- * use in `eclairs()`
+  * use in `eclairs()`
+  * handle rare exception where `svd()` fails
 * add faster version of `fastcca()`
+  * handle `matrix`, `data.frame`, `eclairs`, and `list` from `svd()`
 * add `predict()` for `fastcca()` model
-* handle rare exception where `svd()` fails
+* add `as.eclairs()`
 
 # decorrelate 0.1.6
 * July 9, 2025

@@ -49,6 +49,7 @@ reference:
 
 - title: Other
   contents:
+  - "as.eclairs"
   - "cov_transform"
   - "eclairs_corMat"
   - "eclairs_sq"
