@@ -46,8 +46,8 @@ setMethod("show", "fastcca", function(object) {
 #'
 #' Fast Canonical correlation analysis that is scalable to high dimensional data.  Uses covariance shrinkage and algorithmic speed ups to be linear time in p when p > n.
 #'
-#' @param X \code{matrix}, \code{data.frame}, \code{eclairs} decomposition or \code{list} from \code{svd()}
-#' @param Y \code{matrix}, \code{data.frame}, \code{eclairs} decomposition or \code{list} from \code{svd()}
+#' @param X \code{matrix}, \code{data.frame}, \code{eclairs()} decomposition or \code{list} from \code{svd()}
+#' @param Y \code{matrix}, \code{data.frame}, \code{eclairs()} decomposition or \code{list} from \code{svd()}
 #' @param k number of canonical components to return
 #' @param k.x number of singular vectors of X to use
 #' @param k.y number of singular vectors of Y to use
@@ -56,7 +56,7 @@ setMethod("show", "fastcca", function(object) {
 #' @param svd.method SVD algorithm string "svd", "irlba", or "pcaone" 
 #'
 #' @details
-#' Objects in \code{X} and \code{Y} are converted to \code{eclairs} decomposition from \code{matrix}, \code{data.frame} or \code{list} from \code{svd()}.  The \code{predict()} function maps from one input to another, except when input object is \code{list} from \code{svd()}.
+#' Objects in \code{X} and \code{Y} are converted to \code{eclairs()} decomposition from \code{matrix}, \code{data.frame} or \code{list} from \code{svd()}.  The \code{predict()} function maps from one input to another, except when input object is \code{list} from \code{svd()}.
 #'
 #' @examples
 #' pop <- LifeCycleSavings[, 2:3]
