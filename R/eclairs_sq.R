@@ -13,6 +13,7 @@
 #' @param rank1 use the first 'rank' singular vectors from the SVD.  Using increasing rank1 will increase the accuracy of the estimation.  But note that the computationaly complexity is O(P choose(rank, 2)), where P is the number of features in the dataset
 #' @param rank2 rank of \code{eclairs()} decomposition returned
 #' @param varianceFraction fraction of variance to retain after truncating trailing eigen values
+#' @param svd.method SVD algorithm string "svd", "irlba", or "pcaone" 
 #'
 #' @details Consider a data matrix \eqn{X_{N x P}} of \eqn{P} features and \eqn{N} samples where \eqn{N << P}. Let the columns of X be scaled so that \eqn{C_{P x P} = XX^T}.  C is often too big to compute directly since it is O(P^2) and O(P^3) to invert.  But we can compute the SVD of X in O(PN^2).
 #' The goal is to compute the SVD of the matrix C^2, given only the SVD of C in less than \eqn{O(P^2)} time.  Here we compute this SVD of C^2 in \eqn{O(PN^4)} time, which is tractible for small N.
@@ -59,7 +60,10 @@
 #' @importFrom irlba irlba
 #' @export
 eclairs_sq <- function(
-    ecl, rank1 = ecl$k, rank2 = Inf, varianceFraction = 1) {
+    ecl, rank1 = ecl$k, rank2 = Inf, varianceFraction = 1, svd.method = c("svd", "irlba", "pcaone")) {
+
+  svd.method <- match.arg(svd.method)
+
   if (!is(ecl, "eclairs")) {
     stop("ecl must be of class eclairs")
   }
@@ -109,60 +113,12 @@ eclairs_sq <- function(
   G <- G[, df$index[idx], drop = FALSE]
 
   # SVD of G
-
   n <- ecl$n
   p <- ecl$p
   nu <- 1
 
-  # SVD of X to get low rank estimate of Sigma
-  if (rank2 < min(p, n) / 3) {
-    # if( is.null(warmStart) ){ dcmp = svds(G, k, isreal=TRUE)
-    dcmp <- irlba(G, rank2) # should be faster thatn PRIMME::svds
-    # }else{\t\t\t \tdcmp = svds(G, rank2,
-    # u0=ecl$U[,seq_len(rank2)], isreal=TRUE) }
-  } else {
-    dcmp <- svd(G)
+  k = min(c(dim(G), rank2))
+  dcmp <- run_svd(t(G), k, svd.method) 
 
-    # if rank2 < min(n,p) truncate spectrum
-    if (rank2 < length(dcmp$d)) {
-      dcmp$u <- dcmp$u[, seq_len(rank2), drop = FALSE]
-      dcmp$v <- dcmp$v[, seq_len(rank2), drop = FALSE]
-      dcmp$d <- dcmp$d[seq_len(rank2)]
-    }
-  }
-
-  # Modify sign of dcmp$v and dcmp$u so principal components are consistant
-  # This is motivated by whitening:::makePositivDiagonal() but here adjust
-  # both U and V so reconstructed data is correct
-  values <- sign(diag(dcmp$u))
-
-  # faster version
-  dcmp$v <- eachrow(dcmp$v, values, "*")
-  dcmp$u <- eachrow(dcmp$u, values, "*")
-
-  ecl <- list(
-    U = dcmp$u,
-    dSq = dcmp$d^2,
-    V = dcmp$v,
-    lambda = NA,
-    logLik = NA,
-    nu = NA,
-    n = n,
-    p = p,
-    k = length(dcmp$d),
-    rownames = ecl$rownames,
-    colnames = ecl$colnames,
-    method = "svd",
-    call = match.call()
-  )
-
-  ecl <- new("eclairs", ecl)
-
-  # estimate lambda and nu values
-  res <- getShrinkageParams(ecl)
-  ecl$lambda <- res$lambda
-  ecl$nu <- res$nu
-  ecl$logLik <- res$logLik
-
-  ecl
+  as.eclairs( dcmp, dcmp$k, n, p, svd.method, mu = rep(0,p), sigma = rep(1, p), rn=ecl$rownames, cn=ecl$colnames)
 }
