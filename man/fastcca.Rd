@@ -16,9 +16,9 @@ fastcca(
 )
 }
 \arguments{
-\item{X}{\code{matrix}, \code{data.frame}, \code{eclairs} decomposition or \code{list} from \code{svd()}}
+\item{X}{\code{matrix}, \code{data.frame}, \code{eclairs()} decomposition or \code{list} from \code{svd()}}
 
-\item{Y}{\code{matrix}, \code{data.frame}, \code{eclairs} decomposition or \code{list} from \code{svd()}}
+\item{Y}{\code{matrix}, \code{data.frame}, \code{eclairs()} decomposition or \code{list} from \code{svd()}}
 
 \item{k}{number of canonical components to return}
 
@@ -36,7 +36,7 @@ fastcca(
 Fast Canonical correlation analysis that is scalable to high dimensional data.  Uses covariance shrinkage and algorithmic speed ups to be linear time in p when p > n.
 }
 \details{
-Objects in \code{X} and \code{Y} are converted to \code{eclairs} decomposition from \code{matrix}, \code{data.frame} or \code{list} from \code{svd()}.  The \code{predict()} function maps from one input to another, except when input object is \code{list} from \code{svd()}.
+Objects in \code{X} and \code{Y} are converted to \code{eclairs()} decomposition from \code{matrix}, \code{data.frame} or \code{list} from \code{svd()}.  The \code{predict()} function maps from one input to another, except when input object is \code{list} from \code{svd()}.
 }
 \examples{
 pop <- LifeCycleSavings[, 2:3]
@@ -58,5 +58,5 @@ fit2 = fastcca(ecl.x, ecl.y)
 # fastcca() also works mixed types
 fit3 = fastcca(pop, ecl.y)
 
-# it also works with results if svd()
+# it also works with results of svd()
 }

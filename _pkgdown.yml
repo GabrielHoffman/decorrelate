@@ -49,7 +49,6 @@ reference:
 
 - title: Other
   contents:
-  - "as.eclairs"
   - "cov_transform"
   - "eclairs_corMat"
   - "eclairs_sq"
@@ -62,6 +61,7 @@ reference:
 
 - title: Low level
   contents:
+  - "as.eclairs"
   - "dmult"
   - "getShrinkageParams"
   - "mult_eclairs"

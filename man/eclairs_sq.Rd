@@ -4,7 +4,13 @@
 \alias{eclairs_sq}
 \title{Compute eclairs decomp of squared correlation matrix}
 \usage{
-eclairs_sq(ecl, rank1 = ecl$k, rank2 = Inf, varianceFraction = 1)
+eclairs_sq(
+  ecl,
+  rank1 = ecl$k,
+  rank2 = Inf,
+  varianceFraction = 1,
+  svd.method = c("svd", "irlba", "pcaone")
+)
 }
 \arguments{
 \item{ecl}{estimate of correlation matrix from \code{eclairs()} storing \eqn{U}, \eqn{d_1^2}, \eqn{\lambda} and \eqn{\nu}}
@@ -14,6 +20,8 @@ eclairs_sq(ecl, rank1 = ecl$k, rank2 = Inf, varianceFraction = 1)
 \item{rank2}{rank of \code{eclairs()} decomposition returned}
 
 \item{varianceFraction}{fraction of variance to retain after truncating trailing eigen values}
+
+\item{svd.method}{SVD algorithm string "svd", "irlba", or "pcaone"}
 }
 \value{
 compute the eclairs of C^2

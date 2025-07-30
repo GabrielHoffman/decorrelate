@@ -57,11 +57,11 @@
 
 
 <dl><dt id="arg-x">X<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p><code>matrix</code>, <code>data.frame</code>, <code>eclairs</code> decomposition or <code>list</code> from <code><a href="https://rdrr.io/r/base/svd.html" class="external-link">svd()</a></code></p></dd>
+<dd><p><code>matrix</code>, <code>data.frame</code>, <code><a href="eclairs.html">eclairs()</a></code> decomposition or <code>list</code> from <code><a href="https://rdrr.io/r/base/svd.html" class="external-link">svd()</a></code></p></dd>
 
 
 <dt id="arg-y">Y<a class="anchor" aria-label="anchor" href="#arg-y"></a></dt>
-<dd><p><code>matrix</code>, <code>data.frame</code>, <code>eclairs</code> decomposition or <code>list</code> from <code><a href="https://rdrr.io/r/base/svd.html" class="external-link">svd()</a></code></p></dd>
+<dd><p><code>matrix</code>, <code>data.frame</code>, <code><a href="eclairs.html">eclairs()</a></code> decomposition or <code>list</code> from <code><a href="https://rdrr.io/r/base/svd.html" class="external-link">svd()</a></code></p></dd>
 
 
 <dt id="arg-k">k<a class="anchor" aria-label="anchor" href="#arg-k"></a></dt>
@@ -90,7 +90,7 @@
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Objects in <code>X</code> and <code>Y</code> are converted to <code>eclairs</code> decomposition from <code>matrix</code>, <code>data.frame</code> or <code>list</code> from <code><a href="https://rdrr.io/r/base/svd.html" class="external-link">svd()</a></code>.  The <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> function maps from one input to another, except when input object is <code>list</code> from <code><a href="https://rdrr.io/r/base/svd.html" class="external-link">svd()</a></code>.</p>
+    <p>Objects in <code>X</code> and <code>Y</code> are converted to <code><a href="eclairs.html">eclairs()</a></code> decomposition from <code>matrix</code>, <code>data.frame</code> or <code>list</code> from <code><a href="https://rdrr.io/r/base/svd.html" class="external-link">svd()</a></code>.  The <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> function maps from one input to another, except when input object is <code>list</code> from <code><a href="https://rdrr.io/r/base/svd.html" class="external-link">svd()</a></code>.</p>
     </div>
 
     <div class="section level2">
@@ -123,7 +123,7 @@
 <span class="r-in"><span><span class="co"># fastcca() also works mixed types</span></span></span>
 <span class="r-in"><span><span class="va">fit3</span> <span class="op">=</span> <span class="fu">fastcca</span><span class="op">(</span><span class="va">pop</span>, <span class="va">ecl.y</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># it also works with results if svd()</span></span></span>
+<span class="r-in"><span><span class="co"># it also works with results of svd()</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
