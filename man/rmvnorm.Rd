@@ -2,9 +2,12 @@
 % Please edit documentation in R/rmvnorm_eclairs.R
 \name{rmvnorm_eclairs}
 \alias{rmvnorm_eclairs}
+\alias{rmvt_eclairs}
 \title{Draw from multivariate normal and t distributions}
 \usage{
-rmvnorm_eclairs(n, mu, ecl, v = Inf, seed = NULL)
+rmvnorm_eclairs(n, mu, ecl, seed = NULL)
+
+rmvt_eclairs(n, mu, ecl, nu, seed = NULL)
 }
 \arguments{
 \item{n}{sample size}
@@ -13,9 +16,9 @@ rmvnorm_eclairs(n, mu, ecl, v = Inf, seed = NULL)
 
 \item{ecl}{covariance matrix as an \link{eclairs} object}
 
-\item{v}{degrees of freedom, defaults to Inf.  If finite, uses a multivariate t distribution}
-
 \item{seed}{If you want the same to be generated again use a seed for the generator, an integer number}
+
+\item{nu}{degrees of freedom.  If finite, uses a multivariate t distribution}
 }
 \value{
 matrix where rows are samples from multivariate normal or t distribution where columns have covariance specified by \code{ecl}
@@ -50,11 +53,5 @@ X.draw1 <- rmvnorm_eclairs(n, mu, ecl)
 
 # using full covariance matrix implied by eclairs model
 X.draw2 <- rmvnorm(n, mu, getCov(ecl))
-
-# assess difference betweeen covariances from two methods
-range(cov(X.draw1) - cov(X.draw2))
-
-# compare covariance to the covariance matrix used to simulated the data
-range(cov(X.draw1) - getCov(ecl))
 
 }

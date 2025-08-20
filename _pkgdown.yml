@@ -41,11 +41,13 @@ reference:
   contents:
   - "eclairs-class"
   - "fastcca-class"
+  - "multiwaycca-class"
 
 - title: Simulating data
   contents:
   - "autocorr.mat"
   - "rmvnorm_eclairs"
+  - "dmvnorm_eclairs"
 
 - title: Other
   contents:

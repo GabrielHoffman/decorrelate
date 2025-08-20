@@ -1,4 +1,6 @@
 
+rho.mod, Cramer's V is wrong fpr n < p
+inst fastcca, can I control k and lambda for each dataset?
 
 
 July 24, 2025

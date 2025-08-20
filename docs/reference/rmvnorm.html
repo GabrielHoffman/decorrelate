@@ -31,7 +31,7 @@
 
       <h1>Draw from multivariate normal and t distributions</h1>
       <small class="dont-index">Source: <a href="https://github.com/GabrielHoffman/decorrelate/blob/HEAD/R/rmvnorm_eclairs.R" class="external-link"><code>R/rmvnorm_eclairs.R</code></a></small>
-      <div class="d-none name"><code>rmvnorm_eclairs.Rd</code></div>
+      <div class="d-none name"><code>rmvnorm.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
@@ -40,7 +40,9 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">rmvnorm_eclairs</span><span class="op">(</span><span class="va">n</span>, <span class="va">mu</span>, <span class="va">ecl</span>, seed <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">rmvnorm_eclairs</span><span class="op">(</span><span class="va">n</span>, <span class="va">mu</span>, <span class="va">ecl</span>, seed <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">rmvt_eclairs</span><span class="op">(</span><span class="va">n</span>, <span class="va">mu</span>, <span class="va">ecl</span>, <span class="va">nu</span>, seed <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -64,7 +66,7 @@
 
 
 <dt id="arg-nu">nu<a class="anchor" aria-label="anchor" href="#arg-nu"></a></dt>
-<dd><p>degrees of freedom, defaults to Inf.  If finite, uses a multivariate t distribution</p></dd>
+<dd><p>degrees of freedom.  If finite, uses a multivariate t distribution</p></dd>
 
 </dl></div>
     <div class="section level2">

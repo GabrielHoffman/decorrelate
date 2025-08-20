@@ -194,7 +194,7 @@ fastcca <- function( X, Y,
   # Faster way to eval diag of correlation
   # diag(cor(x.vars, y.vars))[seq(k)]
   res$cor <- colsums(.standardise(res$x.vars) * .standardise(res$y.vars)) / (nrow(res$y.vars)-1)
-  names(res$cor) <- paste("comp", seq(k), sep = "")
+  names(res$cor) <- paste("comp", seq(ncol(res$x.vars)), sep = "")
 
   res
 }

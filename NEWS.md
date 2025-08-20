@@ -7,6 +7,7 @@
   * handle `matrix`, `data.frame`, `eclairs`, and `list` from `svd()`
 * add `predict()` for `fastcca()` model
 * add `as.eclairs()`
+* add `dmvnorm_eclairs()`, `dmvt_eclairs()`, `rmvnorm_eclairs()`, `rmvt_eclairs()`
 
 # decorrelate 0.1.6
 * July 9, 2025
